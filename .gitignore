@@ -398,3 +398,15 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+
+# ========================
+# React Native frontend
+# ========================
+foodshare-app/node_modules/
+foodshare-app/.expo/
+foodshare-app/.expo-shared/
+foodshare-app/.vscode/
+foodshare-app/android/
+foodshare-app/ios/
+foodshare-app/.env
+foodshare-app/npm-debug.log
