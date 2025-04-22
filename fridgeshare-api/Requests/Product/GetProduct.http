@@ -1,0 +1,2 @@
+@id = 0ac05d40-f1b6-454f-942a-99b71a2430c5
+GET http://localhost:5133/products/{{id}}

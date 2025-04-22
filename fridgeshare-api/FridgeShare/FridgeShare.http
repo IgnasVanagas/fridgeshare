@@ -1,0 +1,6 @@
+@FridgeShare_HostAddress = http://localhost:5133
+
+GET {{FridgeShare_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

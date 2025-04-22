@@ -1,0 +1,8 @@
+@id = 0ac05d40-f1b6-454f-942a-99b71a2430c4
+PUT http://localhost:5133/products/{{id}}
+Content-Type: application/json
+
+{
+    "Title": "Test pakeistas",
+    "Description": "test description"
+}
