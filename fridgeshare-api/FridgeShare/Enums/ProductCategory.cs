@@ -1,3 +1,4 @@
+namespace FridgeShare.Enums;
 public enum ProductCategory
 {
     PreparedMeals,

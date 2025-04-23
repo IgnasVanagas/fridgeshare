@@ -1,19 +1,20 @@
 using ErrorOr;
 using FridgeShare.Contracts.FridgeShare.Product;
 using FridgeShare.Models;
-using FridgeShare.ServiceErrors;
 using FridgeShare.Services.Products;
+using FridgeShare.Services.Storages;
 using Microsoft.AspNetCore.Mvc;
-
 namespace FridgeShare.Controllers;
 
 public class ProductsController : ApiController
 {
     private readonly IProductService _productService;
+    private readonly IStorageService _storageService;
 
-    public ProductsController(IProductService productService)
+    public ProductsController(IProductService productService, IStorageService storageService)
     {
         _productService = productService;
+        _storageService = storageService;
     }
 
     [HttpPost]
@@ -69,6 +70,7 @@ public class ProductsController : ApiController
 
     private IActionResult CreatedAtGetProduct(Product product)
     {
+        var addProductResult =_storageService.AddProduct(product.StorageId, product);
         return CreatedAtAction(
             actionName: nameof(GetProduct),
             routeValues: new { id = product.Id },
@@ -76,8 +78,11 @@ public class ProductsController : ApiController
     }
 
 
-    private static ProductResponse MapProductResponse(Product product)
+    private ProductResponse MapProductResponse(Product product)
     {
-        return new ProductResponse(product.Id, product.Title, product.Description);
+        var storage = _storageService.GetStorage(product.StorageId).Value;
+        return new ProductResponse(product.Id, product.Title, product.Description, (int)product.Category, product.Category.ToString(),
+        (int)product.TypeOfMeasurement, product.TypeOfMeasurement.ToString(), product.Quantity, product.InStock, product.StorageId,
+        storage.Title, product.AddedOn, product.ExpiryDate, product.PreparationDate, product.BoughtOn);
     }
 }
