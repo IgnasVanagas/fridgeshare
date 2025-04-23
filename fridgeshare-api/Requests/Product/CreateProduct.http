@@ -1,0 +1,13 @@
+POST http://localhost:5133/products
+Content-Type: application/json
+
+{
+    "Title": "Test",
+    "Description": "test description",
+    "Category": 4,
+    "TypeOfMeasurement": 4,
+    "Quantity": 10,
+    "inStock": true,
+    "PreparationDate": "2025-05-01",
+    "StorageId": "dd37e35b-a352-42cb-a65f-b8b8b20770fb"
+}

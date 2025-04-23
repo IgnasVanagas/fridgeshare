@@ -1,0 +1,8 @@
+POST http://localhost:5133/storages
+Content-Type: application/json
+
+{
+    "Title": "Naujas storage",
+    "Location": "1A",
+    "Type": 1
+}
