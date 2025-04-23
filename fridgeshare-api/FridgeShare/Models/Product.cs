@@ -48,7 +48,7 @@ public class Product
     float quantity, bool inStock, Guid storageId, DateOnly? expiryDate = null, DateOnly? preparationDate = null,
     DateOnly? boughtOn = null, Guid? id = null)
     {
-        List<Error> errors = ValidateProduct(title, typeOfMeasurement, category, storageId, expiryDate, preparationDate, boughtOn);
+        List<Error> errors = ValidateProduct(title, description, quantity, typeOfMeasurement, category, storageId, expiryDate, preparationDate, boughtOn);
 
         if (errors.Count > 0)
         {
@@ -71,7 +71,7 @@ public class Product
         request.ExpiryDate, request.PreparationDate, request.BoughOn, id);
     }
 
-    private static List<Error> ValidateProduct(string title, int typeOfMeasurement, int category, Guid storageId, DateOnly? expiryDate, 
+    private static List<Error> ValidateProduct(string title, string description, float quantity, int typeOfMeasurement, int category, Guid storageId, DateOnly? expiryDate, 
     DateOnly? preparationDate, DateOnly? boughtOn)
     {
         List<Error> errors = new List<Error>();
@@ -80,10 +80,15 @@ public class Product
             errors.Add(Errors.Product.InvalidTitle);
         }
 
-        if (!Enum.IsDefined(typeof(FoodMeasurement), typeOfMeasurement))
+        if (description.Length is > MaxDescriptionLength)
         {
-            errors.Add(Errors.Product.InvalidMeasurement);
+            errors.Add(Errors.Product.InvalidDescription);
         }
+
+        if (!Enum.IsDefined(typeof(FoodMeasurement), typeOfMeasurement))
+            {
+                errors.Add(Errors.Product.InvalidMeasurement);
+            }
 
         if (!Enum.IsDefined(typeof(ProductCategory), category))
         {
@@ -98,6 +103,17 @@ public class Product
         if (storageId == Guid.Empty)
         {
             errors.Add(Errors.Product.StorageIdMissing);
+        }
+
+        if (quantity < 0 || ((FoodMeasurement)typeOfMeasurement == FoodMeasurement.pcs && quantity != Math.Floor(quantity)))
+        {
+            errors.Add(Errors.Product.IncorrectQuantity);
+        }
+
+        if ((preparationDate != null && preparationDate > DateOnly.FromDateTime(DateTime.UtcNow)) ||
+            (boughtOn != null && boughtOn > DateOnly.FromDateTime(DateTime.UtcNow)))
+        {
+            errors.Add(Errors.Product.InvalidDate);
         }
 
         return errors;

@@ -4,10 +4,10 @@ Content-Type: application/json
 {
     "Title": "Test",
     "Description": "test description",
-    "Category": 1,
-    "TypeOfMeasurement": 1,
-    "Quantity": 1.0,
+    "Category": 4,
+    "TypeOfMeasurement": 4,
+    "Quantity": 10,
     "inStock": true,
-    "boughOn": "2025-05-01",
-    "StorageId": "544944f3-a717-4f78-81d6-1096f2b39da8"
+    "PreparationDate": "2025-05-01",
+    "StorageId": "dd37e35b-a352-42cb-a65f-b8b8b20770fb"
 }
