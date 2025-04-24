@@ -8,10 +8,11 @@ const mainStyle = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
-	button: {
-		fontSize: 20,
-		textDecorationLine: 'underline',
-		color: colors.brandGreen,
+	container2: {
+		padding: 24,
+		flex: 1,
+		alignItems: 'center',
+		justifyContent: 'center',
 	},
 	text: {
 		color: colors.black,
@@ -31,7 +32,7 @@ const mainStyle = StyleSheet.create({
 		width: '80%',
 	},
 	formInputView: {
-		marginBottom: 20,
+		marginBottom: 13,
 	},
 	formInput: {
 		height: 50,
@@ -40,6 +41,19 @@ const mainStyle = StyleSheet.create({
 		borderWidth: 1,
 		borderRadius: 15,
 		padding: 7,
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'center',
+		paddingHorizontal: 14,
+	},
+	formInputText: {
+		flex: 1,
+		paddingVertical: 10,
+		paddingRight: 10,
+	},
+	formPasswordIcon: {
+		marginLeft: 5,
+		marginRight: 5,
 	},
 	formError: {
 		color: colors.red,
