@@ -7,6 +7,7 @@ var builder = WebApplication.CreateBuilder(args);
     builder.Services.AddControllers();
     builder.Services.AddScoped<IProductService, productService>();
     builder.Services.AddScoped<IStorageService, storageService>();
+    builder.Services.AddScoped<ICommunityService, communityService>();
 }
 
 var app = builder.Build();
