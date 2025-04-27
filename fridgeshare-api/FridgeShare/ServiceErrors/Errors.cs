@@ -1,4 +1,5 @@
 using ErrorOr;
+
 namespace FridgeShare.ServiceErrors;
 
 public static class Errors
@@ -32,7 +33,7 @@ public static class Errors
 
         public static Error InvalidDate => Error.Validation(
             code: "Product.InvalidDate",
-            description: "Date can not be greater than today."
+            description: "Date cannot be greater than today."
         );
 
         public static Error StorageIdMissing => Error.Validation(
@@ -70,12 +71,40 @@ public static class Errors
 
         public static Error InvalidDate => Error.Validation(
             code: "Storage.InvalidDate",
-            description: "Date can not be greater than today."
+            description: "Date cannot be greater than today."
         );
 
         public static Error NotFound => Error.NotFound(
             code: "Storage.NotFound",
             description: "Storage not found"
+        );
+    }
+
+    public static class Community
+    {
+        public static Error InvalidTitle => Error.Validation(
+            code: "Community.InvalidTitle",
+            description: $"Community title must be between {Models.Community.MinTitleLength} and {Models.Community.MaxTitleLength}."
+        );
+
+        public static Error InvalidDescription => Error.Validation(
+            code: "Community.InvalidDescription",
+            description: $"Community description must be less than {Models.Community.MaxDescriptionLength} characters."
+        );
+
+        public static Error InvalidJoiningCode => Error.Validation(
+            code: "Community.InvalidJoiningCode",
+            description: "Joining code must be provided and valid."
+        );
+
+        public static Error Invalid => Error.Validation(
+            code: "Community.Invalid",
+            description: "Invalid community data."
+        );
+
+        public static Error NotFound => Error.NotFound(
+            code: "Community.NotFound",
+            description: "Community not found."
         );
     }
 }
