@@ -78,4 +78,21 @@ public static class Errors
             description: "Storage not found"
         );
     }
+
+    public static class Tag
+    {
+        public static Error InvalidTitle => Error.Validation(
+            code: "Tag.InvalidTitle",
+            description: "Tag not found!"
+        );
+
+        public static Error InvalidColor => Error.Validation(
+            code: "Tag.InvalidColor",
+            description: "Color is not in HEX!"
+        );
+        public static Error NotFound => Error.NotFound(
+            code: "Tag.NotFound",
+            description: "Tag not found"
+        );
+    }
 }
