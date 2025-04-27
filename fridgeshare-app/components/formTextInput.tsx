@@ -22,7 +22,7 @@ const FormTextInput = ({
 	onChangeText: any;
 	onBlur: any;
 	value: string;
-	isPassword: boolean;
+	isPassword?: boolean;
 }) => {
 	const [hidePassword, setHidePassword] = useState(true);
 	const togglePasswordVisibility = () => {
