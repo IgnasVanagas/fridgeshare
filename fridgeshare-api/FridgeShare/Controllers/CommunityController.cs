@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FridgeShare.Controllers;
 
+
 public class CommunityController : ApiController
 {
     private readonly ICommunityService _communityService;
@@ -16,71 +17,74 @@ public class CommunityController : ApiController
     }
 
     [HttpPost]
-    public IActionResult CreateCommunity(CreateCommunityRequest request)
+    public async Task<IActionResult> CreateCommunity([FromBody] CreateCommunityRequest request)
     {
-        ErrorOr<Community> requestToCommunityResult = Community.From(request);
+        var requestToCommunityResult = Community.From(request);
+
         if (requestToCommunityResult.IsError)
-        {
             return Problem(requestToCommunityResult.Errors);
-        }
 
         var community = requestToCommunityResult.Value;
-        ErrorOr<Created> createResult = _communityService.CreateCommunity(community);
+        var createResult = await _communityService.CreateCommunity(community);
 
-        return createResult.Match(
-            created => CreatedAtGetCommunity(community),
-            errors => Problem(errors)
-        );
+        if (createResult.IsError)
+            return Problem(createResult.Errors);
+
+        return CreatedAtGetCommunity(community);
     }
 
     [HttpGet("{id:int}")]
-    public IActionResult GetCommunity(int id)
+    public async Task<IActionResult> GetCommunity(int id)
     {
-        ErrorOr<Community> getResult = _communityService.GetCommunity(id);
+        var getResult = await _communityService.GetCommunity(id);
 
-        return getResult.Match(
-            community => Ok(MapCommunityResponse(community)),
-            errors => Problem(errors)
-        );
+        if (getResult.IsError)
+            return Problem(getResult.Errors);
+
+        var community = getResult.Value;
+        return Ok(MapCommunityResponse(community));
     }
 
     [HttpPut("{id:int}")]
-    public IActionResult UpdateCommunity(int id, UpdateCommunityRequest request)
+    public async Task<IActionResult> UpdateCommunity(int id, [FromBody] UpdateCommunityRequest request)
     {
-        ErrorOr<Community> communityResult = Community.From(id, request);
+        var communityResult = Community.From(id, request);
+
         if (communityResult.IsError)
-        {
             return Problem(communityResult.Errors);
-        }
 
         var community = communityResult.Value;
-        ErrorOr<UpdatedCommunity> updateResult = _communityService.UpdateCommunity(community);
+        var updateResult = await _communityService.UpdateCommunity(community);
 
-        return updateResult.Match(
-            updated => updated.IsCreated ? CreatedAtGetCommunity(community) : NoContent(),
-            errors => Problem(errors)
-        );
+        if (updateResult.IsError)
+            return Problem(updateResult.Errors);
+
+        return updateResult.Value.IsCreated ? CreatedAtGetCommunity(community) : NoContent();
     }
 
     [HttpDelete("{id:int}")]
-    public IActionResult DeleteCommunity(int id)
+    public async Task<IActionResult> DeleteCommunity(int id)
     {
-        ErrorOr<Deleted> deleteResult = _communityService.DeleteCommunity(id);
-        return deleteResult.Match(
-            deleted => NoContent(),
-            errors => Problem(errors)
+        var deleteResult = await _communityService.DeleteCommunity(id);
+
+        if (deleteResult.IsError)
+            return Problem(deleteResult.Errors);
+
+        return NoContent();
+    }
+
+    private IActionResult CreatedAtGetCommunity(Community community)
+    {
+        return CreatedAtAction(
+            nameof(GetCommunity),
+            new { id = community.Id },
+            MapCommunityResponse(community)
         );
     }
 
-    private IActionResult CreatedAtGetCommunity(Community community) =>
-        CreatedAtAction(
-            actionName: nameof(GetCommunity),
-            routeValues: new { id = community.Id },
-            value: MapCommunityResponse(community)
-        );
-
-    private static CommunityResponse MapCommunityResponse(Community community) =>
-        new(
+    private static CommunityResponse MapCommunityResponse(Community community)
+    {
+        return new CommunityResponse(
             community.Id,
             community.Title,
             community.Description,
@@ -89,4 +93,22 @@ public class CommunityController : ApiController
             community.Active,
             community.ManagerId
         );
+    }
+
+    private IActionResult Problem(List<Error> errors)
+    {
+        if (errors.Count == 0)
+            return Problem();
+
+        var firstError = errors[0];
+        var statusCode = firstError.Type switch
+        {
+            ErrorType.Conflict => StatusCodes.Status409Conflict,
+            ErrorType.Validation => StatusCodes.Status400BadRequest,
+            ErrorType.NotFound => StatusCodes.Status404NotFound,
+            _ => StatusCodes.Status500InternalServerError
+        };
+
+        return Problem(statusCode: statusCode, title: firstError.Description);
+    }
 }

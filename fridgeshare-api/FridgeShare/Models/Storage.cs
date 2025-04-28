@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using ErrorOr;
 using FridgeShare.Contracts.FridgeShare.Storage;
 using FridgeShare.Enums;
@@ -7,43 +8,43 @@ namespace FridgeShare.Models;
 
 public class Storage
 {
+    public Storage() { }
+
     public const int MinTitleLength = 0;
     public const int MaxTitleLength = 50;
     public const int MinLocationLength = 3;
     public const int MaxLocationLength = 50;
 
-    public Guid Id { get; }
-    public string Title { get; } = null!;
-    public string Location { get; }
-    public bool IsEmpty { get; }
-    public DateTime DateAdded { get; } = DateTime.UtcNow;
-    public DateTime? LastCleaningDate { get; }
-    public DateTime? LastMaintenanceDate { get; }
-    public StorageType Type { get; }
-    public bool PropertyOfCompany { get; }
-    public bool NeedsMaintenance { get; }
+    [Key] 
+    public Guid Id { get; private set; }
+    public string Title { get; private set; } = null!;
+    public string Location { get; private set; }
+    public bool IsEmpty { get; private set; }
+    public DateTime DateAdded { get; private set; } = DateTime.UtcNow;
+    public DateTime? LastCleaningDate { get; private set; }
+    public DateTime? LastMaintenanceDate { get; private set; }
+    public StorageType Type { get; private set; }
+    public bool PropertyOfCompany { get; private set; }
+    public bool NeedsMaintenance { get; private set; }
 
-    // public int CommunityId { get; set; }
-    // public Community Community { get; set; }
-
-    public ICollection<Product> Products { get; } = new List<Product>();
+    public ICollection<Product> Products { get; private set; } = new List<Product>();
 
     private Storage(Guid id, string title, string location, StorageType type, DateTime? lastCleaningDate, DateTime? lastMaintenanceDate,
-    bool isEmpty = true, bool propertyOfCompany = false, bool needsMaintenance = false)
+        bool isEmpty = true, bool propertyOfCompany = false, bool needsMaintenance = false)
     {
-        this.Id = id;
-        this.Title = title;
-        this.Location = location;
-        this.Type = type;
-        this.LastCleaningDate = lastCleaningDate;
-        this.LastMaintenanceDate = lastMaintenanceDate;
-        this.IsEmpty = isEmpty;
-        this.PropertyOfCompany = propertyOfCompany;
-        this.NeedsMaintenance = needsMaintenance;
+        Id = id;
+        Title = title;
+        Location = location;
+        Type = type;
+        LastCleaningDate = lastCleaningDate;
+        LastMaintenanceDate = lastMaintenanceDate;
+        IsEmpty = isEmpty;
+        PropertyOfCompany = propertyOfCompany;
+        NeedsMaintenance = needsMaintenance;
     }
 
     public static ErrorOr<Storage> Create(string title, string location, int type, DateTime? lastCleaningDate, DateTime? lastMaintenanceDate,
-    bool isEmpty = true, bool propertyOfCompany = false, bool needsMaintenance = false, Guid? id = null)
+        bool isEmpty = true, bool propertyOfCompany = false, bool needsMaintenance = false, Guid? id = null)
     {
         List<Error> errors = ValidateStorage(title, location, type, lastCleaningDate, lastMaintenanceDate);
 
@@ -59,17 +60,17 @@ public class Storage
     public static ErrorOr<Storage> From(CreateStorageRequest request)
     {
         return Create(request.Title, request.Location, request.Type, request.LastCleaningDate, request.LastMaintenanceDate,
-        request.IsEmpty, request.propertyOfCompany, request.NeedsMaintenance);
+            request.IsEmpty, request.propertyOfCompany, request.NeedsMaintenance);
     }
 
     public static ErrorOr<Storage> From(Guid id, UpdateStorageRequest request)
     {
         return Create(request.Title, request.Location, request.Type, request.LastCleaningDate, request.LastMaintenanceDate,
-        request.IsEmpty, request.propertyOfCompany, request.NeedsMaintenance, id);
+            request.IsEmpty, request.propertyOfCompany, request.NeedsMaintenance, id);
     }
 
     private static List<Error> ValidateStorage(string title, string location, int type, DateTime? lastCleaningDate,
-    DateTime? lastMaintenanceDate)
+        DateTime? lastMaintenanceDate)
     {
         List<Error> errors = new List<Error>();
         if (!Enum.IsDefined(typeof(StorageType), type))
@@ -88,7 +89,7 @@ public class Storage
         }
 
         if ((lastCleaningDate != null && lastCleaningDate > DateTime.UtcNow) ||
-        (lastMaintenanceDate != null && lastMaintenanceDate > DateTime.UtcNow))
+            (lastMaintenanceDate != null && lastMaintenanceDate > DateTime.UtcNow))
         {
             errors.Add(Errors.Storage.InvalidDate);
         }

@@ -1,49 +1,72 @@
 using ErrorOr;
+using FridgeShare.Data;
 using FridgeShare.Models;
 using FridgeShare.ServiceErrors;
+using Microsoft.EntityFrameworkCore;
 
 namespace FridgeShare.Services.Communities;
 
 public class CommunityService : ICommunityService
 {
-    private static readonly Dictionary<int, Community> _communities = new();
-    private static int _nextId = 1;
+    private readonly FridgeShareDbContext _dbContext;
 
-    public ErrorOr<Created> CreateCommunity(Community community)
+    public CommunityService(FridgeShareDbContext dbContext)
     {
-        community.Id = _nextId++;
+        _dbContext = dbContext;
+    }
+
+    public async Task<ErrorOr<Created>> CreateCommunity(Community community)
+    {
         community.CreatedOn = DateTime.UtcNow;
-        _communities[community.Id] = community;
+        _dbContext.Communities.Add(community);
+        await _dbContext.SaveChangesAsync();
 
         return Result.Created;
     }
 
-    public ErrorOr<Community> GetCommunity(int id)
+    public async Task<ErrorOr<Community>> GetCommunity(int id)
     {
-        if (_communities.TryGetValue(id, out var community))
-        {
-            return community;
-        }
+        var community = await _dbContext.Communities.FindAsync(id);
 
-        return Errors.Community.NotFound;
-    }
-
-    public ErrorOr<UpdatedCommunity> UpdateCommunity(Community community)
-    {
-        bool isCreated = !_communities.ContainsKey(community.Id);
-        _communities[community.Id] = community;
-
-        return new UpdatedCommunity(isCreated);
-    }
-
-    public ErrorOr<Deleted> DeleteCommunity(int id)
-    {
-        if (!_communities.ContainsKey(id))
+        if (community is null)
         {
             return Errors.Community.NotFound;
         }
 
-        _communities.Remove(id);
+        return community;
+    }
+
+    public async Task<ErrorOr<UpdatedCommunity>> UpdateCommunity(Community community)
+    {
+        var existing = await _dbContext.Communities.FindAsync(community.Id);
+
+        bool isCreated = existing is null;
+
+        if (isCreated)
+        {
+            _dbContext.Communities.Add(community);
+        }
+        else
+        {
+            _dbContext.Entry(existing!).CurrentValues.SetValues(community);
+        }
+
+        await _dbContext.SaveChangesAsync();
+        return new UpdatedCommunity(isCreated);
+    }
+
+    public async Task<ErrorOr<Deleted>> DeleteCommunity(int id)
+    {
+        var community = await _dbContext.Communities.FindAsync(id);
+
+        if (community is null)
+        {
+            return Errors.Community.NotFound;
+        }
+
+        _dbContext.Communities.Remove(community);
+        await _dbContext.SaveChangesAsync();
+
         return Result.Deleted;
     }
 }
