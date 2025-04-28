@@ -5,10 +5,10 @@ namespace FridgeShare.Services.Storages;
 
 public interface IStorageService
 {
-    ErrorOr<Created> CreateStorage(Storage storage);
-    ErrorOr<Storage> GetStorage(Guid id);
-    ErrorOr<UpdatedStorage> UpdateStorage(Storage storage);
-    ErrorOr<Deleted> DeleteStorage(Guid id);
+    Task<ErrorOr<Created>> CreateStorage(Storage storage);
+    Task<ErrorOr<Storage>> GetStorage(Guid id);
+    Task<ErrorOr<UpdatedStorage>> UpdateStorage(Storage storage);
+    Task<ErrorOr<Deleted>> DeleteStorage(Guid id);
 
-    ErrorOr<Storage> AddProduct(Guid id, Product product);
+    Task<ErrorOr<Storage>> AddProduct(Guid storageId, Product product);
 }

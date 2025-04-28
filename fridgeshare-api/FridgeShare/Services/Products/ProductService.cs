@@ -1,39 +1,71 @@
 using ErrorOr;
+using FridgeShare.Data;
 using FridgeShare.Models;
 using FridgeShare.ServiceErrors;
+using Microsoft.EntityFrameworkCore;
 
 namespace FridgeShare.Services.Products;
 
-public class productService : IProductService
+public class ProductService : IProductService
 {
-    private static readonly Dictionary<Guid, Product> _products = new();
+    private readonly FridgeShareDbContext _dbContext;
 
-    public ErrorOr<Created> CreateProduct(Product product)
+    public ProductService(FridgeShareDbContext dbContext)
     {
-        _products.Add(product.Id, product);
+        _dbContext = dbContext;
+    }
+
+    public async Task<ErrorOr<Created>> CreateProduct(Product product)
+    {
+        _dbContext.Products.Add(product);
+        await _dbContext.SaveChangesAsync();
         return Result.Created;
     }
 
-    public ErrorOr<Deleted> DeleteProduct(Guid id)
+    public async Task<ErrorOr<Product>> GetProduct(Guid id)
     {
-        _products.Remove(id);
-        return Result.Deleted;
-    }
+        var product = await _dbContext.Products.FindAsync(id);
 
-    public ErrorOr<Product> GetProduct(Guid id)
-    {
-        if (_products.TryGetValue(id, out var product))
+        if (product is null)
         {
-            return product;
+            return Errors.Product.NotFound;
         }
-        return Errors.Product.NotFound;
+
+        return product;
     }
 
-    public ErrorOr<UpdatedProduct> UpdateProduct(Product product)
+    public async Task<ErrorOr<UpdatedProduct>> UpdateProduct(Product product)
     {
-        bool isCreated = !_products.ContainsKey(product.Id);
+        var existingProduct = await _dbContext.Products.FindAsync(product.Id);
 
-        _products[product.Id] = product;
+        bool isCreated = existingProduct is null;
+
+        if (isCreated)
+        {
+            _dbContext.Products.Add(product);
+        }
+        else
+        {
+            _dbContext.Entry(existingProduct!).CurrentValues.SetValues(product);
+        }
+
+        await _dbContext.SaveChangesAsync();
+
         return new UpdatedProduct(isCreated);
+    }
+
+    public async Task<ErrorOr<Deleted>> DeleteProduct(Guid id)
+    {
+        var product = await _dbContext.Products.FindAsync(id);
+
+        if (product is null)
+        {
+            return Errors.Product.NotFound;
+        }
+
+        _dbContext.Products.Remove(product);
+        await _dbContext.SaveChangesAsync();
+
+        return Result.Deleted;
     }
 }

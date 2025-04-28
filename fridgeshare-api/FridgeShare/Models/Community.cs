@@ -5,6 +5,7 @@ using FridgeShare.Contracts.FridgeShare.Community;
 
 public class Community
 {
+    public Community() { }
     public const int MinTitleLength = 3;
     public const int MaxTitleLength = 100;
     public const int MaxDescriptionLength = 500;

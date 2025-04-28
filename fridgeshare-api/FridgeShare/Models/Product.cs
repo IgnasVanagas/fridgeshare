@@ -1,4 +1,5 @@
 using ErrorOr;
+using System.ComponentModel.DataAnnotations;
 using FridgeShare.Contracts.FridgeShare.Product;
 using FridgeShare.Enums;
 using FridgeShare.ServiceErrors;
@@ -7,26 +8,28 @@ namespace FridgeShare.Models;
 
 public class Product
 {
+    public Product() { }
     public const int MinTitleLength = 3;
     public const int MaxTitleLength = 50;
     public const int MaxDescriptionLength = 255;
-    public Guid Id { get; }
-    public string Title { get; } = null!;
-    public string Description { get; }
-    public DateOnly? ExpiryDate { get; }
-    public DateOnly? PreparationDate { get; }
-    public DateOnly? BoughtOn { get; }
-    public ProductCategory Category { get; }
-    public FoodMeasurement TypeOfMeasurement { get; }
-    public float Quantity { get; }
-    public bool InStock { get; }
-    public DateTime AddedOn { get; } = DateTime.UtcNow;
+[Key]
+public Guid Id { get; private set; }
 
-    public Guid StorageId { get; }
-    public Storage? Storage { get; }
+public string Title { get; private set; } = null!;
+public string Description { get; private set; }
+public DateOnly? ExpiryDate { get; private set; }
+public DateOnly? PreparationDate { get; private set; }
+public DateOnly? BoughtOn { get; private set; }
+public ProductCategory Category { get; private set; }
+public FoodMeasurement TypeOfMeasurement { get; private set; }
+public float Quantity { get; private set; }
+public bool InStock { get; private set; }
+public DateTime AddedOn { get; private set; } = DateTime.UtcNow;
+public Guid StorageId { get; private set; }
+public Storage? Storage { get; private set; }
+public ICollection<ProductTag> ProductTags { get; private set; } = new List<ProductTag>();
+public ICollection<ProductTaken> ProductTakens { get; private set; } = new List<ProductTaken>();
 
-    public ICollection<ProductTag> ProductTags { get; } = new List<ProductTag>();
-    public ICollection<ProductTaken> ProductTakens { get; } = new List<ProductTaken>();
 
     private Product(Guid id, string title, string description, ProductCategory category, FoodMeasurement typeOfMeasurement,
     float quantity, bool inStock, Guid storageId, DateOnly? expiryDate = null, DateOnly? preparationDate = null, DateOnly? boughtOn = null)
