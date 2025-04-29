@@ -6,6 +6,7 @@ import {
 	View,
 	Text,
 	ScrollView,
+	StyleSheet,
 } from 'react-native';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -16,38 +17,17 @@ import { useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import colors from '@/constants/colors';
+import measurementOptions from '@/constants/measurementOptions';
+import categories from '@/constants/categories';
 import GreenSubmitButton from '@/components/submitButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AddProduct = () => {
-	const measurementOptions = [
-		{ id: 1, label: 'g' },
-		{ id: 2, label: 'kg' },
-		{ id: 3, label: 'l' },
-		{ id: 4, label: 'ml' },
-		{ id: 5, label: 'vnt' },
-	];
-
-	const categories = [
-		{ id: 1, label: 'Paruošti patiekalai' },
-		{ id: 2, label: 'Vaisiai ir daržovės' },
-		{ id: 3, label: 'Mėsa ir mėsos gaminiai' },
-		{ id: 4, label: 'Žuvis ir žuvies gaminiai' },
-		{ id: 5, label: 'Kepiniai, saldainiai, užkandžiai' },
-		{ id: 6, label: 'Duonos gaminiai' },
-		{ id: 7, label: 'Šaldyti produktai' },
-		{ id: 8, label: 'Bakalėja' },
-		{ id: 9, label: 'Koncervuotas maistas' },
-		{ id: 10, label: 'Kava, arbata, gėrimai' },
-		{ id: 11, label: 'Kūdikių maistas' },
-	];
-
 	const todaysDate = new Date();
 
 	const [isBought, setIsBought] = useState(false);
 	const [isMade, setIsMade] = useState(false);
 	const [hasExpiryDate, setHasExpiryDate] = useState(false);
-	// const [selectedCategory, setSelectedCategory] = useState<number>(1);
 
 	const AddProductValidation = yup.object().shape({
 		title: yup
@@ -172,7 +152,7 @@ const AddProduct = () => {
 						<Text style={mainStyle.welcomeSign}>
 							Pridėti produktą
 						</Text>
-						<View style={mainStyle.form}>
+						<View style={[mainStyle.form, { width: '95%' }]}>
 							<FormTextInput
 								label="Pavadinimas"
 								error={formik.errors.title}
@@ -195,7 +175,9 @@ const AddProduct = () => {
 								multiline={true}
 								numberOfLines={4}
 							/>
-							<View style={mainStyle.inline}>
+							<View
+								style={[mainStyle.inline, { marginBottom: 15 }]}
+							>
 								<Text>Ar tai pirktas produktas?</Text>
 								<Checkbox
 									value={isBought}
@@ -203,7 +185,12 @@ const AddProduct = () => {
 								/>
 							</View>
 							{isBought && (
-								<View>
+								<View
+									style={[
+										mainStyle.inline,
+										style.dateInputView,
+									]}
+								>
 									<Text>Pirkimo data:</Text>
 									<DateTimePicker
 										value={
@@ -230,7 +217,9 @@ const AddProduct = () => {
 								</View>
 							)}
 
-							<View style={mainStyle.inline}>
+							<View
+								style={[mainStyle.inline, { marginBottom: 15 }]}
+							>
 								<Text>Ar tai gamintas patiekalas?</Text>
 								<Checkbox
 									value={isMade}
@@ -238,7 +227,12 @@ const AddProduct = () => {
 								/>
 							</View>
 							{isMade && (
-								<View>
+								<View
+									style={[
+										mainStyle.inline,
+										style.dateInputView,
+									]}
+								>
 									<Text>Gaminimo data:</Text>
 									<DateTimePicker
 										value={
@@ -264,7 +258,9 @@ const AddProduct = () => {
 										)}
 								</View>
 							)}
-							<View style={mainStyle.inline}>
+							<View
+								style={[mainStyle.inline, { marginBottom: 15 }]}
+							>
 								<Text>Ar turi galiojimo datą?</Text>
 								<Checkbox
 									value={hasExpiryDate}
@@ -274,7 +270,12 @@ const AddProduct = () => {
 								/>
 							</View>
 							{hasExpiryDate && (
-								<View>
+								<View
+									style={[
+										mainStyle.inline,
+										style.dateInputView,
+									]}
+								>
 									<Text>Galioja iki:</Text>
 									<DateTimePicker
 										value={
@@ -371,3 +372,10 @@ const AddProduct = () => {
 	);
 };
 export default AddProduct;
+
+const style = StyleSheet.create({
+	dateInputView: {
+		marginTop: 10,
+		marginBottom: 10,
+	},
+});
