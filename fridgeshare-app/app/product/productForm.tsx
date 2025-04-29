@@ -13,7 +13,7 @@ import * as yup from 'yup';
 import mainStyle from '@/styles/styles';
 import FormTextInput from '@/components/formTextInput';
 import Checkbox from 'expo-checkbox';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { Picker } from '@react-native-picker/picker';
 import colors from '@/constants/colors';
@@ -22,12 +22,35 @@ import categories from '@/constants/categories';
 import GreenSubmitButton from '@/components/submitButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
-const AddProduct = () => {
+type FormValues = {
+	title: string;
+	description: string;
+	dateBought?: Date;
+	dateMade?: Date;
+	expiryDate?: Date;
+	quantity: number;
+	selectedMeasurement: number;
+	selectedCategory: number;
+};
+
+const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 	const todaysDate = new Date();
 
 	const [isBought, setIsBought] = useState(false);
 	const [isMade, setIsMade] = useState(false);
 	const [hasExpiryDate, setHasExpiryDate] = useState(false);
+
+	useEffect(() => {
+		if (existingProduct) {
+			setIsBought(
+				!!existingProduct.dateBought && !existingProduct.dateMade
+			);
+			setIsMade(
+				!!existingProduct.dateMade && !existingProduct.dateBought
+			);
+			setHasExpiryDate(!!existingProduct.expiryDate);
+		}
+	}, [existingProduct]);
 
 	const AddProductValidation = yup.object().shape({
 		title: yup
@@ -63,19 +86,8 @@ const AddProduct = () => {
 		selectedCategory: yup.number().min(1).max(11).required(),
 	});
 
-	type FormValues = {
-		title: string;
-		description: string;
-		dateBought?: Date;
-		dateMade?: Date;
-		expiryDate?: Date;
-		quantity: number;
-		selectedMeasurement: number;
-		selectedCategory: number;
-	};
-
 	const formik = useFormik<FormValues>({
-		initialValues: {
+		initialValues: existingProduct || {
 			title: '',
 			description: '',
 			dateBought: new Date(),
@@ -87,19 +99,25 @@ const AddProduct = () => {
 		},
 		validationSchema: AddProductValidation,
 		onSubmit: async (values) => {
-			const dateToSend = { ...values };
-			if (isBought && 'dateMade' in dateToSend) {
-				dateToSend['dateMade'] = undefined;
+			const dataToSend = { ...values };
+			if (isBought && 'dateMade' in dataToSend) {
+				dataToSend['dateMade'] = undefined;
 			}
 
-			if (isMade && 'dateBought' in dateToSend) {
-				dateToSend['dateBought'] = undefined;
+			if (isMade && 'dateBought' in dataToSend) {
+				dataToSend['dateBought'] = undefined;
 			}
 
-			if (!hasExpiryDate && 'expiryDate' in dateToSend) {
-				dateToSend['expiryDate'] = undefined;
+			if (!hasExpiryDate && 'expiryDate' in dataToSend) {
+				dataToSend['expiryDate'] = undefined;
 			}
-			console.log(dateToSend);
+			if (existingProduct) {
+				console.log('Redaguojama. ');
+			} else {
+				console.log('Naujai pridedama ');
+			}
+
+			console.log(dataToSend);
 		},
 	});
 
