@@ -14,6 +14,7 @@ const FormTextInput = ({
 	onBlur,
 	value,
 	isPassword = false,
+	...rest
 }: {
 	label: string;
 	error: any;
@@ -23,6 +24,7 @@ const FormTextInput = ({
 	onBlur: any;
 	value: string;
 	isPassword?: boolean;
+	[key: string]: any;
 }) => {
 	const [hidePassword, setHidePassword] = useState(true);
 	const togglePasswordVisibility = () => {
@@ -39,6 +41,7 @@ const FormTextInput = ({
 					onBlur={onBlur}
 					value={value}
 					secureTextEntry={isPassword ? hidePassword : false}
+					{...rest}
 				/>
 				{isPassword && (
 					<TouchableOpacity onPress={togglePasswordVisibility}>
