@@ -42,9 +42,6 @@ const AddProduct = () => {
 		{ id: 11, label: 'Kūdikių maistas' },
 	];
 
-	let initialTitle = '';
-	let initialDescription = '';
-
 	const todaysDate = new Date();
 
 	const [isBought, setIsBought] = useState(false);
@@ -99,8 +96,8 @@ const AddProduct = () => {
 
 	const formik = useFormik<FormValues>({
 		initialValues: {
-			title: initialTitle,
-			description: initialDescription,
+			title: '',
+			description: '',
 			dateBought: new Date(),
 			dateMade: new Date(),
 			expiryDate: new Date(),
