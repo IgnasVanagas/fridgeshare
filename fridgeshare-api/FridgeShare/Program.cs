@@ -4,6 +4,7 @@ using FridgeShare.Services.Communities;
 using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using FridgeShare.Data;
+using FridgeShare.Services.Tags;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -34,6 +35,7 @@ builder.Services.AddDbContext<FridgeShareDbContext>(options =>
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
 builder.Services.AddScoped<ICommunityService, CommunityService>();
+builder.Services.AddScoped<ITagService, TagService>();
 
 var app = builder.Build();
 

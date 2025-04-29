@@ -107,4 +107,20 @@ public static class Errors
             description: "Community not found."
         );
     }
+
+    public static class Tag
+    {
+        public static Error InvalidTitle => Error.Validation(
+            code: "Tag.InvalidTitle",
+            description: $"Tag title must be between {Models.Tag.MinTitleLength} and {Models.Tag.MaxTitleLength}."
+        );
+        public static Error InvalidColorCode => Error.Validation(
+            code: "Tag.InvalidColorCodeLength",
+            description: "Tag's color must be HEX code."
+        );
+        public static Error NotFound => Error.NotFound(
+            code: "Tag.NotFound",
+            description: "Tag not found."
+        );
+    }
 }
