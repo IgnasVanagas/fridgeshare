@@ -11,8 +11,15 @@ const mainStyle = StyleSheet.create({
 	container2: {
 		padding: 24,
 		flex: 1,
+		backgroundColor: colors.white,
 		alignItems: 'center',
 		justifyContent: 'center',
+	},
+	container3: {
+		padding: 24,
+		flex: 1,
+		backgroundColor: colors.white,
+		alignItems: 'center',
 	},
 	text: {
 		color: colors.black,
