@@ -123,4 +123,12 @@ public static class Errors
             description: "Tag not found."
         );
     }
+
+    public static class User
+    {
+        public static Error NotFound => Error.NotFound(
+            code: "User.NotFound",
+            description: "User not found."
+        );
+    }
 }
