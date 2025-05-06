@@ -68,4 +68,69 @@ public class ProductService : IProductService
 
         return Result.Deleted;
     }
+
+    public async Task<ErrorOr<Created>> AddProductTag(Guid productId, ProductTag productTag)
+    {
+        _dbContext.ProductTags.Add(productTag);
+        await _dbContext.SaveChangesAsync();
+        var product = await _dbContext.Products
+            .Include(p => p.ProductTags)
+            .FirstOrDefaultAsync(p => p.Id == productId);
+        if (product is null)
+        {
+            return Errors.Product.NotFound;
+        }
+        product.ProductTags.Add(productTag);
+        await _dbContext.SaveChangesAsync();
+        return Result.Created;
+    }
+
+    public async Task<ErrorOr<List<ProductTag>>> GetProductTag(Guid productId)
+    {
+        var productTag = await _dbContext.ProductTags
+            .Where(pt => pt.ProductId == productId)
+            .ToListAsync();
+        if (productTag is null)
+        {
+            return Errors.ProductTag.NotFound;
+        }
+        return productTag;
+    }
+
+    public async Task<ErrorOr<Product>> AddProductTaken(Guid productId, ProductTaken productTaken)
+    {
+        var product = await _dbContext.Products
+            .Include(p => p.ProductTakens)
+            .FirstOrDefaultAsync(p => p.Id == productId);
+        if(product is null)
+        {
+            return Errors.Product.NotFound;
+        }
+
+        var updateQuantityResult = product.UpdateQuantityLeft(productTaken);
+        if(updateQuantityResult.IsError)
+        {
+            return updateQuantityResult.Errors;
+        }
+
+        product.ProductTakens.Add(productTaken);
+        await _dbContext.SaveChangesAsync();
+        return product;
+    }
+
+    public async Task<ErrorOr<Deleted>> RemoveProductTaken(Guid productId, ProductTaken productTaken)
+    {
+        var product = await _dbContext.Products
+            .Include (p => p.ProductTakens)
+            .FirstOrDefaultAsync(p => p.Id == productId);
+
+        if(product is null)
+        {
+            return Errors.Product.NotFound;
+        }
+
+        product.ProductTakens.Remove(productTaken);
+        await _dbContext.SaveChangesAsync();
+        return Result.Deleted;
+    }
 }

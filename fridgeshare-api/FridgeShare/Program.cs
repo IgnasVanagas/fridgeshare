@@ -5,6 +5,8 @@ using Microsoft.OpenApi.Models;
 using Microsoft.EntityFrameworkCore;
 using FridgeShare.Data;
 using FridgeShare.Services.Tags;
+using FridgeShare.Services.Users;
+using FridgeShare.Services.ProductsTaken;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +38,8 @@ builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
 builder.Services.AddScoped<ICommunityService, CommunityService>();
 builder.Services.AddScoped<ITagService, TagService>();
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IProductTakenService, ProductTakenService>();
 
 var app = builder.Build();
 

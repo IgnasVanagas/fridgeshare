@@ -6,6 +6,16 @@ public static class Errors
 {
     public static class Product
     {
+        public static Error InvalidProductTaken => Error.Validation(
+            code: "Product.InvalidProductTaken",
+            description: "Product taken is null"
+        );
+
+        public static Error InvalidQuantityLeft => Error.Validation(
+            code: "Product.InvalidQuantityLeft",
+            description: "Quantity left can't be less than 0."
+        );
+
         public static Error InvalidTitle => Error.Validation(
             code: "Product.InvalidName",
             description: $"Title length should be between {Models.Product.MinTitleLength} and {Models.Product.MaxTitleLength}."
@@ -49,6 +59,15 @@ public static class Errors
         public static Error NotFound => Error.NotFound(
             code: "Product.NotFound",
             description: "Product not found"
+        );
+
+    }
+
+    public static class ProductTag
+    {
+        public static Error NotFound => Error.NotFound(
+            code: "ProductTag.NotFound",
+            description: "ProductTag not found."
         );
     }
 
@@ -121,6 +140,58 @@ public static class Errors
         public static Error NotFound => Error.NotFound(
             code: "Tag.NotFound",
             description: "Tag not found."
+        );
+    }
+
+    public static class User
+    {
+        public static Error InvalidName => Error.Validation(
+            code: "User.InvalidName",
+            description: $"Name should be between {FridgeShare.Models.User.MinNameLength} and {FridgeShare.Models.User.MaxNameLength} characters long."
+        );
+
+        public static Error InvalidLastName => Error.Validation(
+            code: "User.InvalidLastName",
+            description: $"Last name should be between {FridgeShare.Models.User.MinLastNameLength} and {FridgeShare.Models.User.MaxLastNameLength} characters long."
+        );
+
+        public static Error InvalidUsername => Error.Validation(
+            code: "User.InvalidUsername",
+            description: $"Username should be between {FridgeShare.Models.User.MinUsernameLength} and {FridgeShare.Models.User.MaxUsernameLength} characters long."
+        );
+
+        public static Error InvalidPassword => Error.Validation(
+            code: "User.InvalidPasswordLength",
+            description: $"Password should be between {FridgeShare.Models.User.MinPasswordLength} and {FridgeShare.Models.User.MaxPasswordLength} characters long."
+        );
+
+        public static Error PasswordWithoutNumbers => Error.Validation(
+            code: "User.PasswordWithoutNumbers",
+            description: "Password must contain at least one number"
+        );
+
+        public static Error InvalidEmail => Error.Validation(
+            code: "User.InvalidEmail",
+            description: $"Email can't be longer than {FridgeShare.Models.User.MaxEmailLength} characters long."
+        );
+
+
+        public static Error InvalidEmailFormat => Error.Validation(
+            code: "User.InvalidEmailFormat",
+            description: "Invalid email format."
+        );
+
+        public static Error NotFound => Error.NotFound(
+            code: "User.NotFound",
+            description: "User not found."
+        );
+    }
+
+    public static class ProductTaken
+    {
+        public static Error NotFound => Error.NotFound(
+            code: "ProductTaken.NotFound",
+            description: "ProductTaken not found."
         );
     }
 }

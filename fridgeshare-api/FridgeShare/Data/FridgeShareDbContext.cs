@@ -20,28 +20,35 @@ public class FridgeShareDbContext : DbContext
     public DbSet<Comment> Comments { get; set; }
     public DbSet<UserCommunity> UserCommunities { get; set; }
 
-protected override void OnModelCreating(ModelBuilder modelBuilder)
-{
-    base.OnModelCreating(modelBuilder);
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
 
-    modelBuilder.Entity<ProductTag>()
-        .HasKey(pt => new { pt.ProductId, pt.TagId });
+        modelBuilder.Entity<ProductTag>()
+            .HasKey(pt => new { pt.ProductId, pt.TagId });
 
-    modelBuilder.Entity<UserCommunity>()
+        modelBuilder.Entity<ProductTaken>()
+            .HasKey(pt => pt.Id);
+
+        modelBuilder.Entity<ProductTaken>()
+            .Property(pt => pt.Id)
+            .ValueGeneratedOnAdd();
+
+        modelBuilder.Entity<UserCommunity>()
         .HasKey(uc => new { uc.UserId, uc.CommunityId });
 
-    modelBuilder.Entity<UserCommunity>()
-        .HasOne(uc => uc.User)
-        .WithMany(u => u.UserCommunities)
-        .HasForeignKey(uc => uc.UserId)
-        .OnDelete(DeleteBehavior.Restrict); 
+        modelBuilder.Entity<UserCommunity>()
+            .HasOne(uc => uc.User)
+            .WithMany(u => u.UserCommunities)
+            .HasForeignKey(uc => uc.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
 
-    modelBuilder.Entity<UserCommunity>()
-        .HasOne(uc => uc.Community)
-        .WithMany(c => c.UserCommunities)
-        .HasForeignKey(uc => uc.CommunityId)
-        .OnDelete(DeleteBehavior.Restrict); 
-}
+        modelBuilder.Entity<UserCommunity>()
+            .HasOne(uc => uc.Community)
+            .WithMany(c => c.UserCommunities)
+            .HasForeignKey(uc => uc.CommunityId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
 
 }
 

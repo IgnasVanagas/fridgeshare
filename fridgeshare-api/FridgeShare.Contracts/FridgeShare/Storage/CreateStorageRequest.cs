@@ -5,6 +5,7 @@ public record CreateStorageRequest
     string Title,
     string Location,
     int Type,
+    int CommunityId,
     DateTime? LastCleaningDate,
     DateTime? LastMaintenanceDate,
     bool propertyOfCompany = false,

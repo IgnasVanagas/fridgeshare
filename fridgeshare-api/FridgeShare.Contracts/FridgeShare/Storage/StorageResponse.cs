@@ -12,5 +12,7 @@ public record StorageResponse
     int Type,
     string TypeName,
     bool PropertyOfCompany,
-    bool NeedsMaintenance
+    bool NeedsMaintenance,
+    int CommunityId,
+    string CommunityName
 );

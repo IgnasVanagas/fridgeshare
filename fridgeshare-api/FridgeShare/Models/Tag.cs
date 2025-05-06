@@ -21,14 +21,18 @@ public class Tag
 
     public ICollection<ProductTag> ProductTags { get; set; } = new List<ProductTag>();
 
-    private Tag(string title, string color, int communityId)
+    private Tag(int id, string title, string color, int communityId)
     {
+        if(id >= 0)
+        {
+            Id = id;
+        }
         Title = title;
         Color = color;
         CommunityId = communityId;
     }
 
-    public static ErrorOr<Tag> Create(string title, string color, int communityId, int? id = null)
+    public static ErrorOr<Tag> Create(string title, string color, int communityId, int id = -1)
     {
         List<Error> errors = ValidateTag(title, color);
         
@@ -36,7 +40,7 @@ public class Tag
         {
             return errors;
         }
-        return new Tag(title, color, communityId);
+        return new Tag(id, title, color, communityId);
     }
 
     public static ErrorOr<Tag> From(CreateTagRequest request)
@@ -46,7 +50,7 @@ public class Tag
 
     public static ErrorOr<Tag> From(int id, UpdateTagRequest request)
     {
-        return Create(request.Title, request.Color, request.CommunityId);
+        return Create(request.Title, request.Color, request.CommunityId, id);
     }
 
     private static List<Error> ValidateTag(string title, string color)

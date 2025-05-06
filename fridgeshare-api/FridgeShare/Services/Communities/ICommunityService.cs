@@ -9,4 +9,6 @@ public interface ICommunityService
     Task<ErrorOr<Community>> GetCommunity(int id);
     Task<ErrorOr<UpdatedCommunity>> UpdateCommunity(Community community);
     Task<ErrorOr<Deleted>> DeleteCommunity(int id);
+    Task<ErrorOr<Community>> AddStorage(int communityId, Storage storage);
+    Task<ErrorOr<Community>> AddTag(int communityId, Tag tag);
 }

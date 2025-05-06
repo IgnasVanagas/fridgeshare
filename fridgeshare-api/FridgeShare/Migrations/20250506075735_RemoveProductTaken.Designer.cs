@@ -4,6 +4,7 @@ using FridgeShare.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FridgeShare.Migrations
 {
     [DbContext(typeof(FridgeShareDbContext))]
-    partial class FridgeShareDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250506075735_RemoveProductTaken")]
+    partial class RemoveProductTaken
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -52,7 +55,7 @@ namespace FridgeShare.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments", (string)null);
+                    b.ToTable("Comments");
                 });
 
             modelBuilder.Entity("FridgeShare.Models.Community", b =>
@@ -88,7 +91,7 @@ namespace FridgeShare.Migrations
 
                     b.HasIndex("ManagerId");
 
-                    b.ToTable("Communities", (string)null);
+                    b.ToTable("Communities");
                 });
 
             modelBuilder.Entity("FridgeShare.Models.Product", b =>
@@ -139,7 +142,7 @@ namespace FridgeShare.Migrations
 
                     b.HasIndex("StorageId");
 
-                    b.ToTable("Products", (string)null);
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("FridgeShare.Models.ProductTag", b =>
@@ -154,36 +157,7 @@ namespace FridgeShare.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("ProductTags", (string)null);
-                });
-
-            modelBuilder.Entity("FridgeShare.Models.ProductTaken", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<float>("QuantityTaken")
-                        .HasColumnType("real");
-
-                    b.Property<DateTime>("TakenOn")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("ProductsTaken", (string)null);
+                    b.ToTable("ProductTags");
                 });
 
             modelBuilder.Entity("FridgeShare.Models.Storage", b =>
@@ -228,7 +202,7 @@ namespace FridgeShare.Migrations
 
                     b.HasIndex("CommunityId");
 
-                    b.ToTable("Storages", (string)null);
+                    b.ToTable("Storages");
                 });
 
             modelBuilder.Entity("FridgeShare.Models.Tag", b =>
@@ -254,7 +228,7 @@ namespace FridgeShare.Migrations
 
                     b.HasIndex("CommunityId");
 
-                    b.ToTable("Tags", (string)null);
+                    b.ToTable("Tags");
                 });
 
             modelBuilder.Entity("FridgeShare.Models.User", b =>
@@ -296,7 +270,7 @@ namespace FridgeShare.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users", (string)null);
+                    b.ToTable("Users");
                 });
 
             modelBuilder.Entity("FridgeShare.Models.UserCommunity", b =>
@@ -317,7 +291,7 @@ namespace FridgeShare.Migrations
 
                     b.HasIndex("CommunityId");
 
-                    b.ToTable("UserCommunities", (string)null);
+                    b.ToTable("UserCommunities");
                 });
 
             modelBuilder.Entity("FridgeShare.Models.Comment", b =>
@@ -380,25 +354,6 @@ namespace FridgeShare.Migrations
                     b.Navigation("Tag");
                 });
 
-            modelBuilder.Entity("FridgeShare.Models.ProductTaken", b =>
-                {
-                    b.HasOne("FridgeShare.Models.Product", "Product")
-                        .WithMany("ProductTakens")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FridgeShare.Models.User", "User")
-                        .WithMany("ProductsTaken")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("FridgeShare.Models.Storage", b =>
                 {
                     b.HasOne("FridgeShare.Models.Community", "Community")
@@ -452,8 +407,6 @@ namespace FridgeShare.Migrations
             modelBuilder.Entity("FridgeShare.Models.Product", b =>
                 {
                     b.Navigation("ProductTags");
-
-                    b.Navigation("ProductTakens");
                 });
 
             modelBuilder.Entity("FridgeShare.Models.Storage", b =>
@@ -468,8 +421,6 @@ namespace FridgeShare.Migrations
 
             modelBuilder.Entity("FridgeShare.Models.User", b =>
                 {
-                    b.Navigation("ProductsTaken");
-
                     b.Navigation("UserCommunities");
                 });
 #pragma warning restore 612, 618

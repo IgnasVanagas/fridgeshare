@@ -3,6 +3,7 @@ using FridgeShare.Contracts.FridgeShare.Product;
 using FridgeShare.Models;
 using FridgeShare.Services.Products;
 using FridgeShare.Services.Storages;
+using FridgeShare.Services.Tags;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FridgeShare.Controllers;
@@ -11,11 +12,13 @@ public class ProductsController : ApiController
 {
     private readonly IProductService _productService;
     private readonly IStorageService _storageService;
+    private readonly ITagService _tagService;
 
-    public ProductsController(IProductService productService, IStorageService storageService)
+    public ProductsController(IProductService productService, IStorageService storageService, ITagService tagService)
     {
         _productService = productService;
         _storageService = storageService;
+        _tagService = tagService;
     }
 
     [HttpPost]
@@ -36,7 +39,29 @@ public class ProductsController : ApiController
             return Problem(createProductResult.Errors);
         }
 
-        await _storageService.AddProduct(product.StorageId, product);
+
+        foreach(var tag in request.TagIds)
+        {
+            var requestToProductTagResult = ProductTag.Create(product.Id, tag);
+            if (requestToProductTagResult.IsError)
+            {
+                return Problem(requestToProductTagResult.Errors);
+            }
+            ProductTag productTag = requestToProductTagResult.Value;
+
+            var productTagResult = await _productService.AddProductTag(product.Id, productTag);
+            if (productTagResult.IsError)
+            {
+                return Problem(productTagResult.Errors);
+            }
+            var productTagResult2 = await _tagService.AddProductTag(tag, productTag);
+        }
+
+        var addProduct = await _storageService.AddProduct(product.StorageId, product);
+        if(addProduct.IsError)
+        {
+            return Problem(addProduct.Errors);
+        }
         return CreatedAtGetProduct(product);
     }
 
@@ -59,7 +84,15 @@ public class ProductsController : ApiController
         }
 
         var storage = storageResult.Value;
-        var response = MapProductResponse(product, storage);
+
+        var tagsResult = await _productService.GetProductTag(product.Id);
+        if(tagsResult.IsError)
+        {
+            return Problem(tagsResult.Errors);
+        }
+        var tags = tagsResult.Value;
+
+        var response = MapProductResponse(product, storage, tags);
 
         return Ok(response);
     }
@@ -81,8 +114,33 @@ public class ProductsController : ApiController
         {
             return Problem(updateProductResult.Errors);
         }
+        bool isCreated = updateProductResult.Value.isCreated;
+        if (isCreated)
+        {
+            foreach (var tag in request.TagIds)
+            {
+                var requestToProductTagResult = ProductTag.Create(product.Id, tag);
+                if (requestToProductTagResult.IsError)
+                {
+                    return Problem(requestToProductTagResult.Errors);
+                }
+                ProductTag productTag = requestToProductTagResult.Value;
 
-        return updateProductResult.Value.isCreated ? CreatedAtGetProduct(product) : NoContent();
+                var productTagResult = await _productService.AddProductTag(product.Id, productTag);
+                if (productTagResult.IsError)
+                {
+                    return Problem(productTagResult.Errors);
+                }
+                var productTagResult2 = await _tagService.AddProductTag(tag, productTag);
+            }
+
+            var addProduct = await _storageService.AddProduct(product.StorageId, product);
+            if(addProduct.IsError)
+            {
+                return Problem(addProduct.Errors);
+            }
+        }
+        return isCreated ? CreatedAtGetProduct(product) : NoContent();
     }
 
     [HttpDelete("{id:guid}")]
@@ -106,14 +164,15 @@ public class ProductsController : ApiController
             value: new { id = product.Id });
     }
 
-    private static ProductResponse MapProductResponse(Product product, Storage storage)
+    private static ProductResponse MapProductResponse(Product product, Storage storage, List<ProductTag> tags)
     {
+        List<int> tagsIds = tags.Select(t => t.TagId).ToList();
         return new ProductResponse(
             product.Id, product.Title, product.Description,
             (int)product.Category, product.Category.ToString(),
             (int)product.TypeOfMeasurement, product.TypeOfMeasurement.ToString(),
             product.Quantity, product.InStock, product.StorageId,
-            storage.Title, product.AddedOn, product.ExpiryDate, product.PreparationDate, product.BoughtOn
+            storage.Title, tagsIds, product.AddedOn, product.ExpiryDate, product.PreparationDate, product.BoughtOn
         );
     }
 }

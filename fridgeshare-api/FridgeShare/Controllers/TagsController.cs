@@ -1,5 +1,6 @@
 ﻿using FridgeShare.Contracts.FridgeShare.Tag;
 using FridgeShare.Models;
+using FridgeShare.Services.Communities;
 using FridgeShare.Services.Tags;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,10 +9,12 @@ namespace FridgeShare.Controllers;
 public class TagsController : ApiController
 {
     private readonly ITagService _tagService;
+    private readonly ICommunityService _communityService;
 
-    public TagsController(ITagService tagService)
+    public TagsController(ITagService tagService, ICommunityService communityService)
     {
         _tagService = tagService;
+        _communityService = communityService;
     }
 
     [HttpPost]
@@ -32,6 +35,12 @@ public class TagsController : ApiController
             return Problem(createTagResult.Errors);
         }
 
+        var addTag = await _communityService.AddTag(tag.CommunityId, tag);
+        if(addTag.IsError)
+        {
+            return Problem(addTag.Errors);
+        }
+
         return CreatedAtGetTag(tag);
     }
 
@@ -46,7 +55,13 @@ public class TagsController : ApiController
 
         var tag = getTagResult.Value;
 
-        var response = MapTagResponse(tag);
+        var getCommunity = await _communityService.GetCommunity(tag.CommunityId);
+        if(getCommunity.IsError)
+        {
+            return Problem(getCommunity.Errors);
+        }
+        var community = getCommunity.Value;
+        var response = MapTagResponse(tag, community);
         return Ok(response);
     }
 
@@ -68,7 +83,16 @@ public class TagsController : ApiController
             return Problem(updateTagResult.Errors);
         }
 
-        return updateTagResult.Value.isCreated ? CreatedAtGetTag(tag) : NoContent();
+        bool isCreated = updateTagResult.Value.isCreated;
+        if(isCreated)
+        {
+            var addTag = await _communityService.AddTag(tag.CommunityId, tag);
+            if(addTag.IsError)
+            {
+                return Problem(addTag.Errors);
+            }
+        }
+        return isCreated ? CreatedAtGetTag(tag) : NoContent();
     }
 
     [HttpDelete("{id:int}")]
@@ -92,10 +116,10 @@ public class TagsController : ApiController
             );
     }
 
-    private static TagResponse MapTagResponse(Tag tag)
+    private static TagResponse MapTagResponse(Tag tag, Community community)
     {
         return new TagResponse(
-            tag.Id, tag.Title, tag.Color, tag.CommunityId, "prideti"
+            tag.Id, tag.Title, tag.Color, tag.CommunityId, community.Title
         );
     }
 }
