@@ -52,6 +52,14 @@ public static class Errors
         );
     }
 
+    public static class ProductTag
+    {
+        public static Error NotFound => Error.NotFound(
+            code: "ProductTag.NotFound",
+            description: "ProductTag not found."
+        );
+    }
+
     public static class Storage
     {
         public static Error InvalidType => Error.Validation(

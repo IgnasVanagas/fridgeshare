@@ -69,4 +69,33 @@ public class CommunityService : ICommunityService
 
         return Result.Deleted;
     }
+
+    public async Task<ErrorOr<Community>> AddStorage(int communityId, Storage storage)
+    {
+        var community = await _dbContext.Communities
+            .Include(c => c.Storages)
+            .FirstOrDefaultAsync(c => c.Id == communityId);
+        if(community is null)
+        {
+            return Errors.Community.NotFound;
+        }
+        community.Storages.Add(storage);
+        await _dbContext.SaveChangesAsync();
+        return community;
+    }
+
+    public async Task<ErrorOr<Community>> AddTag(int communityId, Tag tag)
+    {
+        var community = await _dbContext.Communities
+            .Include(c => c.Tags)
+            .FirstOrDefaultAsync(c => c.Id == communityId);
+        if(community is null)
+        {
+            return Errors.Community.NotFound;
+        }
+
+        community.Tags.Add(tag);
+        await _dbContext.SaveChangesAsync();
+        return community;
+    }
 }

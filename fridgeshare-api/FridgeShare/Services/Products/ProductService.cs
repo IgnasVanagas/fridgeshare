@@ -68,4 +68,32 @@ public class ProductService : IProductService
 
         return Result.Deleted;
     }
+
+    public async Task<ErrorOr<Created>> AddProductTag(Guid productId, ProductTag productTag)
+    {
+        _dbContext.ProductTags.Add(productTag);
+        await _dbContext.SaveChangesAsync();
+        var product = await _dbContext.Products
+            .Include(p => p.ProductTags)
+            .FirstOrDefaultAsync(p => p.Id == productId);
+        if (product is null)
+        {
+            return Errors.Product.NotFound;
+        }
+        product.ProductTags.Add(productTag);
+        await _dbContext.SaveChangesAsync();
+        return Result.Created;
+    }
+
+    public async Task<ErrorOr<List<ProductTag>>> GetProductTag(Guid productId)
+    {
+        var productTag = await _dbContext.ProductTags
+            .Where(pt => pt.ProductId == productId)
+            .ToListAsync();
+        if (productTag is null)
+        {
+            return Errors.ProductTag.NotFound;
+        }
+        return productTag;
+    }
 }

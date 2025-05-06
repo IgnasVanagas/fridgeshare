@@ -4,6 +4,7 @@ using FridgeShare.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FridgeShare.Migrations
 {
     [DbContext(typeof(FridgeShareDbContext))]
-    partial class FridgeShareDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250506065200_DropProductTags")]
+    partial class DropProductTags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,21 +140,6 @@ namespace FridgeShare.Migrations
                     b.HasIndex("StorageId");
 
                     b.ToTable("Products");
-                });
-
-            modelBuilder.Entity("FridgeShare.Models.ProductTag", b =>
-                {
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<int>("TagId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ProductId", "TagId");
-
-                    b.HasIndex("TagId");
-
-                    b.ToTable("ProductTags");
                 });
 
             modelBuilder.Entity("FridgeShare.Models.ProductTaken", b =>
@@ -361,25 +349,6 @@ namespace FridgeShare.Migrations
                     b.Navigation("Storage");
                 });
 
-            modelBuilder.Entity("FridgeShare.Models.ProductTag", b =>
-                {
-                    b.HasOne("FridgeShare.Models.Product", "Product")
-                        .WithMany("ProductTags")
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FridgeShare.Models.Tag", "Tag")
-                        .WithMany("ProductTags")
-                        .HasForeignKey("TagId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Tag");
-                });
-
             modelBuilder.Entity("FridgeShare.Models.ProductTaken", b =>
                 {
                     b.HasOne("FridgeShare.Models.Product", "Product")
@@ -451,19 +420,12 @@ namespace FridgeShare.Migrations
 
             modelBuilder.Entity("FridgeShare.Models.Product", b =>
                 {
-                    b.Navigation("ProductTags");
-
                     b.Navigation("ProductTakens");
                 });
 
             modelBuilder.Entity("FridgeShare.Models.Storage", b =>
                 {
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("FridgeShare.Models.Tag", b =>
-                {
-                    b.Navigation("ProductTags");
                 });
 
             modelBuilder.Entity("FridgeShare.Models.User", b =>

@@ -4,6 +4,7 @@ using FridgeShare.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FridgeShare.Migrations
 {
     [DbContext(typeof(FridgeShareDbContext))]
-    partial class FridgeShareDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250505182938_StorageMigr")]
+    partial class StorageMigr
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -141,13 +144,18 @@ namespace FridgeShare.Migrations
 
             modelBuilder.Entity("FridgeShare.Models.ProductTag", b =>
                 {
-                    b.Property<Guid>("ProductId")
-                        .HasColumnType("uniqueidentifier");
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
 
                     b.Property<int>("TagId")
                         .HasColumnType("int");
 
+                    b.Property<Guid>("ProductId1")
+                        .HasColumnType("uniqueidentifier");
+
                     b.HasKey("ProductId", "TagId");
+
+                    b.HasIndex("ProductId1");
 
                     b.HasIndex("TagId");
 
@@ -365,7 +373,7 @@ namespace FridgeShare.Migrations
                 {
                     b.HasOne("FridgeShare.Models.Product", "Product")
                         .WithMany("ProductTags")
-                        .HasForeignKey("ProductId")
+                        .HasForeignKey("ProductId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

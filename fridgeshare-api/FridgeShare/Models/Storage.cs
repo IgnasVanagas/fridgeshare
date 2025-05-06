@@ -19,17 +19,19 @@ public class Storage
     public Guid Id { get; private set; }
     public string Title { get; private set; } = null!;
     public string Location { get; private set; }
-    public bool IsEmpty { get; private set; }
+    public bool IsEmpty { get; private set; } = true;
     public DateTime DateAdded { get; private set; } = DateTime.UtcNow;
     public DateTime? LastCleaningDate { get; private set; }
     public DateTime? LastMaintenanceDate { get; private set; }
     public StorageType Type { get; private set; }
-    public bool PropertyOfCompany { get; private set; }
-    public bool NeedsMaintenance { get; private set; }
+    public bool PropertyOfCompany { get; private set; } = false;
+    public bool NeedsMaintenance { get; private set; } = false;
+    public int CommunityId { get; private set; }
+    public Community Community { get; private set; } = null!;
 
     public ICollection<Product> Products { get; private set; } = new List<Product>();
 
-    private Storage(Guid id, string title, string location, StorageType type, DateTime? lastCleaningDate, DateTime? lastMaintenanceDate,
+    private Storage(Guid id, string title, string location, StorageType type, DateTime? lastCleaningDate, DateTime? lastMaintenanceDate, int communityId,
         bool isEmpty = true, bool propertyOfCompany = false, bool needsMaintenance = false)
     {
         Id = id;
@@ -41,10 +43,11 @@ public class Storage
         IsEmpty = isEmpty;
         PropertyOfCompany = propertyOfCompany;
         NeedsMaintenance = needsMaintenance;
+        CommunityId = communityId;
     }
 
     public static ErrorOr<Storage> Create(string title, string location, int type, DateTime? lastCleaningDate, DateTime? lastMaintenanceDate,
-        bool isEmpty = true, bool propertyOfCompany = false, bool needsMaintenance = false, Guid? id = null)
+        int communityId, bool isEmpty = true, bool propertyOfCompany = false, bool needsMaintenance = false, Guid? id = null)
     {
         List<Error> errors = ValidateStorage(title, location, type, lastCleaningDate, lastMaintenanceDate);
 
@@ -53,20 +56,20 @@ public class Storage
             return errors;
         }
 
-        return new Storage(id ?? Guid.NewGuid(), title, location, (StorageType)type, lastCleaningDate, lastMaintenanceDate, isEmpty,
+        return new Storage(id ?? Guid.NewGuid(), title, location, (StorageType)type, lastCleaningDate, lastMaintenanceDate, communityId, isEmpty,
                 propertyOfCompany, needsMaintenance);
     }
 
     public static ErrorOr<Storage> From(CreateStorageRequest request)
     {
         return Create(request.Title, request.Location, request.Type, request.LastCleaningDate, request.LastMaintenanceDate,
-            request.IsEmpty, request.propertyOfCompany, request.NeedsMaintenance);
+            request.CommunityId, request.IsEmpty, request.propertyOfCompany, request.NeedsMaintenance);
     }
 
     public static ErrorOr<Storage> From(Guid id, UpdateStorageRequest request)
     {
         return Create(request.Title, request.Location, request.Type, request.LastCleaningDate, request.LastMaintenanceDate,
-            request.IsEmpty, request.propertyOfCompany, request.NeedsMaintenance, id);
+            request.CommunityId, request.IsEmpty, request.propertyOfCompany, request.NeedsMaintenance, id);
     }
 
     private static List<Error> ValidateStorage(string title, string location, int type, DateTime? lastCleaningDate,

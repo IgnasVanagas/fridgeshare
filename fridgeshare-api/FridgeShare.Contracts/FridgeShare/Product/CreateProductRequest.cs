@@ -9,6 +9,7 @@ public record CreateProductRequest
     float Quantity,
     bool InStock,
     Guid StorageId,
+    List<int> TagIds,
     DateOnly? ExpiryDate = null,
     DateOnly? PreparationDate = null,
     DateOnly? BoughOn = null

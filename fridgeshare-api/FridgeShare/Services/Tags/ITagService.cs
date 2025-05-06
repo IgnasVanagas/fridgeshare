@@ -8,4 +8,5 @@ public interface ITagService
     Task<ErrorOr<Tag>> GetTag(int id);
     Task<ErrorOr<UpdatedTag>> UpdateTag(Tag tag);
     Task<ErrorOr<Deleted>> DeleteTag(int id);
+    Task<ErrorOr<Tag>> AddProductTag(int tagId, ProductTag productTag);
 }

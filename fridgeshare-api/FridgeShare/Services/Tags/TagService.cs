@@ -2,6 +2,7 @@
 using FridgeShare.Data;
 using FridgeShare.Models;
 using FridgeShare.ServiceErrors;
+using Microsoft.EntityFrameworkCore;
 
 namespace FridgeShare.Services.Tags;
 
@@ -12,6 +13,20 @@ public class TagService : ITagService
     public TagService(FridgeShareDbContext dbContext)
     {
         _dbContext = dbContext;
+    }
+
+    public async Task<ErrorOr<Tag>> AddProductTag(int tagId, ProductTag productTag)
+    {
+        var tag = await _dbContext.Tags
+            .Include(t => t.ProductTags)
+            .FirstOrDefaultAsync(t => t.Id == tagId);
+        if(tag is null)
+        {
+            return Errors.Tag.NotFound;
+        }
+        tag.ProductTags.Add(productTag);
+        await _dbContext.SaveChangesAsync();
+        return tag;
     }
 
     public async Task<ErrorOr<Created>> CreateTag(Tag tag)

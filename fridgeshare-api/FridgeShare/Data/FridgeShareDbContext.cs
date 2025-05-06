@@ -22,12 +22,13 @@ public class FridgeShareDbContext : DbContext
 
 protected override void OnModelCreating(ModelBuilder modelBuilder)
 {
-    base.OnModelCreating(modelBuilder);
+        base.OnModelCreating(modelBuilder);
 
     modelBuilder.Entity<ProductTag>()
         .HasKey(pt => new { pt.ProductId, pt.TagId });
 
-    modelBuilder.Entity<UserCommunity>()
+
+        modelBuilder.Entity<UserCommunity>()
         .HasKey(uc => new { uc.UserId, uc.CommunityId });
 
     modelBuilder.Entity<UserCommunity>()

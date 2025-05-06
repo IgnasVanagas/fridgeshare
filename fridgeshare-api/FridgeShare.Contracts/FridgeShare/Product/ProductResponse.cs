@@ -13,6 +13,7 @@ public record ProductResponse
     bool InStock,
     Guid StorageId,
     string storageName,
+    List<int> TagIds,
     DateTime AddedOn,
     DateOnly? ExpiryDate = null,
     DateOnly? PreparationDate = null,

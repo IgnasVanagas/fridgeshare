@@ -8,15 +8,15 @@ public class User
     public User() { }
 
     [Key]
-    public int Id { get; set; }
-    public string Name { get; set; } = null!;
-    public string LastName { get; set; } = null!;
-    public string Email { get; set; } = null!;
-    public string Username { get; set; } = null!;
-    public string Password { get; set; } = null!;
-    public DateTime RegisteredOn { get; set; } = DateTime.UtcNow;
-    public bool Active { get; set; } = true;
-    public bool IsAdmin { get; set; } = false;
+    public int Id { get; private set; }
+    public string Name { get; private set; } = null!;
+    public string LastName { get; private set; } = null!;
+    public string Email { get; private set; } = null!;
+    public string Username { get; private set; } = null!;
+    public string Password { get; private set; } = null!;
+    public DateTime RegisteredOn { get; private set; } = DateTime.UtcNow;
+    public bool Active { get; private set; } = true;
+    public bool IsAdmin { get; private set; } = false;
 
     public ICollection<UserCommunity> UserCommunities { get; set; } = new List<UserCommunity>();
     public ICollection<ProductTaken> ProductsTaken { get; set; } = new List<ProductTaken>();
