@@ -2,6 +2,7 @@
 using FridgeShare.Data;
 using FridgeShare.Models;
 using FridgeShare.ServiceErrors;
+using Microsoft.EntityFrameworkCore;
 
 namespace FridgeShare.Services.Users;
 
@@ -12,6 +13,21 @@ public class UserService : IUserService
     public UserService(FridgeShareDbContext dbContext)
     {
         _dbContext = dbContext;
+    }
+
+    public async Task<ErrorOr<User>> AddProductTaken(int userId, ProductTaken productTaken)
+    {
+        var user = await _dbContext.Users
+            .Include(u => u.ProductsTaken)
+            .FirstOrDefaultAsync(u => u.Id == userId);
+        if(user is null)
+        {
+            return Errors.User.NotFound;
+        }
+
+        user.ProductsTaken.Add(productTaken);
+        await _dbContext.SaveChangesAsync();
+        return user;
     }
 
     public async Task<ErrorOr<Created>> CreateUser(User user)

@@ -6,6 +6,16 @@ public static class Errors
 {
     public static class Product
     {
+        public static Error InvalidProductTaken => Error.Validation(
+            code: "Product.InvalidProductTaken",
+            description: "Product taken is null"
+        );
+
+        public static Error InvalidQuantityLeft => Error.Validation(
+            code: "Product.InvalidQuantityLeft",
+            description: "Quantity left can't be less than 0."
+        );
+
         public static Error InvalidTitle => Error.Validation(
             code: "Product.InvalidName",
             description: $"Title length should be between {Models.Product.MinTitleLength} and {Models.Product.MaxTitleLength}."
@@ -50,6 +60,7 @@ public static class Errors
             code: "Product.NotFound",
             description: "Product not found"
         );
+
     }
 
     public static class ProductTag
@@ -137,6 +148,14 @@ public static class Errors
         public static Error NotFound => Error.NotFound(
             code: "User.NotFound",
             description: "User not found."
+        );
+    }
+
+    public static class ProductTaken
+    {
+        public static Error NotFound => Error.NotFound(
+            code: "ProductTaken.NotFound",
+            description: "ProductTaken not found."
         );
     }
 }

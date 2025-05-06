@@ -23,6 +23,7 @@ public DateOnly? BoughtOn { get; private set; }
 public ProductCategory Category { get; private set; }
 public FoodMeasurement TypeOfMeasurement { get; private set; }
 public float Quantity { get; private set; }
+public float QuantityLeft { get; private set; }
 public bool InStock { get; private set; }
 public DateTime AddedOn { get; private set; } = DateTime.UtcNow;
 public Guid StorageId { get; private set; }
@@ -43,6 +44,7 @@ public ICollection<ProductTaken> ProductTakens { get; private set; } = new List<
         this.Category = category;
         this.TypeOfMeasurement = typeOfMeasurement;
         this.Quantity = quantity;
+        this.QuantityLeft = quantity;
         this.InStock = inStock;
         this.StorageId = storageId;
     }
@@ -72,6 +74,26 @@ public ICollection<ProductTaken> ProductTakens { get; private set; } = new List<
     {
         return Create(request.Title, request.Description, request.Category, request.TypeOfMeasurement, request.Quantity, request.InStock, request.StorageId,
         request.ExpiryDate, request.PreparationDate, request.BoughOn, id);
+    }
+
+    public ErrorOr<Product> UpdateQuantityLeft(ProductTaken productTaken)
+    {
+        if(productTaken is null)
+        {
+            return Errors.Product.InvalidProductTaken;
+        }
+
+        if(productTaken.QuantityTaken > this.QuantityLeft)
+        {
+            return Errors.Product.InvalidQuantityLeft;
+        }
+
+        this.QuantityLeft -= productTaken.QuantityTaken;
+        if(this.QuantityLeft == 0)
+        {
+            this.InStock = false;
+        }
+        return this;
     }
 
     private static List<Error> ValidateProduct(string title, string description, float quantity, int typeOfMeasurement, int category, Guid storageId, DateOnly? expiryDate, 

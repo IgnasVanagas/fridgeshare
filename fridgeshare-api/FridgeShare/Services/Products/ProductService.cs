@@ -96,4 +96,21 @@ public class ProductService : IProductService
         }
         return productTag;
     }
+
+    public async Task<ErrorOr<Product>> AddProductTaken(Guid productId, ProductTaken productTaken)
+    {
+        var product = await _dbContext.Products
+            .Include(p => p.ProductTakens)
+            .FirstOrDefaultAsync(p => p.Id == productId);
+        if(product is null)
+        {
+            return Errors.Product.NotFound;
+        }
+
+        product.UpdateQuantityLeft(productTaken);
+
+        product.ProductTakens.Add(productTaken);
+        await _dbContext.SaveChangesAsync();
+        return product;
+    }
 }
