@@ -10,4 +10,5 @@ public interface IUserService
     Task<ErrorOr<UpdatedUser>> UpdateUser(User user);
     Task<ErrorOr<Deleted>> DeleteUser(int id);
     Task<ErrorOr<User>> AddProductTaken(int userId, ProductTaken productTaken);
+    Task<ErrorOr<Deleted>> RemoveProductTaken(int userId, ProductTaken productTaken);
 }

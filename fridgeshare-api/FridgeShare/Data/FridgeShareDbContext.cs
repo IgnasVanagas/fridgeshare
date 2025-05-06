@@ -27,6 +27,12 @@ public class FridgeShareDbContext : DbContext
         modelBuilder.Entity<ProductTag>()
             .HasKey(pt => new { pt.ProductId, pt.TagId });
 
+        modelBuilder.Entity<ProductTaken>()
+            .HasKey(pt => pt.Id);
+
+        modelBuilder.Entity<ProductTaken>()
+            .Property(pt => pt.Id)
+            .ValueGeneratedOnAdd();
 
         modelBuilder.Entity<UserCommunity>()
         .HasKey(uc => new { uc.UserId, uc.CommunityId });

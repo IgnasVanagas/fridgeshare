@@ -6,7 +6,6 @@ namespace FridgeShare.Models;
 public class ProductTaken
 {
     public ProductTaken() { }
-     [Key]
     public int Id { get; private set; }
     public int UserId { get; private set; }
     public User? User { get; private set; }
@@ -17,19 +16,14 @@ public class ProductTaken
     public DateTime TakenOn { get; private set; } = DateTime.UtcNow;
     public float QuantityTaken { get; private set; }
 
-    private ProductTaken(int id, int userId, Guid productId, float quantityTaken)
+    private ProductTaken(int userId, Guid productId, float quantityTaken)
     {
-        if(id >= 0)
-        {
-            Id = id;
-        }
-        
         UserId = userId;
         ProductId = productId;
         QuantityTaken = quantityTaken;
     }
 
-    public static ErrorOr<ProductTaken> Create(int userId, Guid productId, float quantityTaken, int id = -1)
+    public static ErrorOr<ProductTaken> Create(int userId, Guid productId, float quantityTaken)
     {
         var errors = Validate();
 
@@ -38,13 +32,14 @@ public class ProductTaken
             return errors;
         }
 
-        return new ProductTaken(id, userId, productId, quantityTaken);
+        return new ProductTaken(userId, productId, quantityTaken);
     }
 
     public static ErrorOr<ProductTaken> From(CreateProductTakenRequest request)
     {
         return Create(request.UserId, request.ProductId, request.QuantityTaken);
     }
+
     private static List<Error> Validate()
     {
         List<Error> errors = new List<Error>();

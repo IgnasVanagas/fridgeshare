@@ -107,10 +107,30 @@ public class ProductService : IProductService
             return Errors.Product.NotFound;
         }
 
-        product.UpdateQuantityLeft(productTaken);
+        var updateQuantityResult = product.UpdateQuantityLeft(productTaken);
+        if(updateQuantityResult.IsError)
+        {
+            return updateQuantityResult.Errors;
+        }
 
         product.ProductTakens.Add(productTaken);
         await _dbContext.SaveChangesAsync();
         return product;
+    }
+
+    public async Task<ErrorOr<Deleted>> RemoveProductTaken(Guid productId, ProductTaken productTaken)
+    {
+        var product = await _dbContext.Products
+            .Include (p => p.ProductTakens)
+            .FirstOrDefaultAsync(p => p.Id == productId);
+
+        if(product is null)
+        {
+            return Errors.Product.NotFound;
+        }
+
+        product.ProductTakens.Remove(productTaken);
+        await _dbContext.SaveChangesAsync();
+        return Result.Deleted;
     }
 }

@@ -37,9 +37,19 @@ public class UserService : IUserService
         return Result.Created;
     }
 
-    public Task<ErrorOr<Deleted>> DeleteUser(int id)
+    public async Task<ErrorOr<Deleted>> DeleteUser(int id)
     {
-        throw new NotImplementedException();
+        var user = await _dbContext.Users.FindAsync(id);
+        if ( user is null)
+        {
+            return Errors.User.NotFound;
+        }
+        var userDeactivation = user.DeactivateUser();
+        if(userDeactivation.IsError)
+        {
+            return userDeactivation.Errors;
+        }
+        return Result.Deleted;
     }
 
     public async Task<ErrorOr<User>> GetUser(int id)
@@ -50,6 +60,19 @@ public class UserService : IUserService
             return Errors.User.NotFound;
         }
         return user;
+    }
+
+    public async Task<ErrorOr<Deleted>> RemoveProductTaken(int userId, ProductTaken productTaken)
+    {
+        var user = await _dbContext.Users.FindAsync(userId);
+        if (user is null)
+        {
+            return Errors.User.NotFound;
+        }
+
+        user.ProductsTaken.Remove(productTaken);
+        await _dbContext.SaveChangesAsync();
+        return Result.Deleted;
     }
 
     public async Task<ErrorOr<UpdatedUser>> UpdateUser(User user)

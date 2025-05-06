@@ -21,6 +21,18 @@ public class ProductTakenService : IProductTakenService
         return Result.Created;
     }
 
+    public async Task<ErrorOr<Deleted>> RemoveProductTaken(int id)
+    {
+        var productTaken = await _dbContext.ProductsTaken.FindAsync(id);
+        if (productTaken is null)
+        {
+            return Errors.ProductTaken.NotFound;
+        }
+        _dbContext.ProductsTaken.Remove(productTaken);
+        await _dbContext.SaveChangesAsync();
+        return Result.Deleted;
+    }
+
     public async Task<ErrorOr<ProductTaken>> GetProductTaken(int id)
     {
         var productTaken = await _dbContext.ProductsTaken.FindAsync(id);

@@ -38,30 +38,33 @@ public class ProductTakenController : ApiController
     public async Task<IActionResult> CreateProductTaken(CreateProductTakenRequest request)
     {
         var requestToProductTaken = ProductTaken.From(request);
-
         if (requestToProductTaken.IsError)
         {
             return Problem(requestToProductTaken.Errors);
         }
-
         var productTaken = requestToProductTaken.Value;
-        var createProductTakenResult = await _productTakenService.CreateProductTaken(productTaken);
 
-        if (createProductTakenResult.IsError) {
+        var createProductTakenResult = await _productTakenService.CreateProductTaken(productTaken);
+        if (createProductTakenResult.IsError)
+        {
             return Problem(createProductTakenResult.Errors);
         }
 
         var addToUserProductTaken = await _userService.AddProductTaken(productTaken.UserId, productTaken);
         if(addToUserProductTaken.IsError)
         {
+            await _productTakenService.RemoveProductTaken(productTaken.Id);
             return Problem(addToUserProductTaken.Errors);
         }
 
         var addToProduct = await _productService.AddProductTaken(productTaken.ProductId, productTaken);
         if(addToProduct.IsError)
         {
+            await _userService.RemoveProductTaken(productTaken.UserId, productTaken);
+            await _productTakenService.RemoveProductTaken(productTaken.Id);
             return Problem(addToProduct.Errors);
         }
+
         return CreatedAtGetProduct(productTaken);
     }
 

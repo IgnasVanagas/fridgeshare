@@ -69,6 +69,12 @@ public class User
         return Create(id, request.Name, request.LastName, request.Email, request.Username, request.Password, request.Active, request.IsAdmin);
     }
 
+    public ErrorOr<User> DeactivateUser()
+    {
+        this.Active = false;
+        return this;
+    }
+
     private static List<Error> ValidateUser(string name, string lastName, string email, string username, string password)
     {
         List<Error> errors = new List<Error>();

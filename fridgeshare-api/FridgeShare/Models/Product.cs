@@ -88,6 +88,12 @@ public ICollection<ProductTaken> ProductTakens { get; private set; } = new List<
             return Errors.Product.InvalidQuantityLeft;
         }
 
+        if(productTaken.QuantityTaken <= 0 || (this.TypeOfMeasurement == FoodMeasurement.pcs && productTaken.QuantityTaken != Math.Floor(productTaken.QuantityTaken)))
+        {
+            return Errors.Product.IncorrectQuantity;
+        }
+        
+
         this.QuantityLeft -= productTaken.QuantityTaken;
         if(this.QuantityLeft == 0)
         {
