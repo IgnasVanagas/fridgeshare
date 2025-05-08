@@ -1,10 +1,13 @@
 using ErrorOr;
 using FridgeShare.Contracts.FridgeShare.User;
 using FridgeShare.ServiceErrors;
+using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
 using System.Text.RegularExpressions;
 
 namespace FridgeShare.Models;
+
+[Index(nameof(Username), IsUnique = true)]
 public class User
 {
     public User() { }

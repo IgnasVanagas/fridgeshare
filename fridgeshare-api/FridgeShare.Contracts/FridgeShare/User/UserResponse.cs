@@ -6,7 +6,6 @@ public record UserResponse(
     string LastName,
     string Email,
     string Username,
-    string Password,
     DateTime RegisteredOn,
     bool Active,
     bool IsAdmin

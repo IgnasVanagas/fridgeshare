@@ -185,6 +185,11 @@ public static class Errors
             code: "User.NotFound",
             description: "User not found."
         );
+
+        public static Error IncorrectPassword => Error.Validation(
+            code: "User.IncorrectPassword",
+            description: "Incorrect password."
+        );
     }
 
     public static class ProductTaken

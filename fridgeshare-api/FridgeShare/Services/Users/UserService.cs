@@ -62,6 +62,30 @@ public class UserService : IUserService
         return user;
     }
 
+    public async Task<ErrorOr<User>> GetUser(string username)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == username);
+        if (user is null)
+        {
+            return Errors.User.NotFound;
+        }
+        return user;
+    }
+
+    public async Task<ErrorOr<User>> LoginUser(string username, string password)
+    {
+        var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == username && u.Active);
+        if(user is null)
+        {
+            return Errors.User.NotFound;
+        }
+        if(password != null && user.Password != password)
+        {
+            return Errors.User.IncorrectPassword;
+        }
+        return user;
+    }
+
     public async Task<ErrorOr<Deleted>> RemoveProductTaken(int userId, ProductTaken productTaken)
     {
         var user = await _dbContext.Users.FindAsync(userId);

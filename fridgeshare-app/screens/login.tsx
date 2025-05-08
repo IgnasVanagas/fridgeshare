@@ -6,7 +6,7 @@ import {
 	TouchableWithoutFeedback,
 	Keyboard,
 } from 'react-native';
-import { Link } from 'expo-router';
+import { Link, router } from 'expo-router';
 
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -15,24 +15,48 @@ import { StatusBar } from 'expo-status-bar';
 import mainStyle from '@/styles/styles';
 import FormTextInput from '@/components/formTextInput';
 import GreenSubmitButton from '@/components/submitButton';
+import axios from 'axios';
+import { API_BASE_URL } from '@/api_config';
+import { useAuth } from '@/context/authContext';
+import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
+	const navigation = useNavigation();
+	const { login } = useAuth();
 	let initialUsername = '';
 	let initialPassword = '';
 
 	const loginValidation = yup.object().shape({
 		username: yup.string().required('Privaloma!'),
-		password: yup
-			.string()
-			.min(6, 'Slaptažodis turi būti bent 6 simbolių ilgio!')
-			.required('Privaloma!'),
+		password: yup.string().required('Privaloma!'),
 	});
 
 	const formik = useFormik({
 		initialValues: { username: initialUsername, password: initialPassword },
 		validationSchema: loginValidation,
-		onSubmit: async (values) => {
+		onSubmit: async (values: Record<string, string>) => {
 			console.log(values);
+			await axios
+				.post(
+					`${API_BASE_URL}/login`,
+					{
+						username: values['username'],
+						password: values['password'],
+					},
+					{
+						headers: {
+							'Content-Type': 'application/json',
+						},
+					}
+				)
+				.then(function (response) {
+					login(response.data['username']);
+					navigation.navigate('Index');
+					// router.push('/');
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
 		},
 	});
 	return (

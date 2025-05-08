@@ -7,6 +7,7 @@ using FridgeShare.Data;
 using FridgeShare.Services.Tags;
 using FridgeShare.Services.Users;
 using FridgeShare.Services.ProductsTaken;
+using Microsoft.AspNetCore.Hosting;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,6 +34,12 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<FridgeShareDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+});
+
 //  Dependency Injection
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<IStorageService, StorageService>();
@@ -42,13 +49,7 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductTakenService, ProductTakenService>();
 
 var app = builder.Build();
-
-//  (Optional) Database seeding if you later want it
-// using (var scope = app.Services.CreateScope())
-// {
-//     var dbContext = scope.ServiceProvider.GetRequiredService<FridgeShareDbContext>();
-//     await DatabaseSeeder.SeedAsync(dbContext);
-// }
+app.UseCors("AllowAll");
 
 //  Middleware
 if (app.Environment.IsDevelopment())
@@ -58,6 +59,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseExceptionHandler("/error");  // Global error handler
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.MapControllers();               // Map all endpoints automatically
 app.Run();

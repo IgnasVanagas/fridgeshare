@@ -26,9 +26,28 @@ public class UserController : ApiController
         return Ok(response);
     }
 
+    [HttpGet("{username}")]
+    public async Task<IActionResult> GetUserByUsername(string username)
+    {
+        var getUserResult = await _userService.GetUser(username);
+        if (getUserResult.IsError)
+        {
+            return Problem(getUserResult.Errors);
+        }
+
+        var user = getUserResult.Value;
+        var response = MapUserResponse(user);
+        return Ok(response);
+    }
+
     [HttpPost]
     public async Task<IActionResult> CreateUser(CreateUserRequest request)
     {
+        var getUser = await _userService.GetUser(request.Username);
+        if(!getUser.IsError)
+        {
+            return Conflict(new { message = "Username is not unique!" });
+        }
         var requestToUserResult = FridgeShare.Models.User.From(request);
         if (requestToUserResult.IsError) {
             return Problem(requestToUserResult.Errors);
@@ -37,6 +56,20 @@ public class UserController : ApiController
         var user = requestToUserResult.Value;
         await _userService.CreateUser(user);
         return CreatedAtGetUser(user);
+    }
+
+    [HttpPost("/login")]
+    public async Task<IActionResult> LoginUser(LoginUserRequest request)
+    {
+        var loginUserResult = await _userService.LoginUser(request.Username, request.Password);
+        if(loginUserResult.IsError)
+        {
+            return Problem(loginUserResult.Errors);
+        }
+
+        var user = loginUserResult.Value;
+        var response = MapUserResponse(user);
+        return Ok(response);
     }
 
     [HttpPut("{id:int}")]
@@ -59,7 +92,7 @@ public class UserController : ApiController
 
     private static UserResponse MapUserResponse(User user)
     {
-        return new UserResponse(user.Id, user.Name, user.LastName, user.Email, user.Username, user.Password, user.RegisteredOn, user.Active, user.IsAdmin);
+        return new UserResponse(user.Id, user.Name, user.LastName, user.Email, user.Username, user.RegisteredOn, user.Active, user.IsAdmin);
     }
 
     private IActionResult CreatedAtGetUser(User user)
