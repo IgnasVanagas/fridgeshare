@@ -14,6 +14,8 @@ import { StatusBar } from 'expo-status-bar';
 import FormTextInput from '@/components/formTextInput';
 import GreenSubmitButton from '@/components/submitButton';
 import { Link } from 'expo-router';
+import axios from 'axios';
+import { API_BASE_URL } from '@/api_config';
 
 const SignupScreen = () => {
 	let initialUsername = '';
@@ -43,20 +45,49 @@ const SignupScreen = () => {
 			.string()
 			.required('Privaloma!')
 			.oneOf([yup.ref('password'), null], 'Slaptažodžiai nesutampa!'),
+		name: yup.string().required('Privaloma!').min(3).max(30),
+		lastName: yup.string().required('Privaloma!').min(3).max(50),
 	});
 
 	const formik = useFormik({
 		initialValues: {
+			name: '',
+			lastName: '',
 			username: initialUsername,
 			email: initialEmail,
 			password: initialPassword,
 			confirmPassword: initialConfirmPassword,
 		},
 		validationSchema: signUpValidation,
-		onSubmit: async (values) => {
+		onSubmit: async (values: Record<string, string>) => {
 			console.log(values);
+			await axios
+				.post(
+					`${API_BASE_URL}/user`,
+					{
+						name: values['name'],
+						lastName: values['lastName'],
+						email: values['email'],
+						username: values['username'],
+						password: values['password'],
+						active: true,
+						isAdmin: false,
+					},
+					{
+						headers: {
+							'Content-Type': 'application/json',
+						},
+					}
+				)
+				.then(function (response) {
+					console.log(response.data);
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
 		},
 	});
+
 	return (
 		<KeyboardAvoidingView
 			style={{ flex: 1 }}
@@ -70,6 +101,26 @@ const SignupScreen = () => {
 					<StatusBar style="dark" hidden={false} />
 					<Text style={mainStyle.welcomeSign}>Sveiki!</Text>
 					<View style={mainStyle.form}>
+						<FormTextInput
+							label="Vardas"
+							error={formik.errors.name}
+							touched={formik.touched.name}
+							placeholder=""
+							onChangeText={formik.handleChange('name')}
+							onBlur={formik.handleBlur('name')}
+							value={formik.values.name}
+							isPassword={false}
+						/>
+						<FormTextInput
+							label="Pavardė"
+							error={formik.errors.lastName}
+							touched={formik.touched.lastName}
+							placeholder=""
+							onChangeText={formik.handleChange('lastName')}
+							onBlur={formik.handleBlur('lastName')}
+							value={formik.values.lastName}
+							isPassword={false}
+						/>
 						<FormTextInput
 							label="Prisijungimo vardas"
 							error={formik.errors.username}

@@ -1,13 +1,10 @@
-import { Stack } from 'expo-router';
-import { Drawer } from 'expo-router/drawer';
-import Index from '.';
+import { StackNavigation } from '@/components/stackNavigator';
+import { AuthProvider } from '@/context/authContext';
 
 export default function RootLayout() {
 	return (
-		<Drawer
-			screenOptions={{
-				headerShown: false,
-			}}
-		/>
+		<AuthProvider>
+			<StackNavigation />
+		</AuthProvider>
 	);
 }

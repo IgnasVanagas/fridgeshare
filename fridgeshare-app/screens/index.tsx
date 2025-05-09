@@ -2,22 +2,10 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
 import mainStyle from '@/styles/styles';
-import Feather from '@expo/vector-icons/Feather';
-import { Link, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
 
 export default function Index() {
-	const router = useRouter();
-	const [isLoggedIn, setIsLoggedIn] = useState(true);
-
-	if (isLoggedIn) {
-		return (
-			<View style={mainStyle.container}>
-				<StatusBar style="dark" hidden={false} />
-				<Text style={mainStyle.welcomeSign}>Home page</Text>
-			</View>
-		);
-	}
+	const navigation = useNavigation();
 
 	return (
 		<View style={mainStyle.container}>
@@ -29,7 +17,7 @@ export default function Index() {
 			<View style={[mainStyle.inline, { width: '50%' }]}>
 				<TouchableOpacity
 					style={mainStyle.submitColorfulButton}
-					onPress={() => router.push('/signup')}
+					onPress={() => navigation.navigate('Registruotis')}
 				>
 					<Text style={mainStyle.submitColorfulButtonText}>
 						Registruotis
@@ -38,7 +26,7 @@ export default function Index() {
 
 				<TouchableOpacity
 					style={mainStyle.submitColorfulButton}
-					onPress={() => router.push('/login')}
+					onPress={() => navigation.navigate('Prisijungti')}
 				>
 					<Text style={mainStyle.submitColorfulButtonText}>
 						Prisijungti
