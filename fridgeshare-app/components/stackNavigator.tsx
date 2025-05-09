@@ -5,7 +5,7 @@ import SignupScreen from '@/screens/signup';
 import { useAuth } from '@/context/authContext';
 import Index from '@/screens';
 import { useEffect } from 'react';
-import AuthIndex from '@/screens/auth_index';
+import AuthIndex from '@/screens/authIndex';
 
 const Stack1 = createNativeStackNavigator();
 

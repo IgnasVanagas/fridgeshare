@@ -1,6 +1,6 @@
 import colors from '@/constants/colors';
 import { useAuth } from '@/context/authContext';
-import AuthIndex from '@/screens/auth_index';
+import AuthIndex from '@/screens/authIndex';
 import AddProduct from '@/screens/productForm';
 import {
 	createDrawerNavigator,
