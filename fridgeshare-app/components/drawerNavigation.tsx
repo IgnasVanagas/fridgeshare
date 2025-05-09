@@ -1,6 +1,6 @@
 import colors from '@/constants/colors';
 import { useAuth } from '@/context/authContext';
-import Index from '@/screens';
+import AuthIndex from '@/screens/auth_index';
 import AddProduct from '@/screens/productForm';
 import {
 	createDrawerNavigator,
@@ -32,7 +32,7 @@ const DrawerNavigation = () => {
 				</View>
 			)}
 		>
-			<Drawer.Screen name="Pagrindinis langas" component={Index} />
+			<Drawer.Screen name="Pagrindinis langas" component={AuthIndex} />
 			<Drawer.Screen name="Prekiu sarasas" component={AddProduct} />
 		</Drawer.Navigator>
 	);

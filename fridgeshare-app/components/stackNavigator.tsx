@@ -5,6 +5,7 @@ import SignupScreen from '@/screens/signup';
 import { useAuth } from '@/context/authContext';
 import Index from '@/screens';
 import { useEffect } from 'react';
+import AuthIndex from '@/screens/auth_index';
 
 const Stack1 = createNativeStackNavigator();
 
@@ -23,7 +24,7 @@ export function AuthStackNavigation() {
 	return (
 		<Stack2.Navigator screenOptions={{ headerShown: false }}>
 			<Stack2.Screen name="Drawer" component={DrawerNavigation} />
-			<Stack2.Screen name="Index" component={Index} />
+			<Stack2.Screen name="AuthIndex" component={AuthIndex} />
 		</Stack2.Navigator>
 	);
 }
