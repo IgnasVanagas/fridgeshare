@@ -9,6 +9,7 @@ public class Community
     public const int MinTitleLength = 3;
     public const int MaxTitleLength = 100;
     public const int MaxDescriptionLength = 500;
+    public const int JoiningCodeLength = 6;
 
     public int Id { get; set; }
     public string Title { get; set; } = null!;
@@ -36,16 +37,13 @@ public class Community
             return ServiceErrors.Errors.Community.InvalidDescription;
         }
 
-        if (string.IsNullOrWhiteSpace(request.JoiningCode))
-        {
-            return ServiceErrors.Errors.Community.InvalidJoiningCode;
-        }
+        string joiningCode = GenerateRandomJoiningCode();
 
         return new Community
         {
             Title = request.Title,
             Description = request.Description,
-            JoiningCode = request.JoiningCode,
+            JoiningCode = joiningCode,
             ManagerId = request.ManagerId,
             CreatedOn = DateTime.UtcNow,
             Active = true
@@ -78,5 +76,19 @@ public class Community
             ManagerId = request.ManagerId,
             Active = request.Active
         };
+    }
+
+    private static string GenerateRandomJoiningCode()
+    {
+        Random random = new Random();
+        string possibleSymbols = "QWERTYUIOPASDFGHJKLZXCVBNM0123456789";
+        string randomString = "";
+        for (int i = 0; i < JoiningCodeLength; i++)
+        {
+            int index = random.Next(possibleSymbols.Length);
+            randomString = randomString + possibleSymbols[index];
+        }
+
+        return randomString;
     }
 }
