@@ -41,9 +41,9 @@ public class UserCommunity
         return new UserCommunity(userId, communityId, dateJoined);
     }
 
-    public static ErrorOr<UserCommunity> From(CreateUserCommunityRequest request)
+    public static ErrorOr<UserCommunity> From(CreateUserCommunityRequest request, int communityId)
     {
-        return Create(request.UserId, request.CommunityId);
+        return Create(request.UserId, communityId);
     }
 
     public static ErrorOr<UserCommunity> From(int userId, int communityId, UpdateUserCommunityRequest request)

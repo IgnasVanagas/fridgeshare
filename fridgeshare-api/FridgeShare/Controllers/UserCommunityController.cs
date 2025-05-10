@@ -22,7 +22,19 @@ public class UserCommunityController : ApiController
     [HttpPost]
     public async Task<IActionResult> CreateUserJoin(CreateUserCommunityRequest request)
     {
-        var requestToUserCommunityResult = UserCommunity.From(request);
+        var getCommunityResult = await _communityService.GetCommunityWithJoiningCode(request.JoiningCode);
+        if (getCommunityResult.IsError)
+        {
+            return Problem(getCommunityResult.Errors);
+        }
+        var community = getCommunityResult.Value;
+
+        if(community.JoiningCode != request.JoiningCode)
+        {
+            return Problem("Wrong code for joining!");
+        }
+
+        var requestToUserCommunityResult = UserCommunity.From(request, community.Id);
         if(requestToUserCommunityResult.IsError)
         {
             return Problem(requestToUserCommunityResult.Errors);

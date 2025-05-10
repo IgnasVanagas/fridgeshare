@@ -3,5 +3,5 @@
 public record CreateUserCommunityRequest
 (
     int UserId,
-    int CommunityId
+    string JoiningCode
 );

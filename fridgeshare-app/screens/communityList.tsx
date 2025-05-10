@@ -54,6 +54,7 @@ const CommunityList = () => {
 						mainStyle.inline,
 						{ marginBottom: '2%' },
 					]}
+					onPress={() => navigation.navigate('JoinCommunity')}
 				>
 					<Feather name="plus" size={20} color={colors.white} />
 					<Text style={buttonStyle.submitColorfulButtonText}>

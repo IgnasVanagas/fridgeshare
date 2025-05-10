@@ -3,4 +3,5 @@ export type ParamList = {
 	Drawer: undefined;
 	AuthIndex: undefined;
 	RequestList: undefined;
+	JoinCommunity: undefined;
 };

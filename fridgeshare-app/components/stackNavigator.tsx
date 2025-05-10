@@ -8,6 +8,7 @@ import AuthIndex from '@/screens/authIndex';
 import CommunityView from '@/screens/communityView';
 import { ParamList } from '@/constants/paramList';
 import SentOutRequestList from '@/screens/sentOutRequestList';
+import JoinCommunity from '@/screens/joinCommunity';
 
 const Stack1 = createNativeStackNavigator();
 
@@ -29,6 +30,7 @@ export function AuthStackNavigation() {
 			<Stack2.Screen name="AuthIndex" component={AuthIndex} />
 			<Stack2.Screen name="CommunityView" component={CommunityView} />
 			<Stack2.Screen name="RequestList" component={SentOutRequestList} />
+			<Stack2.Screen name="JoinCommunity" component={JoinCommunity} />
 		</Stack2.Navigator>
 	);
 }
