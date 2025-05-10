@@ -52,7 +52,7 @@ namespace FridgeShare.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Comments");
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("FridgeShare.Models.Community", b =>
@@ -88,7 +88,7 @@ namespace FridgeShare.Migrations
 
                     b.HasIndex("ManagerId");
 
-                    b.ToTable("Communities");
+                    b.ToTable("Communities", (string)null);
                 });
 
             modelBuilder.Entity("FridgeShare.Models.Product", b =>
@@ -139,7 +139,7 @@ namespace FridgeShare.Migrations
 
                     b.HasIndex("StorageId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("FridgeShare.Models.ProductTag", b =>
@@ -154,7 +154,7 @@ namespace FridgeShare.Migrations
 
                     b.HasIndex("TagId");
 
-                    b.ToTable("ProductTags");
+                    b.ToTable("ProductTags", (string)null);
                 });
 
             modelBuilder.Entity("FridgeShare.Models.ProductTaken", b =>
@@ -183,7 +183,7 @@ namespace FridgeShare.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ProductsTaken");
+                    b.ToTable("ProductsTaken", (string)null);
                 });
 
             modelBuilder.Entity("FridgeShare.Models.Storage", b =>
@@ -228,7 +228,7 @@ namespace FridgeShare.Migrations
 
                     b.HasIndex("CommunityId");
 
-                    b.ToTable("Storages");
+                    b.ToTable("Storages", (string)null);
                 });
 
             modelBuilder.Entity("FridgeShare.Models.Tag", b =>
@@ -254,7 +254,7 @@ namespace FridgeShare.Migrations
 
                     b.HasIndex("CommunityId");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("FridgeShare.Models.User", b =>
@@ -299,7 +299,7 @@ namespace FridgeShare.Migrations
                     b.HasIndex("Username")
                         .IsUnique();
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("FridgeShare.Models.UserCommunity", b =>
@@ -320,7 +320,7 @@ namespace FridgeShare.Migrations
 
                     b.HasIndex("CommunityId");
 
-                    b.ToTable("UserCommunities");
+                    b.ToTable("UserCommunities", (string)null);
                 });
 
             modelBuilder.Entity("FridgeShare.Models.Comment", b =>

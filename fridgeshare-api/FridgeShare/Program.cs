@@ -8,6 +8,7 @@ using FridgeShare.Services.Tags;
 using FridgeShare.Services.Users;
 using FridgeShare.Services.ProductsTaken;
 using Microsoft.AspNetCore.Hosting;
+using FridgeShare.Services.UserCommunities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -47,6 +48,7 @@ builder.Services.AddScoped<ICommunityService, CommunityService>();
 builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductTakenService, ProductTakenService>();
+builder.Services.AddScoped<IUserCommunityService, UserCommunityService>();
 
 var app = builder.Build();
 app.UseCors("AllowAll");
