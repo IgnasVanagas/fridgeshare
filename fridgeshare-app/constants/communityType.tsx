@@ -4,4 +4,5 @@ export type Community = {
 	communityTitle: string;
 	requestSent: string;
 	dateJoined: string;
+	managerId: number;
 };

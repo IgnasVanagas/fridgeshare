@@ -32,9 +32,23 @@ const SentOutRequestList = () => {
 					console.log(error);
 				});
 		};
+		if (id) {
+			fetchData();
+		}
+	}, [id]);
 
-		fetchData();
-	}, []);
+	const cancelRequest = async (communityId: number) => {
+		try {
+			await axios.delete(
+				`${API_BASE_URL}/usercommunity/${id}/${communityId}`
+			);
+			setRequestList((prev) =>
+				prev.filter((item) => item.communityId != communityId)
+			);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 	return (
 		<ScrollView
 			keyboardShouldPersistTaps="handled"
@@ -51,6 +65,9 @@ const SentOutRequestList = () => {
 							<Text>{request.communityTitle}</Text>
 							<TouchableOpacity
 								style={buttonStyle.redButtonCancel}
+								onPress={() =>
+									cancelRequest(request.communityId)
+								}
 							>
 								<Text style={{ color: colors.white }}>
 									Atšaukti
