@@ -1,3 +1,4 @@
+import buttonStyle from '@/styles/buttons';
 import mainStyle from '@/styles/styles';
 import { TouchableOpacity, Text } from 'react-native';
 
@@ -11,9 +12,9 @@ const GreenSubmitButton = ({
 	return (
 		<TouchableOpacity
 			onPress={onPress}
-			style={mainStyle.submitColorfulButton}
+			style={buttonStyle.submitColorfulButton}
 		>
-			<Text style={mainStyle.submitColorfulButtonText}>{label}</Text>
+			<Text style={buttonStyle.submitColorfulButtonText}>{label}</Text>
 		</TouchableOpacity>
 	);
 };

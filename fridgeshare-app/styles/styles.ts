@@ -30,6 +30,12 @@ const mainStyle = StyleSheet.create({
 		fontWeight: 'bold',
 		marginBottom: 50,
 	},
+	styledH1: {
+		color: colors.brandGreen,
+		fontSize: 20,
+		fontWeight: 'bold',
+		marginBottom: 20,
+	},
 	form: {
 		borderStyle: 'solid',
 		borderColor: colors.brandGreen,
@@ -64,15 +70,6 @@ const mainStyle = StyleSheet.create({
 	},
 	formError: {
 		color: colors.red,
-	},
-	submitColorfulButton: {
-		backgroundColor: colors.brandGreen,
-		alignItems: 'center',
-		borderRadius: 10,
-	},
-	submitColorfulButtonText: {
-		color: colors.white,
-		margin: 10,
 	},
 	inline: {
 		flexDirection: 'row',

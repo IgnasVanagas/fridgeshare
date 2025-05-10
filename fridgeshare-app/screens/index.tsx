@@ -3,6 +3,7 @@ import { StatusBar } from 'expo-status-bar';
 
 import mainStyle from '@/styles/styles';
 import { useNavigation } from '@react-navigation/native';
+import buttonStyle from '@/styles/buttons';
 
 export default function Index() {
 	const navigation = useNavigation();
@@ -16,19 +17,19 @@ export default function Index() {
 			</Text>
 			<View style={[mainStyle.inline, { width: '50%' }]}>
 				<TouchableOpacity
-					style={mainStyle.submitColorfulButton}
+					style={buttonStyle.submitColorfulButton}
 					onPress={() => navigation.navigate('Registruotis')}
 				>
-					<Text style={mainStyle.submitColorfulButtonText}>
+					<Text style={buttonStyle.submitColorfulButtonText}>
 						Registruotis
 					</Text>
 				</TouchableOpacity>
 
 				<TouchableOpacity
-					style={mainStyle.submitColorfulButton}
+					style={buttonStyle.submitColorfulButton}
 					onPress={() => navigation.navigate('Prisijungti')}
 				>
-					<Text style={mainStyle.submitColorfulButtonText}>
+					<Text style={buttonStyle.submitColorfulButtonText}>
 						Prisijungti
 					</Text>
 				</TouchableOpacity>

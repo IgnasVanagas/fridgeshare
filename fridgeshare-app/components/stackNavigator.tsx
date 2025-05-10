@@ -4,8 +4,10 @@ import DrawerNavigation from './drawerNavigation';
 import SignupScreen from '@/screens/signup';
 import { useAuth } from '@/context/authContext';
 import Index from '@/screens';
-import { useEffect } from 'react';
 import AuthIndex from '@/screens/authIndex';
+import CommunityView from '@/screens/communityView';
+import { ParamList } from '@/constants/paramList';
+import SentOutRequestList from '@/screens/sentOutRequestList';
 
 const Stack1 = createNativeStackNavigator();
 
@@ -19,19 +21,20 @@ export function NonAuthStackNavigation() {
 	);
 }
 
-const Stack2 = createNativeStackNavigator();
+const Stack2 = createNativeStackNavigator<ParamList>();
 export function AuthStackNavigation() {
 	return (
 		<Stack2.Navigator screenOptions={{ headerShown: false }}>
 			<Stack2.Screen name="Drawer" component={DrawerNavigation} />
 			<Stack2.Screen name="AuthIndex" component={AuthIndex} />
+			<Stack2.Screen name="CommunityView" component={CommunityView} />
+			<Stack2.Screen name="RequestList" component={SentOutRequestList} />
 		</Stack2.Navigator>
 	);
 }
 
 export function StackNavigation() {
-	const { isLoggedIn, isLoading } = useAuth();
-	if (isLoading) return null;
+	const { isLoggedIn } = useAuth();
 	return isLoggedIn ? (
 		<AuthStackNavigation key="auth" />
 	) : (
