@@ -98,4 +98,14 @@ public class CommunityService : ICommunityService
         await _dbContext.SaveChangesAsync();
         return community;
     }
+
+    public async Task<ErrorOr<Community>> GetCommunityWithJoiningCode(string joiningCode)
+    {
+        var community = await _dbContext.Communities.FirstOrDefaultAsync(c => c.JoiningCode == joiningCode);
+        if(community is null)
+        {
+            return Errors.Community.NotFound;
+        }
+        return community;
+    }
 }

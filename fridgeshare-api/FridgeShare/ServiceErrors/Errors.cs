@@ -199,4 +199,12 @@ public static class Errors
             description: "ProductTaken not found."
         );
     }
+
+    public static class UserCommunity
+    {
+        public static Error NotFound => Error.NotFound(
+            code: "UserCommunity.NotFound",
+            description: "UserCommunity not found."
+        );
+    }
 }
