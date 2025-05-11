@@ -7,16 +7,15 @@ import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import { SafeAreaView, Text } from 'react-native';
 import { ScrollView } from 'react-native';
+import { Community } from '@/constants/communityType';
+import { useAuth } from '@/context/authContext';
 
-type Community = {
-	id: number;
-	title: string;
-	description: string;
-};
 type Props = NativeStackScreenProps<ParamList, 'CommunityView'>;
 const CommunityView = ({ route }: Props) => {
 	const { id } = route.params;
+	const { id: userId } = useAuth();
 	const [community, setCommunity] = useState<Community | null>(null);
+	const [isAdmin, setIsAdmin] = useState(false);
 
 	useEffect(() => {
 		const getCommunity = async () => {
@@ -27,7 +26,6 @@ const CommunityView = ({ route }: Props) => {
 					},
 				})
 				.then(function (response) {
-					console.log(response.data);
 					setCommunity(response.data);
 				})
 				.catch(function (error) {
@@ -37,6 +35,12 @@ const CommunityView = ({ route }: Props) => {
 
 		getCommunity();
 	}, []);
+
+	useEffect(() => {
+		if (community && userId) {
+			setIsAdmin(community?.managerId.toString() == userId);
+		}
+	}, [community, userId]);
 	return (
 		<ScrollView
 			keyboardShouldPersistTaps="handled"
@@ -46,6 +50,9 @@ const CommunityView = ({ route }: Props) => {
 				<StatusBar style="dark" hidden={false} />
 				<Text style={mainStyle.styledH1}> {community?.title} </Text>
 				<Text> {community?.description} </Text>
+				{isAdmin && (
+					<Text>Prisijungimo kodas: {community?.joiningCode}</Text>
+				)}
 				<Text>-----content-------</Text>
 			</SafeAreaView>
 		</ScrollView>

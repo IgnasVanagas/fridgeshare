@@ -39,7 +39,13 @@ const JoinCommunity = () => {
 					if (error.response.status == 405) {
 						setFieldError(
 							'code',
-							'Jau esate išsiuntę užklausą šiai bendruomenei'
+							'Jau esate išsiuntę užklausą šiai bendruomenei arba jai jau priklausote'
+						);
+					}
+					if (error.response.status == 409) {
+						setFieldError(
+							'code',
+							'Jūs jau esate šios bendruomenės įkūrėjas!'
 						);
 					}
 				});

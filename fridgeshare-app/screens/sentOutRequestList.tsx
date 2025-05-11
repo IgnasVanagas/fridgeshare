@@ -1,6 +1,6 @@
 import { API_BASE_URL } from '@/api_config';
 import colors from '@/constants/colors';
-import { Community } from '@/constants/communityType';
+import { UserCommunity } from '@/constants/communityType';
 import { useAuth } from '@/context/authContext';
 import buttonStyle from '@/styles/buttons';
 import mainStyle from '@/styles/styles';
@@ -17,7 +17,7 @@ import {
 
 const SentOutRequestList = () => {
 	const navigation = useNavigation();
-	const [requestList, setRequestList] = useState<Community[]>([]);
+	const [requestList, setRequestList] = useState<UserCommunity[]>([]);
 	const { id } = useAuth();
 
 	useEffect(() => {
