@@ -101,6 +101,10 @@ public static class Errors
 
     public static class Community
     {
+        public static Error MaxTriesForJoiningCode => Error.Failure(
+            code: "UserCommunity.MaxTries",
+            description: "Reached maximum tries for generating joining code."
+        );
         public static Error InvalidTitle => Error.Validation(
             code: "Community.InvalidTitle",
             description: $"Community title must be between {Models.Community.MinTitleLength} and {Models.Community.MaxTitleLength}."
@@ -202,6 +206,7 @@ public static class Errors
 
     public static class UserCommunity
     {
+        
         public static Error NotFound => Error.NotFound(
             code: "UserCommunity.NotFound",
             description: "UserCommunity not found."

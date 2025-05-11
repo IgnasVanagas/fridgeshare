@@ -19,7 +19,13 @@ public class CommunityController : ApiController
     [HttpPost]
     public async Task<IActionResult> CreateCommunity([FromBody] CreateCommunityRequest request)
     {
-        var requestToCommunityResult = Community.From(request);
+        var generateJoiningCode = await _communityService.GenerateUniqueJoiningCode();
+        if(generateJoiningCode.IsError)
+        {
+            return Problem(generateJoiningCode.Errors);
+        }
+        string joiningCode = generateJoiningCode.Value;
+        var requestToCommunityResult = Community.From(request, joiningCode);
 
         if (requestToCommunityResult.IsError)
             return Problem(requestToCommunityResult.Errors);
@@ -43,6 +49,23 @@ public class CommunityController : ApiController
 
         var community = getResult.Value;
         return Ok(MapCommunityResponse(community));
+    }
+
+    [HttpGet("user/{userId:int}")]
+    public async Task<IActionResult> GetUserManagedCommunities(int userId)
+    {
+        var getResult = await _communityService.GetUserManagedCommunities(userId);
+        if(getResult.IsError)
+        {
+            return Problem(getResult.Errors);
+        }
+        List<CommunityResponse> result = new List<CommunityResponse>();
+        var communities = getResult.Value;
+        foreach(var comm in communities)
+        {
+            result.Add(MapCommunityResponse(comm));
+        }
+        return Ok(result);
     }
 
     [HttpPut("{id:int}")]

@@ -74,7 +74,7 @@ public class CommunityService : ICommunityService
     {
         var community = await _dbContext.Communities
             .Include(c => c.Storages)
-            .FirstOrDefaultAsync(c => c.Id == communityId);
+            .FirstOrDefaultAsync(c => c.Id == communityId && c.Active);
         if(community is null)
         {
             return Errors.Community.NotFound;
@@ -88,7 +88,7 @@ public class CommunityService : ICommunityService
     {
         var community = await _dbContext.Communities
             .Include(c => c.Tags)
-            .FirstOrDefaultAsync(c => c.Id == communityId);
+            .FirstOrDefaultAsync(c => c.Id == communityId && c.Active);
         if(community is null)
         {
             return Errors.Community.NotFound;
@@ -101,11 +101,53 @@ public class CommunityService : ICommunityService
 
     public async Task<ErrorOr<Community>> GetCommunityWithJoiningCode(string joiningCode)
     {
-        var community = await _dbContext.Communities.FirstOrDefaultAsync(c => c.JoiningCode == joiningCode);
+        var community = await _dbContext.Communities.FirstOrDefaultAsync(c => c.JoiningCode == joiningCode && c.Active);
         if(community is null)
         {
             return Errors.Community.NotFound;
         }
         return community;
+    }
+
+    public async Task<ErrorOr<List<Community>>> GetUserManagedCommunities(int userId)
+    {
+        var communities = await _dbContext.Communities.Where(c => c.ManagerId == userId && c.Active).OrderBy(c => c.Title).ToListAsync();
+        if(communities == null)
+        {
+            return Errors.Community.NotFound;
+        }
+
+        return communities;
+    }
+
+    public async Task<ErrorOr<string>> GenerateUniqueJoiningCode()
+    {
+        Random random = new Random();
+        string possibleSymbols = "QWERTYUIOPASDFGHJKLZXCVBNM0123456789";
+        string randomString = "";
+        int tryCount = 0;
+        int maxTries = 1000;
+
+        while(true)
+        {
+            for (int i = 0; i < Community.JoiningCodeLength; i++)
+            {
+                int index = random.Next(possibleSymbols.Length);
+                randomString = randomString + possibleSymbols[index];
+            }
+            var community = await _dbContext.Communities.Where(c => c.Active && c.JoiningCode == randomString).FirstOrDefaultAsync();
+            if (community == null)
+            {
+                break;
+            }
+
+            if(tryCount > maxTries)
+            {
+                return Errors.Community.MaxTriesForJoiningCode;
+            }
+            tryCount++;
+        }
+
+        return randomString;
     }
 }

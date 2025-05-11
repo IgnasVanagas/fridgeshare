@@ -12,4 +12,6 @@ public interface ICommunityService
     Task<ErrorOr<Deleted>> DeleteCommunity(int id);
     Task<ErrorOr<Community>> AddStorage(int communityId, Storage storage);
     Task<ErrorOr<Community>> AddTag(int communityId, Tag tag);
+    Task<ErrorOr<List<Community>>> GetUserManagedCommunities(int userId);
+    Task<ErrorOr<string>> GenerateUniqueJoiningCode();
 }

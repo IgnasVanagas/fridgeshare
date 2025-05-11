@@ -25,7 +25,7 @@ public class Community
     public ICollection<Storage> Storages { get; set; } = new List<Storage>();
     public ICollection<Tag> Tags { get; set; } = new List<Tag>();
 
-    public static ErrorOr<Community> From(CreateCommunityRequest request)
+    public static ErrorOr<Community> From(CreateCommunityRequest request, string joiningCode)
     {
         if (string.IsNullOrWhiteSpace(request.Title) || request.Title.Length < MinTitleLength || request.Title.Length > MaxTitleLength)
         {
@@ -36,8 +36,6 @@ public class Community
         {
             return ServiceErrors.Errors.Community.InvalidDescription;
         }
-
-        string joiningCode = GenerateRandomJoiningCode();
 
         return new Community
         {
@@ -76,19 +74,5 @@ public class Community
             ManagerId = request.ManagerId,
             Active = request.Active
         };
-    }
-
-    private static string GenerateRandomJoiningCode()
-    {
-        Random random = new Random();
-        string possibleSymbols = "QWERTYUIOPASDFGHJKLZXCVBNM0123456789";
-        string randomString = "";
-        for (int i = 0; i < JoiningCodeLength; i++)
-        {
-            int index = random.Next(possibleSymbols.Length);
-            randomString = randomString + possibleSymbols[index];
-        }
-
-        return randomString;
     }
 }
