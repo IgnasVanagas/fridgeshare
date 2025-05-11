@@ -11,16 +11,22 @@ import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
 import Feather from '@expo/vector-icons/Feather';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Community } from '@/constants/communityType';
+import { UserCommunity, Community } from '@/constants/communityType';
 import buttonStyle from '@/styles/buttons';
 
 const CommunityList = () => {
 	const navigation = useNavigation();
 
 	const { id } = useAuth();
-	const [listOfCommunities, setListOfCommunities] = useState<Community[]>([]);
+	const [listOfCommunities, setListOfCommunities] = useState<UserCommunity[]>(
+		[]
+	);
+	const [listOfManagedCommunities, setListOfManagedCommunities] = useState<
+		Community[]
+	>([]);
+
 	useEffect(() => {
-		const fetchData = async () => {
+		const fetchCommunitiesData = async () => {
 			await axios
 				.get(`${API_BASE_URL}/usercommunity/user/${id}`, {
 					headers: {
@@ -35,7 +41,19 @@ const CommunityList = () => {
 				});
 		};
 
-		fetchData();
+		const fetchManagedCommunitiesData = async () => {
+			await axios
+				.get(`${API_BASE_URL}/community/user/${id}`)
+				.then(function (response) {
+					setListOfManagedCommunities(response.data);
+				})
+				.catch(function (error) {
+					console.log(error);
+				});
+		};
+
+		fetchCommunitiesData();
+		fetchManagedCommunitiesData();
 	}, []);
 
 	return (
@@ -61,6 +79,48 @@ const CommunityList = () => {
 						Prisijungti prie naujos bendruomenės
 					</Text>
 				</TouchableOpacity>
+				{listOfManagedCommunities.length > 0 && (
+					<Text>Jūsų įkurtos bendruomenės:</Text>
+				)}
+				{listOfManagedCommunities.length > 0 &&
+					listOfManagedCommunities.map((community, index) => (
+						<TouchableOpacity
+							key={community.id}
+							style={{
+								borderColor: colors.brandGreen,
+								borderStyle: 'solid',
+								borderWidth: 1,
+								padding: 15,
+								width: '90%',
+								borderRadius: 15,
+								marginBottom: 15,
+							}}
+							onPress={() => {
+								navigation.navigate('CommunityView', {
+									id: community.id,
+								});
+							}}
+						>
+							<View>
+								<Text
+									style={{
+										textAlign: 'center',
+										fontSize: 16,
+										fontWeight: 'bold',
+										color: colors.brandGreen,
+									}}
+								>
+									{community.title}
+								</Text>
+								<Text>
+									Įkūrėte: {community.createdOn.split('T')[0]}{' '}
+								</Text>
+							</View>
+						</TouchableOpacity>
+					))}
+				{listOfCommunities.length > 0 && (
+					<Text>Bendruomenės, prie kurių prisijungėte:</Text>
+				)}
 				{listOfCommunities.length > 0 ? (
 					listOfCommunities.map((community, index) => (
 						<TouchableOpacity

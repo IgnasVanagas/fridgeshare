@@ -34,6 +34,11 @@ public class UserCommunityController : ApiController
             return Problem("Wrong code for joining!");
         }
 
+        if(community.ManagerId == request.UserId)
+        {
+            return Conflict("User is already manager of this community!");
+        }
+
         var requestToUserCommunityResult = UserCommunity.From(request, community.Id);
         if(requestToUserCommunityResult.IsError)
         {

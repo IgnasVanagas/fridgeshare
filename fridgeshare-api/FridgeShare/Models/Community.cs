@@ -9,6 +9,7 @@ public class Community
     public const int MinTitleLength = 3;
     public const int MaxTitleLength = 100;
     public const int MaxDescriptionLength = 500;
+    public const int JoiningCodeLength = 6;
 
     public int Id { get; set; }
     public string Title { get; set; } = null!;
@@ -24,7 +25,7 @@ public class Community
     public ICollection<Storage> Storages { get; set; } = new List<Storage>();
     public ICollection<Tag> Tags { get; set; } = new List<Tag>();
 
-    public static ErrorOr<Community> From(CreateCommunityRequest request)
+    public static ErrorOr<Community> From(CreateCommunityRequest request, string joiningCode)
     {
         if (string.IsNullOrWhiteSpace(request.Title) || request.Title.Length < MinTitleLength || request.Title.Length > MaxTitleLength)
         {
@@ -36,16 +37,11 @@ public class Community
             return ServiceErrors.Errors.Community.InvalidDescription;
         }
 
-        if (string.IsNullOrWhiteSpace(request.JoiningCode))
-        {
-            return ServiceErrors.Errors.Community.InvalidJoiningCode;
-        }
-
         return new Community
         {
             Title = request.Title,
             Description = request.Description,
-            JoiningCode = request.JoiningCode,
+            JoiningCode = joiningCode,
             ManagerId = request.ManagerId,
             CreatedOn = DateTime.UtcNow,
             Active = true

@@ -17,7 +17,8 @@ public class UserCommunityService : IUserCommunityService
 
     public async Task<ErrorOr<Updated>> ConfirmUserJoinRequest(UserCommunity userCommunity)
     {
-        var requestToJoin = await _dbContext.UserCommunities.FirstOrDefaultAsync(r => r.UserId == userCommunity.UserId && r.CommunityId == userCommunity.CommunityId);
+        var requestToJoin = await _dbContext.UserCommunities
+            .FirstOrDefaultAsync(r => r.UserId == userCommunity.UserId && r.CommunityId == userCommunity.CommunityId);
         if (requestToJoin == null)
         {
             return Errors.UserCommunity.NotFound;
@@ -37,7 +38,8 @@ public class UserCommunityService : IUserCommunityService
 
     public async Task<ErrorOr<Deleted>> DeleteUserJoinRequest(int userId, int communityId)
     {
-        var userCommunityRequest = await _dbContext.UserCommunities.FirstOrDefaultAsync(r => r.UserId == userId && r.CommunityId == communityId);
+        var userCommunityRequest = await _dbContext.UserCommunities
+            .FirstOrDefaultAsync(r => r.UserId == userId && r.CommunityId == communityId);
         if (userCommunityRequest == null)
         {
             return Errors.UserCommunity.NotFound;
@@ -49,7 +51,8 @@ public class UserCommunityService : IUserCommunityService
 
     public async Task<ErrorOr<UserCommunity>> GetUserCommunity(int userId, int communityId)
     {
-        var userCommunityRequest = await _dbContext.UserCommunities.FirstOrDefaultAsync(r => r.UserId == userId && r.CommunityId == communityId);
+        var userCommunityRequest = await _dbContext.UserCommunities
+            .FirstOrDefaultAsync(r => r.UserId == userId && r.CommunityId == communityId);
         if (userCommunityRequest == null)
         {
             return Errors.UserCommunity.NotFound;
@@ -59,10 +62,18 @@ public class UserCommunityService : IUserCommunityService
 
     public async Task<ErrorOr<List<UserCommunity>>> GetUserJoinedCommunities(int userId)
     {
-        var userCommunity = await _dbContext.UserCommunities.Where(uc => uc.UserId == userId && uc.DateJoined != null).ToListAsync();
+        var userCommunity = await _dbContext.UserCommunities
+            .Include(c => c.Community)
+            .Where(uc => uc.UserId == userId && uc.DateJoined != null).ToListAsync();
         if(userCommunity == null)
         {
             return Errors.UserCommunity.NotFound;
+        }
+
+        var managedCommunities = await _dbContext.Communities.Where(c => c.ManagerId == userId).ToListAsync();
+        if(managedCommunities == null)
+        {
+            return Errors.Community.NotFound;
         }
 
         return userCommunity;
@@ -70,7 +81,10 @@ public class UserCommunityService : IUserCommunityService
 
     public async Task<ErrorOr<List<UserCommunity>>> GetUserRequests(int userId)
     {
-        var userCommunity = await _dbContext.UserCommunities.Where(uc => uc.UserId == userId && uc.DateJoined == null).ToListAsync();
+        var userCommunity = await _dbContext.UserCommunities
+            .Where(uc => uc.UserId == userId && uc.DateJoined == null)
+            .OrderBy(uc => uc.RequestSent)
+            .ToListAsync();
         if(userCommunity == null)
         {
             return Errors.UserCommunity.NotFound;
