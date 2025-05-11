@@ -16,12 +16,12 @@ import GreenSubmitButton from '@/components/submitButton';
 import { Link } from 'expo-router';
 import axios from 'axios';
 import { API_BASE_URL } from '@/api_config';
+import { useAuth } from '@/context/authContext';
+import { useNavigation } from '@react-navigation/native';
 
 const SignupScreen = () => {
-	let initialUsername = '';
-	let initialEmail = '';
-	let initialPassword = '';
-	let initialConfirmPassword = '';
+	const { login } = useAuth();
+	const navigation = useNavigation();
 
 	const signUpValidation = yup.object().shape({
 		username: yup
@@ -45,18 +45,26 @@ const SignupScreen = () => {
 			.string()
 			.required('Privaloma!')
 			.oneOf([yup.ref('password'), null], 'Slaptažodžiai nesutampa!'),
-		name: yup.string().required('Privaloma!').min(3).max(30),
-		lastName: yup.string().required('Privaloma!').min(3).max(50),
+		name: yup
+			.string()
+			.required('Privaloma!')
+			.min(3, 'Vardas turi būti bent 3 simbolių ilgio!')
+			.max(30, 'Vardas turi būti ne ilgesnis nei 30 simbolių ilgio!'),
+		lastName: yup
+			.string()
+			.required('Privaloma!')
+			.min(3, 'Pavardė turi būti bent 3 simbolių ilgio!')
+			.max(50, 'Pavardė turi būti ne ilgesnė nei 50 simbolių ilgio!'),
 	});
 
 	const formik = useFormik({
 		initialValues: {
 			name: '',
 			lastName: '',
-			username: initialUsername,
-			email: initialEmail,
-			password: initialPassword,
-			confirmPassword: initialConfirmPassword,
+			username: '',
+			email: '',
+			password: '',
+			confirmPassword: '',
 		},
 		validationSchema: signUpValidation,
 		onSubmit: async (values: Record<string, string>) => {
@@ -80,7 +88,8 @@ const SignupScreen = () => {
 					}
 				)
 				.then(function (response) {
-					console.log(response.data);
+					login(response.data['username'], '' + response.data['id']);
+					navigation.navigate('Index');
 				})
 				.catch(function (error) {
 					console.log(error);

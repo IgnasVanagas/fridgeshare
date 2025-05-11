@@ -100,7 +100,7 @@ public class UserController : ApiController
         return CreatedAtAction(
             actionName: nameof(GetUser),
             routeValues: new { id=user.Id },
-            value: new { id = user.Id }
+            value: MapUserResponse(user)
         );
     }
 }
