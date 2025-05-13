@@ -79,6 +79,13 @@ const CommunityList = () => {
 						Prisijungti prie naujos bendruomenės
 					</Text>
 				</TouchableOpacity>
+				<TouchableOpacity
+  style={[buttonStyle.submitColorfulButton, { marginTop: 10 }]}
+  onPress={() => navigation.navigate('CreateCommunity')}
+>
+  <Text style={buttonStyle.submitColorfulButtonText}>Sukurti naują bendruomenę</Text>
+</TouchableOpacity>
+
 				{listOfManagedCommunities.length > 0 && (
 					<Text>Jūsų įkurtos bendruomenės:</Text>
 				)}
