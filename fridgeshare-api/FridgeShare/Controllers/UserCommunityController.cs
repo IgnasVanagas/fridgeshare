@@ -160,22 +160,28 @@ public class UserCommunityController : ApiController
         return Ok(responses);
     }
 
-    [HttpGet("community/{communityId:int}")]
-    public async Task<IActionResult> GetWaitingToJoinUsers(int communityId)
-    {
-        var getUsers = await _userCommunityService.GetWaitingToJoin(communityId);
-        if(getUsers.IsError)
-        { 
-            return Problem(getUsers.Errors);
-        }
-        var users = getUsers.Value;
-        List<UserCommunityResponse> responses = new List<UserCommunityResponse>();
-        foreach(var user in users)
-        {
-            responses.Add(MapUserCommunityResponse(user));
-        }
-        return Ok(responses);
+[HttpGet("community/{communityId:int}")]
+public async Task<IActionResult> GetWaitingToJoinUsers(int communityId)
+{
+    var getUsers = await _userCommunityService.GetWaitingToJoin(communityId);
+    if(getUsers.IsError)
+    { 
+        return Problem(getUsers.Errors);
     }
+    var users = getUsers.Value;
+    List<UserCommunityResponse> responses = new List<UserCommunityResponse>();
+    foreach(var userCommunity in users)
+    {
+        var userResult = await _userService.GetUser(userCommunity.UserId);
+        if(userResult.IsError)
+        {
+            return Problem(userResult.Errors);
+        }
+        var user = userResult.Value;
+        responses.Add(MapUserCommunityResponse(userCommunity, user.Username, null));
+    }
+    return Ok(responses);
+}
 
     private IActionResult CreatedAtGetUserCommunity(UserCommunity userCommunity)
     {
@@ -196,4 +202,31 @@ public class UserCommunityController : ApiController
         return new UserCommunityResponse(userCommunity.UserId, userCommunity.CommunityId, userCommunity.RequestSent,
             userCommunity.DateJoined, username, communityTitle);
     }
+    
+    [HttpGet("community/{communityId:int}/members")]
+    public async Task<IActionResult> GetCommunityMembers(int communityId)
+    {
+        var getUsers = await _userCommunityService.GetAllForCommunity(communityId);
+        if (getUsers.IsError)
+        {
+            return Problem(getUsers.Errors);
+        }
+
+        var users = getUsers.Value;
+        List<UserCommunityResponse> responses = new List<UserCommunityResponse>();
+        foreach (var userCommunity in users)
+        {
+            var userResult = await _userService.GetUser(userCommunity.UserId);
+            if (userResult.IsError)
+            {
+                return Problem(userResult.Errors);
+            }
+            var user = userResult.Value;
+            responses.Add(MapUserCommunityResponse(userCommunity, user.Username, null));
+        }
+
+        return Ok(responses);
+    }
+
 }
+
