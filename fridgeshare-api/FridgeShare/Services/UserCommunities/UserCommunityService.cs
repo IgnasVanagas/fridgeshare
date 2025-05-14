@@ -102,18 +102,18 @@ public class UserCommunityService : IUserCommunityService
         return users;
     }
     public async Task<ErrorOr<List<UserCommunity>>> GetAllForCommunity(int communityId)
-{
-    var users = await _dbContext
-        .UserCommunities
-        .Where(uc => uc.CommunityId == communityId)
-        .ToListAsync();
-
-    if (users == null)
     {
-        return Errors.UserCommunity.NotFound;
-    }
+        var users = await _dbContext
+            .UserCommunities
+            .Where(uc => uc.CommunityId == communityId)
+            .ToListAsync();
 
-    return users;
-}
+        if (users == null)
+        {
+            return Errors.UserCommunity.NotFound;
+        }
+
+        return users;
+    }
 
 }

@@ -60,17 +60,16 @@ const CommunityView = ({ route }: Props) => {
   }, [community, userId]);
 
   useEffect(() => {
-    const fetchAllUserRelations = async () => {
+const fetchAllUserRelations = async () => {
   try {
-    const res = await axios.get(`${API_BASE_URL}/usercommunity/community/${id}`);
+    const res = await axios.get(`${API_BASE_URL}/usercommunity/community/${id}/members`);
     setAllUserRelations(res.data);
   } catch (err) {
     console.error('Klaida gaunant vartotojus:', err);
   }
 };
 
-
-    fetchAllUserRelations();
+fetchAllUserRelations();
   }, [isAdmin, id]);
 
   const handleAccept = async (targetUserId: number) => {
