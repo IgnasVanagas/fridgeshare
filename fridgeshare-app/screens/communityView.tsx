@@ -5,13 +5,18 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { SafeAreaView, Text } from 'react-native';
+import { SafeAreaView, Text, TouchableOpacity } from 'react-native';
 import { ScrollView } from 'react-native';
 import { Community } from '@/constants/communityType';
 import { useAuth } from '@/context/authContext';
+import buttonStyle from '@/styles/buttons';
+import Feather from '@expo/vector-icons/Feather';
+import colors from '@/constants/colors';
+import { useNavigation } from '@react-navigation/native';
 
 type Props = NativeStackScreenProps<ParamList, 'CommunityView'>;
 const CommunityView = ({ route }: Props) => {
+	const navigation = useNavigation();
 	const { id } = route.params;
 	const { id: userId } = useAuth();
 	const [community, setCommunity] = useState<Community | null>(null);
@@ -48,10 +53,31 @@ const CommunityView = ({ route }: Props) => {
 		>
 			<SafeAreaView style={mainStyle.container3}>
 				<StatusBar style="dark" hidden={false} />
-				<Text style={mainStyle.styledH1}> {community?.title} </Text>
+				<Text style={[mainStyle.styledH1, { marginBottom: 10 }]}>
+					{community?.title}
+				</Text>
 				<Text> {community?.description} </Text>
 				{isAdmin && (
 					<Text>Prisijungimo kodas: {community?.joiningCode}</Text>
+				)}
+				{isAdmin && (
+					<TouchableOpacity
+						style={[
+							buttonStyle.submitColorfulButton,
+							mainStyle.inline,
+							{ marginBottom: '2%' },
+						]}
+						onPress={() =>
+							navigation.navigate('AddStorage', {
+								communityId: id,
+							})
+						}
+					>
+						<Feather name="plus" size={20} color={colors.white} />
+						<Text style={buttonStyle.submitColorfulButtonText}>
+							Pridėti maisto laikymo vietą
+						</Text>
+					</TouchableOpacity>
 				)}
 				<Text>-----content-------</Text>
 			</SafeAreaView>

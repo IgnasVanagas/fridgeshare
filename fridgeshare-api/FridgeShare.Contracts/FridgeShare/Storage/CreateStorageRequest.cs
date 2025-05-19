@@ -6,9 +6,5 @@ public record CreateStorageRequest
     string Location,
     int Type,
     int CommunityId,
-    DateTime? LastCleaningDate,
-    DateTime? LastMaintenanceDate,
-    bool propertyOfCompany = false,
-    bool IsEmpty = false,
-    bool NeedsMaintenance = false
+    bool propertyOfCompany = false
 );

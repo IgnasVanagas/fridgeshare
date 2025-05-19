@@ -62,8 +62,8 @@ public class Storage
 
     public static ErrorOr<Storage> From(CreateStorageRequest request)
     {
-        return Create(request.Title, request.Location, request.Type, request.LastCleaningDate, request.LastMaintenanceDate,
-            request.CommunityId, request.IsEmpty, request.propertyOfCompany, request.NeedsMaintenance);
+        return Create(request.Title, request.Location, request.Type, DateTime.UtcNow, null,
+            request.CommunityId, true, request.propertyOfCompany, false);
     }
 
     public static ErrorOr<Storage> From(Guid id, UpdateStorageRequest request)
