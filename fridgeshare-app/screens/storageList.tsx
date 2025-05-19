@@ -15,21 +15,6 @@ import { Storage } from '@/constants/storage';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 type Props = NativeStackScreenProps<ParamList, 'StorageList'>;
-interface StorageCommunityResponse {
-	id: string;
-	title: string;
-	location: string;
-	isEmpty: boolean;
-	dateAdded: string;
-	lastCleaningDate: string;
-	lastMaintenanceDate: string | null;
-	type: number;
-	typeName: string;
-	propertyOfCompany: boolean;
-	needsMaintenance: boolean;
-	communityId: number;
-	communityName: string;
-}
 
 const StorageList = ({ route }: Props) => {
 	const navigation = useNavigation();
@@ -55,6 +40,45 @@ const StorageList = ({ route }: Props) => {
 		});
 		return fetchData;
 	}, [navigation]);
+
+	const updateStorage = async (
+		storage: Storage,
+		_lastCleaningDate?: Date | null,
+		_needsMaintenance?: boolean | null
+	) => {
+		await axios
+			.put(`${API_BASE_URL}/storages/${storage.id}`, {
+				title: storage.title,
+				location: storage.location,
+				type: storage.type,
+				communityId: communityId,
+				lastCleaningDate: _lastCleaningDate
+					? _lastCleaningDate
+					: storage.lastCleaningDate,
+				lastMaintenanceDate: storage.lastMaintenanceDate,
+				propertyOfCompany: storage.propertyOfCompany,
+				isEmpty: storage.isEmpty,
+				needsMaintenance: _needsMaintenance
+					? _needsMaintenance
+					: storage.needsMaintenance,
+			})
+			.then(function (response) {
+				console.log(response.data);
+				getStorage();
+			})
+			.catch(function (error) {
+				console.log(error);
+			});
+	};
+
+	const handleCleaned = (storage: Storage) => {
+		const dateNow = new Date();
+		updateStorage(storage, dateNow);
+	};
+
+	const handleNeedsMaintenance = (storage: Storage) => {
+		updateStorage(storage, null, true);
+	};
 
 	return (
 		<ScrollView
@@ -137,10 +161,12 @@ const StorageList = ({ route }: Props) => {
 									<Text>{storage.typeName}</Text>
 									<Text>{storage.location}</Text>
 								</View>
-								<Text>
-									Paskutinį kartą valytas:{' '}
-									{storage.lastCleaningDate.split('T')[0]}
-								</Text>
+								{storage.lastCleaningDate && (
+									<Text>
+										Paskutinį kartą valytas:{' '}
+										{storage.lastCleaningDate.split('T')[0]}
+									</Text>
+								)}
 								{storage.lastMaintenanceDate && (
 									<Text>
 										Paskutinį kartą taisytas:{' '}
@@ -151,29 +177,42 @@ const StorageList = ({ route }: Props) => {
 										}
 									</Text>
 								)}
+								{storage.needsMaintenance && (
+									<Text style={{ color: colors.red }}>
+										Reikia techninės priežiūros!
+									</Text>
+								)}
 								<View style={mainStyle.inline}>
 									<TouchableOpacity
 										style={buttonStyle.submitColorfulButton}
+										onPress={() => handleCleaned(storage)}
 									>
 										<Text
 											style={
 												buttonStyle.submitColorfulButtonText
 											}
 										>
-											Sutvarkytas
+											Išvalytas
 										</Text>
 									</TouchableOpacity>
-									<TouchableOpacity
-										style={buttonStyle.submitColorfulButton}
-									>
-										<Text
+									{!storage.needsMaintenance && (
+										<TouchableOpacity
 											style={
-												buttonStyle.submitColorfulButtonText
+												buttonStyle.submitColorfulButton
+											}
+											onPress={() =>
+												handleNeedsMaintenance(storage)
 											}
 										>
-											Reikia taisyti
-										</Text>
-									</TouchableOpacity>
+											<Text
+												style={
+													buttonStyle.submitColorfulButtonText
+												}
+											>
+												Reikia taisyti
+											</Text>
+										</TouchableOpacity>
+									)}
 								</View>
 							</View>
 						</TouchableOpacity>
