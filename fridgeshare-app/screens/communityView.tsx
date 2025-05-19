@@ -6,11 +6,11 @@ import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  Text,
-  TouchableOpacity,
-  View,
+	SafeAreaView,
+	ScrollView,
+	Text,
+	TouchableOpacity,
+	View,
 } from 'react-native';
 import { Community } from '@/constants/communityType';
 import { useAuth } from '@/context/authContext';
@@ -20,178 +20,259 @@ import colors from '@/constants/colors';
 import { useNavigation } from '@react-navigation/native';
 
 interface UserCommunityResponse {
-  userId: number;
-  communityId: number;
-  username?: string;
-  communityTitle?: string;
-  requestSent: string;
-  dateJoined: string | null;
+	userId: number;
+	communityId: number;
+	username?: string;
+	communityTitle?: string;
+	requestSent: string;
+	dateJoined: string | null;
 }
 
 type Props = NativeStackScreenProps<ParamList, 'CommunityView'>;
 
 const CommunityView = ({ route }: Props) => {
 	const navigation = useNavigation();
-  const { id } = route.params;
-  const { id: userId } = useAuth();
-  const [community, setCommunity] = useState<Community | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [allUserRelations, setAllUserRelations] = useState<UserCommunityResponse[]>([]);
+	const { id } = route.params;
+	const { id: userId } = useAuth();
+	const [community, setCommunity] = useState<Community | null>(null);
+	const [isAdmin, setIsAdmin] = useState(false);
+	const [allUserRelations, setAllUserRelations] = useState<
+		UserCommunityResponse[]
+	>([]);
 
-  const acceptedMembers = allUserRelations.filter(u => u.dateJoined !== null);
-  const pendingRequests = allUserRelations.filter(u => u.dateJoined === null);
+	const acceptedMembers = allUserRelations.filter(
+		(u) => u.dateJoined !== null
+	);
+	const pendingRequests = allUserRelations.filter(
+		(u) => u.dateJoined === null
+	);
 
-  useEffect(() => {
-    const getCommunity = async () => {
-      try {
-        const response = await axios.get(`${API_BASE_URL}/community/${id}`, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        setCommunity(response.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getCommunity();
-  }, [id]);
+	useEffect(() => {
+		const getCommunity = async () => {
+			try {
+				const response = await axios.get(
+					`${API_BASE_URL}/community/${id}`,
+					{
+						headers: {
+							'Content-Type': 'application/json',
+						},
+					}
+				);
+				setCommunity(response.data);
+			} catch (error) {
+				console.log(error);
+			}
+		};
+		getCommunity();
+	}, [id]);
 
-  useEffect(() => {
-    if (community && userId) {
-      setIsAdmin(community.managerId.toString() === userId);
-    }
-  }, [community, userId]);
+	useEffect(() => {
+		if (community && userId) {
+			setIsAdmin(community.managerId.toString() === userId);
+		}
+	}, [community, userId]);
 
-  useEffect(() => {
-    const fetchAllUserRelations = async () => {
-  try {
-    const res = await axios.get(`${API_BASE_URL}/usercommunity/community/${id}/members`);
-    setAllUserRelations(res.data);
-  } catch (err) {
-    console.error('Klaida gaunant vartotojus:', err);
-  }
-};
+	useEffect(() => {
+		const fetchAllUserRelations = async () => {
+			try {
+				const res = await axios.get(
+					`${API_BASE_URL}/usercommunity/community/${id}/members`
+				);
+				setAllUserRelations(res.data);
+			} catch (err) {
+				console.error('Klaida gaunant vartotojus:', err);
+			}
+		};
 
-fetchAllUserRelations();
-  }, [isAdmin, id]);
+		fetchAllUserRelations();
+	}, [isAdmin, id]);
 
-  const handleAccept = async (targetUserId: number) => {
-    try {
-      await axios.put(`${API_BASE_URL}/usercommunity/${targetUserId}/${id}`, {
-        dateJoind: new Date().toISOString(),
-      });
-      setAllUserRelations(prev => 
-        prev.map(u =>
-          u.userId === targetUserId ? { ...u, dateJoined: new Date().toISOString() } : u
-        )
-      );
-    } catch (err) {
-      console.error('Klaida patvirtinant narį:', err);
-    }
-  };
+	const handleAccept = async (targetUserId: number) => {
+		try {
+			await axios.put(
+				`${API_BASE_URL}/usercommunity/${targetUserId}/${id}`,
+				{
+					dateJoind: new Date().toISOString(),
+				}
+			);
+			setAllUserRelations((prev) =>
+				prev.map((u) =>
+					u.userId === targetUserId
+						? { ...u, dateJoined: new Date().toISOString() }
+						: u
+				)
+			);
+		} catch (err) {
+			console.error('Klaida patvirtinant narį:', err);
+		}
+	};
 
-  const handleReject = async (targetUserId: number) => {
-    try {
-      await axios.delete(`${API_BASE_URL}/usercommunity/${targetUserId}/${id}`);
-      setAllUserRelations(prev => prev.filter(r => r.userId !== targetUserId));
-    } catch (err) {
-      console.error('Klaida atmetant narį:', err);
-    }
-  };
+	const handleReject = async (targetUserId: number) => {
+		try {
+			await axios.delete(
+				`${API_BASE_URL}/usercommunity/${targetUserId}/${id}`
+			);
+			setAllUserRelations((prev) =>
+				prev.filter((r) => r.userId !== targetUserId)
+			);
+		} catch (err) {
+			console.error('Klaida atmetant narį:', err);
+		}
+	};
 
-  return (
-    <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexGrow: 1 }}>
-      <SafeAreaView style={mainStyle.container3}>
-        <StatusBar style="dark" hidden={false} />
-        <Text style={mainStyle.styledH1}> {community?.title} </Text>
-        <Text> {community?.description} </Text>
+	return (
+		<ScrollView
+			keyboardShouldPersistTaps="handled"
+			contentContainerStyle={{ flexGrow: 1 }}
+		>
+			<SafeAreaView style={mainStyle.container3}>
+				<StatusBar style="dark" hidden={false} />
+				<Text style={mainStyle.styledH1}> {community?.title} </Text>
+				<Text> {community?.description} </Text>
 
-        {isAdmin && (
-          <Text style={{ marginTop: 10, fontWeight: 'bold' }}>
-            Prisijungimo kodas: {community?.joiningCode}
-          </Text>
-        )}
+				{isAdmin && (
+					<Text style={{ marginTop: 10, fontWeight: 'bold' }}>
+						Prisijungimo kodas: {community?.joiningCode}
+					</Text>
+				)}
 
-        {/* ✅ Member List */}
-        <Text style={{ marginTop: 20, fontWeight: 'bold', fontSize: 16 }}>Bendruomenės nariai:</Text>
-        {acceptedMembers.length > 0 ? (
-          acceptedMembers.map((member) => (
-            <View
-              key={member.userId}
-              style={{
-                borderWidth: 1,
-                borderColor: 'lightgray',
-                padding: 10,
-                marginVertical: 5,
-                borderRadius: 10,
-              }}
-            >
-              <Text>Vartotojas: {member.username ?? 'Nežinomas'}</Text>
-              <Text>Prisijungė: {new Date(member.dateJoined!).toLocaleDateString()}</Text>
-            </View>
-          ))
-        ) : (
-          <Text style={{ marginTop: 5 }}>Nėra patvirtintų narių.</Text>
-        )}
+				{/* ✅ Member List */}
+				<Text
+					style={{ marginTop: 20, fontWeight: 'bold', fontSize: 16 }}
+				>
+					Bendruomenės nariai:
+				</Text>
+				{acceptedMembers.length > 0 ? (
+					acceptedMembers.map((member) => (
+						<View
+							key={member.userId}
+							style={{
+								borderWidth: 1,
+								borderColor: 'lightgray',
+								padding: 10,
+								marginVertical: 5,
+								borderRadius: 10,
+							}}
+						>
+							<Text>
+								Vartotojas: {member.username ?? 'Nežinomas'}
+							</Text>
+							<Text>
+								Prisijungė:{' '}
+								{new Date(
+									member.dateJoined!
+								).toLocaleDateString()}
+							</Text>
+						</View>
+					))
+				) : (
+					<Text style={{ marginTop: 5 }}>
+						Nėra patvirtintų narių.
+					</Text>
+				)}
 
-        {/* ✅ Admin Only: Pending Requests */}
-        {isAdmin && (
-          <>
-            <Text style={{ marginTop: 20, fontWeight: 'bold', fontSize: 16 }}>
-              Laukiančios užklausos:
-            </Text>
-            {pendingRequests.length > 0 ? (
-              pendingRequests.map((req) => (
-                <View
-                  key={req.userId}
-                  style={{
-                    borderWidth: 1,
-                    borderColor: 'gray',
-                    padding: 10,
-                    marginVertical: 5,
-                    borderRadius: 10,
-                  }}
-                >
-                  <Text>Vartotojas: {req.username ?? 'Nežinomas'}</Text>
-                  <Text>
-                    Užklausa išsiųsta: {new Date(req.requestSent).toLocaleDateString()}
-                  </Text>
-                  <View style={{ flexDirection: 'row', marginTop: 10 }}>
-                    <TouchableOpacity
-                      onPress={() => handleAccept(req.userId)}
-                      style={{
-                        marginRight: 10,
-                        backgroundColor: 'green',
-                        padding: 8,
-                        borderRadius: 5,
-                      }}
-                    >
-                      <Text style={{ color: 'white' }}>Patvirtinti</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      onPress={() => handleReject(req.userId)}
-                      style={{
-                        backgroundColor: 'red',
-                        padding: 8,
-                        borderRadius: 5,
-                      }}
-                    >
-                      <Text style={{ color: 'white' }}>Atmesti</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              ))
-            ) : (
-              <Text style={{ marginTop: 5 }}>Nėra laukiančių užklausų.</Text>
-            )}
-          </>
-        )}
-
-        <Text style={{ marginTop: 30 }}>-----content-------</Text>
-      </SafeAreaView>
-    </ScrollView>
-  );
+				{/* ✅ Admin Only: Pending Requests */}
+				{isAdmin && (
+					<>
+						<Text
+							style={{
+								marginTop: 20,
+								fontWeight: 'bold',
+								fontSize: 16,
+							}}
+						>
+							Laukiančios užklausos:
+						</Text>
+						{pendingRequests.length > 0 ? (
+							pendingRequests.map((req) => (
+								<View
+									key={req.userId}
+									style={{
+										borderWidth: 1,
+										borderColor: 'gray',
+										padding: 10,
+										marginVertical: 5,
+										borderRadius: 10,
+									}}
+								>
+									<Text>
+										Vartotojas:{' '}
+										{req.username ?? 'Nežinomas'}
+									</Text>
+									<Text>
+										Užklausa išsiųsta:{' '}
+										{new Date(
+											req.requestSent
+										).toLocaleDateString()}
+									</Text>
+									<View
+										style={{
+											flexDirection: 'row',
+											marginTop: 10,
+										}}
+									>
+										<TouchableOpacity
+											onPress={() =>
+												handleAccept(req.userId)
+											}
+											style={{
+												marginRight: 10,
+												backgroundColor: 'green',
+												padding: 8,
+												borderRadius: 5,
+											}}
+										>
+											<Text style={{ color: 'white' }}>
+												Patvirtinti
+											</Text>
+										</TouchableOpacity>
+										<TouchableOpacity
+											onPress={() =>
+												handleReject(req.userId)
+											}
+											style={{
+												backgroundColor: 'red',
+												padding: 8,
+												borderRadius: 5,
+											}}
+										>
+											<Text style={{ color: 'white' }}>
+												Atmesti
+											</Text>
+										</TouchableOpacity>
+									</View>
+								</View>
+							))
+						) : (
+							<Text style={{ marginTop: 5 }}>
+								Nėra laukiančių užklausų.
+							</Text>
+						)}
+					</>
+				)}
+				{isAdmin && (
+					<TouchableOpacity
+						style={[
+							buttonStyle.submitColorfulButton,
+							mainStyle.inline,
+							{ marginBottom: '2%' },
+						]}
+						onPress={() =>
+							navigation.navigate('StorageList', {
+								communityId: id,
+								isAdmin: isAdmin,
+							})
+						}
+					>
+						<Text style={buttonStyle.submitColorfulButtonText}>
+							Visos maisto laikymo vietos
+						</Text>
+					</TouchableOpacity>
+				)}
+				<Text style={{ marginTop: 30 }}>-----content-------</Text>
+			</SafeAreaView>
+		</ScrollView>
+	);
 };
 
 export default CommunityView;

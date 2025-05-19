@@ -76,8 +76,6 @@ const AddStorage = ({ route }: Props) => {
 					});
 			};
 			createStorage();
-			console.log(values);
-			console.log(communityId);
 		},
 	});
 	return (
@@ -140,12 +138,13 @@ const AddStorage = ({ route }: Props) => {
 								<Text>Ar tai yra kompanijos nuosavybė?</Text>
 								<Checkbox
 									value={formik.values.propertyOfCompany}
-									onValueChange={(value) =>
+									onValueChange={(value) => {
+										console.log(value);
 										formik.setFieldValue(
 											'propertyOfCompany',
 											value
-										)
-									}
+										);
+									}}
 								/>
 							</View>
 							<GreenSubmitButton

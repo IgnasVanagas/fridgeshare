@@ -88,4 +88,18 @@ public class StorageService : IStorageService
 
         return storage;
     }
+
+    public async Task<ErrorOr<List<Storage>>> GetAllStorages(int id)
+    {
+        var storages = await _dbContext.Storages
+            .Include(s => s.Community)
+            .Where(s => s.CommunityId == id).OrderBy(s => s.Title.ToLower()).ThenBy(s => s.DateAdded)
+            .ToListAsync();
+        if (storages is null)
+        {
+            return Errors.Storage.NotFound;
+        }
+        return storages;
+
+    }
 }
