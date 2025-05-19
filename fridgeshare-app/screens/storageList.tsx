@@ -24,6 +24,8 @@ const StorageList = ({ route }: Props) => {
 	const { communityId } = route.params;
 	const { isAdmin } = route.params;
 	const [storages, setStorages] = useState<Storage[]>([]);
+	const [deleteError, setDeleteError] = useState<string | null>(null);
+	const [deleteErrorId, setDeleteErrorId] = useState<string | null>(null);
 
 	const getStorage = async () => {
 		await axios
@@ -81,6 +83,31 @@ const StorageList = ({ route }: Props) => {
 		updateStorage(storage, null, true);
 	};
 
+	const handleDelete = (storageId: string) => {
+		const deleteStorage = async (storageId: string) => {
+			await axios
+				.delete(`${API_BASE_URL}/storages/${storageId}`)
+				.then(function (response) {
+					getStorage();
+					setDeleteError(null);
+					setDeleteErrorId(null);
+				})
+				.catch(function (error) {
+					if (error.status == 409) {
+						setDeleteError(
+							'Negalima pašalinti saugojimo vietos, kuri turi produktų!'
+						);
+					} else {
+						setDeleteError('Klaida šalinant saugojimo vietą');
+					}
+					setDeleteErrorId(storageId);
+					console.log(error.status);
+				});
+		};
+
+		deleteStorage(storageId);
+	};
+
 	return (
 		<ScrollView
 			keyboardShouldPersistTaps="handled"
@@ -131,7 +158,7 @@ const StorageList = ({ route }: Props) => {
 				)}
 				{storages.length > 0 ? (
 					storages.map((storage) => (
-						<TouchableOpacity
+						<View
 							key={storage.id}
 							style={buttonStyle.touchableOpacityListItem}
 						>
@@ -139,7 +166,9 @@ const StorageList = ({ route }: Props) => {
 								<View
 									style={[
 										mainStyle.inline,
-										{ justifyContent: 'flex-start' },
+										{
+											justifyContent: 'flex-start',
+										},
 									]}
 								>
 									{storage.propertyOfCompany && (
@@ -152,12 +181,13 @@ const StorageList = ({ route }: Props) => {
 									<Text
 										style={[
 											buttonStyle.touchableOpacityText,
-											{ textAlign: 'left' },
+											{ fontSize: 20 },
 										]}
 									>
 										{storage.title}
 									</Text>
 								</View>
+
 								<View style={mainStyle.inline}>
 									<Text>
 										{storageNameInLithuanian[
@@ -219,8 +249,50 @@ const StorageList = ({ route }: Props) => {
 										</TouchableOpacity>
 									)}
 								</View>
+								<View
+									style={[
+										mainStyle.inline,
+										{ marginTop: 20 },
+									]}
+								>
+									<TouchableOpacity
+										style={buttonStyle.submitColorfulButton}
+										onPress={() =>
+											navigation.navigate('AddStorage', {
+												communityId: communityId,
+												storage: storage,
+											})
+										}
+									>
+										<Text
+											style={
+												buttonStyle.submitColorfulButtonText
+											}
+										>
+											Redaguoti
+										</Text>
+									</TouchableOpacity>
+									<TouchableOpacity
+										style={buttonStyle.submitColorfulButton}
+										onPress={() => handleDelete(storage.id)}
+									>
+										<Text
+											style={
+												buttonStyle.submitColorfulButtonText
+											}
+										>
+											Pašalinti
+										</Text>
+									</TouchableOpacity>
+								</View>
+								{deleteErrorId &&
+									deleteErrorId == storage.id && (
+										<Text style={{ color: colors.red }}>
+											{deleteError}
+										</Text>
+									)}
 							</View>
-						</TouchableOpacity>
+						</View>
 					))
 				) : (
 					<Text>Nėra pridėtų maisto saugojimo vietų.</Text>

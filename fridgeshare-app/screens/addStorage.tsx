@@ -28,13 +28,16 @@ type FormValues = {
 	location: string;
 	type: number;
 	propertyOfCompany: boolean;
+	id?: string | null;
 };
 
 type Props = NativeStackScreenProps<ParamList, 'AddStorage'>;
 
 const AddStorage = ({ route }: Props) => {
-	const { communityId } = route.params;
+	const { communityId, storage } = route.params;
 	const navigation = useNavigation();
+	const isEditing = !!storage;
+
 	const addStorageValidation = yup.object().shape({
 		title: yup
 			.string()
@@ -51,29 +54,50 @@ const AddStorage = ({ route }: Props) => {
 
 	const formik = useFormik<FormValues>({
 		initialValues: {
-			title: '',
-			location: '',
-			type: 0,
-			propertyOfCompany: false,
+			title: storage?.title || '',
+			location: storage?.location || '',
+			type: storage?.type || 0,
+			propertyOfCompany: storage?.propertyOfCompany || false,
+			id: storage?.id || null,
 		},
 		validationSchema: addStorageValidation,
 		onSubmit: async (values) => {
 			const createStorage = async () => {
-				await axios
-					.post(`${API_BASE_URL}/storages`, {
-						title: values['title'],
-						location: values['location'],
-						type: values['type'],
-						communityId: communityId,
-						propertyOfCompany: values['propertyOfCompany'],
-					})
-					.then(function (response) {
-						console.log(response);
-						navigation.goBack();
-					})
-					.catch(function (error) {
-						console.log(error);
-					});
+				if (isEditing) {
+					if (values.id != null) {
+						await axios
+							.put(`${API_BASE_URL}/storages/${values.id}`, {
+								title: values['title'],
+								location: values['location'],
+								type: values['type'],
+								communityId: communityId,
+								propertyOfCompany: values['propertyOfCompany'],
+							})
+							.then(function (response) {
+								console.log(response);
+								navigation.goBack();
+							})
+							.catch(function (error) {
+								console.log(error);
+							});
+					}
+				} else {
+					await axios
+						.post(`${API_BASE_URL}/storages`, {
+							title: values['title'],
+							location: values['location'],
+							type: values['type'],
+							communityId: communityId,
+							propertyOfCompany: values['propertyOfCompany'],
+						})
+						.then(function (response) {
+							console.log(response);
+							navigation.goBack();
+						})
+						.catch(function (error) {
+							console.log(error);
+						});
+				}
 			};
 			createStorage();
 		},
@@ -89,7 +113,9 @@ const AddStorage = ({ route }: Props) => {
 				>
 					<SafeAreaView style={mainStyle.container2}>
 						<Text style={mainStyle.styledH1}>
-							Pridėti maisto laikymo vietą
+							{isEditing
+								? 'Redaguoti maisto laikymo vietą'
+								: 'Pridėti maisto laikymo vietą'}
 						</Text>
 						<View style={[mainStyle.form, { width: '95%' }]}>
 							<FormTextInput
@@ -130,7 +156,7 @@ const AddStorage = ({ route }: Props) => {
 										<Picker.Item
 											key={value.id}
 											label={value.label}
-											value={value.id.toString()}
+											value={value.id}
 										/>
 									))}
 								</Picker>
@@ -143,7 +169,6 @@ const AddStorage = ({ route }: Props) => {
 								<Checkbox
 									value={formik.values.propertyOfCompany}
 									onValueChange={(value) => {
-										console.log(value);
 										formik.setFieldValue(
 											'propertyOfCompany',
 											value
@@ -152,7 +177,7 @@ const AddStorage = ({ route }: Props) => {
 								/>
 							</View>
 							<GreenSubmitButton
-								label="Pridėti"
+								label={isEditing ? 'Išsaugoti' : 'Pridėti'}
 								onPress={() => formik.handleSubmit()}
 							/>
 						</View>
