@@ -12,4 +12,6 @@ public interface IUserCommunityService
     Task<ErrorOr<List<UserCommunity>>> GetUserRequests(int userId);
     Task<ErrorOr<List<UserCommunity>>> GetWaitingToJoin(int communityId);
     Task<ErrorOr<UserCommunity>> GetUserCommunity(int userId, int communityId);
+    Task<ErrorOr<List<UserCommunity>>> GetAllForCommunity(int communityId);
+
 }

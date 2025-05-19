@@ -4,5 +4,6 @@ export type ParamList = {
 	AuthIndex: undefined;
 	RequestList: undefined;
 	JoinCommunity: undefined;
+	CreateCommunity: undefined;
 	AddStorage: { communityId: number };
 };
