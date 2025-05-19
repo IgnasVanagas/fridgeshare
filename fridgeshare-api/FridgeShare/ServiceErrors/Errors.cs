@@ -97,6 +97,11 @@ public static class Errors
             code: "Storage.NotFound",
             description: "Storage not found"
         );
+
+        public static Error HasProducts => Error.Conflict(
+            code: "Storage.HasProducts",
+            description: "Storage has products and cannot be deleted."
+        );
     }
 
     public static class Community

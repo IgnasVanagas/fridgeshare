@@ -4,21 +4,18 @@ import { StyleSheet } from 'react-native';
 const mainStyle = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: colors.white,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
 	container2: {
 		padding: 24,
 		flex: 1,
-		backgroundColor: colors.white,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
 	container3: {
 		padding: 24,
 		flex: 1,
-		backgroundColor: colors.white,
 		alignItems: 'center',
 	},
 	text: {
