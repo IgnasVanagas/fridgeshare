@@ -114,9 +114,13 @@ const AddStorage = ({ route }: Props) => {
 								<Text>Laikymo vietos tipas:</Text>
 								<Picker
 									selectedValue={formik.values.type}
-									onValueChange={(selectedType) =>
-										console.log(selectedType)
-									}
+									onValueChange={(selectedType) => {
+										console.log(selectedType);
+										formik.setFieldValue(
+											'type',
+											selectedType
+										);
+									}}
 									itemStyle={{
 										color: colors.black,
 										fontSize: 14,

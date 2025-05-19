@@ -15,7 +15,10 @@ import { Storage } from '@/constants/storage';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 type Props = NativeStackScreenProps<ParamList, 'StorageList'>;
-
+const storageNameInLithuanian: { [key: string]: string } = {
+	Shelf: 'Spintelė',
+	Fridge: 'Šaldytuvas',
+};
 const StorageList = ({ route }: Props) => {
 	const navigation = useNavigation();
 	const { communityId } = route.params;
@@ -27,7 +30,6 @@ const StorageList = ({ route }: Props) => {
 			.get(`${API_BASE_URL}/storages/community/${communityId}`)
 			.then(function (response) {
 				setStorages(response.data);
-				console.log(response.data);
 			})
 			.catch(function (error) {
 				console.log(error);
@@ -63,7 +65,6 @@ const StorageList = ({ route }: Props) => {
 					: storage.needsMaintenance,
 			})
 			.then(function (response) {
-				console.log(response.data);
 				getStorage();
 			})
 			.catch(function (error) {
@@ -158,7 +159,11 @@ const StorageList = ({ route }: Props) => {
 									</Text>
 								</View>
 								<View style={mainStyle.inline}>
-									<Text>{storage.typeName}</Text>
+									<Text>
+										{storageNameInLithuanian[
+											storage.typeName
+										] ?? storage.typeName}
+									</Text>
 									<Text>{storage.location}</Text>
 								</View>
 								{storage.lastCleaningDate && (
