@@ -57,6 +57,19 @@ const TagForm = ({ route }: Props) => {
 		onSubmit: async (values) => {
 			const addTag = async () => {
 				if (isEditing) {
+					await axios
+						.put(`${API_BASE_URL}/tags/${values.id}`, {
+							title: values.title,
+							color: values.color,
+							communityId: values.communityId,
+						})
+						.then(function () {
+							navigation.goBack();
+						})
+						.catch(function (error) {
+							console.log(error);
+							setError('Klaida redaguojant žymą');
+						});
 				} else {
 					await axios
 						.post(`${API_BASE_URL}/tags`, {

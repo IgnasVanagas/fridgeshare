@@ -147,6 +147,12 @@ const TagsList = ({ route }: Props) => {
 										padding: 5,
 										borderRadius: 5,
 									}}
+									onPress={() =>
+										navigation.navigate('AddTag', {
+											communityId: communityId,
+											tag: tag,
+										})
+									}
 								>
 									<Text style={{ color: colors[index] }}>
 										Redaguoti
