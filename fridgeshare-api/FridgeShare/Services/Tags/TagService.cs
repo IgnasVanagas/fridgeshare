@@ -48,6 +48,19 @@ public class TagService : ITagService
         return Result.Deleted;    
     }
 
+    public async Task<ErrorOr<List<Tag>>> GetAllTagsOfCommunity(int communityId)
+    {
+        var tags = await _dbContext.Tags
+            .Where(t => t.CommunityId == communityId)
+            .OrderBy(t => t.Title.ToLower())
+            .ToListAsync();
+        if (tags == null)
+        {
+            return Errors.Tag.NotFound;
+        }
+        return tags;
+    }
+
     public async Task<ErrorOr<Tag>> GetTag(int id)
     {
         var tag = await _dbContext.Tags.FindAsync(id);

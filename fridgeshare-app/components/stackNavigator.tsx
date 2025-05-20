@@ -14,7 +14,8 @@ import CreateCommunity from '@/screens/createCommunity';
 import ChangeUsername from '@/screens/ChangeUsername';
 import ChangePasswordScreen from '@/screens/ChangePasswordScreen';
 import StorageList from '@/screens/storageList';
-
+import TagForm from '@/screens/tagForm';
+import TagsList from '@/screens/tagList';
 
 const Stack1 = createNativeStackNavigator();
 
@@ -39,9 +40,14 @@ export function AuthStackNavigation() {
 			<Stack2.Screen name="JoinCommunity" component={JoinCommunity} />
 			<Stack2.Screen name="CreateCommunity" component={CreateCommunity} />
 			<Stack2.Screen name="ChangeUsername" component={ChangeUsername} />
-			<Stack2.Screen name="ChangePassword" component={ChangePasswordScreen} />
+			<Stack2.Screen
+				name="ChangePassword"
+				component={ChangePasswordScreen}
+			/>
 			<Stack2.Screen name="StorageList" component={StorageList} />
 			<Stack2.Screen name="AddStorage" component={AddStorage} />
+			<Stack2.Screen name="AddTag" component={TagForm} />
+			<Stack2.Screen name="TagsList" component={TagsList} />
 		</Stack2.Navigator>
 	);
 }
