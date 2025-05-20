@@ -261,10 +261,12 @@ const CommunityView = ({ route }: Props) => {
         Palikti bendruomenę
       </Text>
     </TouchableOpacity>
-  )}
+)}
 
 <Text style={{ marginTop: 30 }}>-----content-------</Text>
 
+</SafeAreaView>
+</ScrollView>
+);
 };
-
 export default CommunityView;
