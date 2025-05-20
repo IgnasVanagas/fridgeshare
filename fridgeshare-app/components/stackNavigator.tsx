@@ -10,6 +10,10 @@ import { ParamList } from '@/constants/paramList';
 import SentOutRequestList from '@/screens/sentOutRequestList';
 import JoinCommunity from '@/screens/joinCommunity';
 import CreateCommunity from '@/screens/createCommunity';
+import ChangeUsername from '@/screens/ChangeUsername';
+import ChangePasswordScreen from '@/screens/ChangePasswordScreen';
+
+
 
 
 const Stack1 = createNativeStackNavigator();
@@ -34,6 +38,9 @@ export function AuthStackNavigation() {
 			<Stack2.Screen name="RequestList" component={SentOutRequestList} />
 			<Stack2.Screen name="JoinCommunity" component={JoinCommunity} />
 			<Stack2.Screen name="CreateCommunity" component={CreateCommunity} />
+			<Stack2.Screen name="ChangeUsername" component={ChangeUsername} />
+			<Stack2.Screen name="ChangePassword" component={ChangePasswordScreen} />
+
 		</Stack2.Navigator>
 	);
 }

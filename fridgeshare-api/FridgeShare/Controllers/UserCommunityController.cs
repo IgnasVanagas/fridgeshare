@@ -29,18 +29,18 @@ public class UserCommunityController : ApiController
         }
         var community = getCommunityResult.Value;
 
-        if(community.JoiningCode != request.JoiningCode)
+        if (community.JoiningCode != request.JoiningCode)
         {
             return Problem("Wrong code for joining!");
         }
 
-        if(community.ManagerId == request.UserId)
+        if (community.ManagerId == request.UserId)
         {
             return Conflict("User is already manager of this community!");
         }
 
         var requestToUserCommunityResult = UserCommunity.From(request, community.Id);
-        if(requestToUserCommunityResult.IsError)
+        if (requestToUserCommunityResult.IsError)
         {
             return Problem(requestToUserCommunityResult.Errors);
         }
@@ -48,7 +48,7 @@ public class UserCommunityController : ApiController
         var userCommunity = requestToUserCommunityResult.Value;
 
         var createUserCommunity = await _userCommunityService.CreateUserJoin(userCommunity);
-        if(createUserCommunity.IsError)
+        if (createUserCommunity.IsError)
         {
             return Problem(createUserCommunity.Errors);
         }
@@ -59,14 +59,14 @@ public class UserCommunityController : ApiController
     public async Task<IActionResult> ConfirmUserJoinRequest(int userId, int communityId, UpdateUserCommunityRequest request)
     {
         var requestToUserCommunityResult = UserCommunity.From(userId, communityId, request);
-        if(requestToUserCommunityResult.IsError)
+        if (requestToUserCommunityResult.IsError)
         {
             return Problem(requestToUserCommunityResult.Errors);
         }
         var userCommunity = requestToUserCommunityResult.Value;
 
         var update = await _userCommunityService.ConfirmUserJoinRequest(userCommunity);
-        if(update.IsError)
+        if (update.IsError)
         {
             return Problem(update.Errors);
         }
@@ -77,7 +77,7 @@ public class UserCommunityController : ApiController
     public async Task<IActionResult> DeleteUserJoin(int userId, int communityId)
     {
         var deleteResult = await _userCommunityService.DeleteUserJoinRequest(userId, communityId);
-        if(deleteResult.IsError)
+        if (deleteResult.IsError)
         {
             return Problem(deleteResult.Errors);
         }
@@ -88,21 +88,21 @@ public class UserCommunityController : ApiController
     public async Task<IActionResult> GetUserCommunity(int userId, int communityId)
     {
         var getUserCommunityResult = await _userCommunityService.GetUserCommunity(userId, communityId);
-        if(getUserCommunityResult.IsError)
+        if (getUserCommunityResult.IsError)
         {
             return Problem(getUserCommunityResult.Errors);
         }
         var userCommunity = getUserCommunityResult.Value;
 
         var userResult = await _userService.GetUser(userId);
-        if(userResult.IsError)
+        if (userResult.IsError)
         {
             return Problem(userResult.Errors);
         }
         var user = userResult.Value;
 
         var communityResult = await _communityService.GetCommunity(communityId);
-        if(communityResult.IsError)
+        if (communityResult.IsError)
         {
             return Problem(communityResult.Errors);
         }
@@ -116,7 +116,7 @@ public class UserCommunityController : ApiController
     public async Task<IActionResult> GetUserCommunities(int userId)
     {
         var getCommunities = await _userCommunityService.GetUserJoinedCommunities(userId);
-        if(getCommunities.IsError)
+        if (getCommunities.IsError)
         {
             return Problem(getCommunities.Errors);
         }
@@ -125,7 +125,7 @@ public class UserCommunityController : ApiController
         foreach (var community in userCommunities)
         {
             var getCommunityResult = await _communityService.GetCommunity(community.CommunityId);
-            if(getCommunityResult.IsError)
+            if (getCommunityResult.IsError)
             {
                 return Problem(getCommunityResult.Errors);
             }
@@ -140,7 +140,7 @@ public class UserCommunityController : ApiController
     public async Task<IActionResult> GetUserRequests(int userId)
     {
         var getRequestsResult = await _userCommunityService.GetUserRequests(userId);
-        if(getRequestsResult.IsError)
+        if (getRequestsResult.IsError)
         {
             return Problem(getRequestsResult.Errors);
         }
@@ -160,28 +160,28 @@ public class UserCommunityController : ApiController
         return Ok(responses);
     }
 
-[HttpGet("community/{communityId:int}")]
-public async Task<IActionResult> GetWaitingToJoinUsers(int communityId)
-{
-    var getUsers = await _userCommunityService.GetWaitingToJoin(communityId);
-    if(getUsers.IsError)
-    { 
-        return Problem(getUsers.Errors);
-    }
-    var users = getUsers.Value;
-    List<UserCommunityResponse> responses = new List<UserCommunityResponse>();
-    foreach(var userCommunity in users)
+    [HttpGet("community/{communityId:int}")]
+    public async Task<IActionResult> GetWaitingToJoinUsers(int communityId)
     {
-        var userResult = await _userService.GetUser(userCommunity.UserId);
-        if(userResult.IsError)
+        var getUsers = await _userCommunityService.GetWaitingToJoin(communityId);
+        if (getUsers.IsError)
         {
-            return Problem(userResult.Errors);
+            return Problem(getUsers.Errors);
         }
-        var user = userResult.Value;
-        responses.Add(MapUserCommunityResponse(userCommunity, user.Username, null));
+        var users = getUsers.Value;
+        List<UserCommunityResponse> responses = new List<UserCommunityResponse>();
+        foreach (var userCommunity in users)
+        {
+            var userResult = await _userService.GetUser(userCommunity.UserId);
+            if (userResult.IsError)
+            {
+                return Problem(userResult.Errors);
+            }
+            var user = userResult.Value;
+            responses.Add(MapUserCommunityResponse(userCommunity, user.Username, null));
+        }
+        return Ok(responses);
     }
-    return Ok(responses);
-}
 
     private IActionResult CreatedAtGetUserCommunity(UserCommunity userCommunity)
     {
@@ -202,7 +202,7 @@ public async Task<IActionResult> GetWaitingToJoinUsers(int communityId)
         return new UserCommunityResponse(userCommunity.UserId, userCommunity.CommunityId, userCommunity.RequestSent,
             userCommunity.DateJoined, username, communityTitle);
     }
-    
+
     [HttpGet("community/{communityId:int}/members")]
     public async Task<IActionResult> GetCommunityMembers(int communityId)
     {
@@ -227,6 +227,19 @@ public async Task<IActionResult> GetWaitingToJoinUsers(int communityId)
 
         return Ok(responses);
     }
+    [HttpDelete("leave/{userId:int}/{communityId:int}")]
+    public async Task<IActionResult> LeaveCommunity(int userId, int communityId)
+    {
+        var result = await _userCommunityService.LeaveCommunity(userId, communityId);
+        if (result.IsError)
+        {
+            return Problem(result.Errors);
+        }
+
+        return NoContent();
+    }
+
+
 
 }
 

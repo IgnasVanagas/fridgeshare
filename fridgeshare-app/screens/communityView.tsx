@@ -95,6 +95,17 @@ fetchAllUserRelations();
       console.error('Klaida atmetant narį:', err);
     }
   };
+  const handleLeaveCommunity = async () => {
+  try {
+    await axios.delete(`${API_BASE_URL}/usercommunity/leave/${userId}/${id}`);
+    // Navigate back or update UI
+    alert('Palikote bendruomenę.');
+  } catch (err) {
+    console.error('Klaida paliekant bendruomenę:', err);
+    alert('Nepavyko palikti bendruomenės.');
+  }
+};
+
 
   return (
     <ScrollView keyboardShouldPersistTaps="handled" contentContainerStyle={{ flexGrow: 1 }}>
@@ -109,7 +120,7 @@ fetchAllUserRelations();
           </Text>
         )}
 
-        {/* ✅ Member List */}
+        {/* Member List */}
         <Text style={{ marginTop: 20, fontWeight: 'bold', fontSize: 16 }}>Bendruomenės nariai:</Text>
         {acceptedMembers.length > 0 ? (
           acceptedMembers.map((member) => (
@@ -131,7 +142,7 @@ fetchAllUserRelations();
           <Text style={{ marginTop: 5 }}>Nėra patvirtintų narių.</Text>
         )}
 
-        {/* ✅ Admin Only: Pending Requests */}
+        {/* Admin Only: Pending Requests */}
         {isAdmin && (
           <>
             <Text style={{ marginTop: 20, fontWeight: 'bold', fontSize: 16 }}>
@@ -183,8 +194,22 @@ fetchAllUserRelations();
             )}
           </>
         )}
+  {!isAdmin && acceptedMembers.some(m => m.userId.toString() === userId) && (
+    <TouchableOpacity
+      onPress={handleLeaveCommunity}
+      style={{
+        marginTop: 20,
+        backgroundColor: 'orange',
+        padding: 10,
+        borderRadius: 5,
+        alignItems: 'center',
+      }}
+    >
+      <Text style={{ color: 'white', fontWeight: 'bold' }}>Palikti bendruomenę</Text>
+    </TouchableOpacity>
+  )}
 
-        <Text style={{ marginTop: 30 }}>-----content-------</Text>
+
       </SafeAreaView>
     </ScrollView>
   );
