@@ -42,6 +42,13 @@ const buttonStyle = StyleSheet.create({
 		fontWeight: 'bold',
 		color: colors.brandGreen,
 	},
+	greenBorder: {
+		borderColor: colors.brandGreen,
+		borderStyle: 'solid',
+		borderRadius: 10,
+		borderWidth: 1,
+		padding: 10,
+	},
 });
 
 export default buttonStyle;

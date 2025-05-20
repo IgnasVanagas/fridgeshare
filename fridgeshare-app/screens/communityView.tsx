@@ -15,9 +15,9 @@ import {
 import { Community } from '@/constants/communityType';
 import { useAuth } from '@/context/authContext';
 import buttonStyle from '@/styles/buttons';
-import Feather from '@expo/vector-icons/Feather';
-import colors from '@/constants/colors';
 import { useNavigation } from '@react-navigation/native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import colors from '@/constants/colors';
 
 interface UserCommunityResponse {
 	userId: number;
@@ -138,7 +138,32 @@ const CommunityView = ({ route }: Props) => {
 		>
 			<SafeAreaView style={mainStyle.container3}>
 				<StatusBar style="dark" hidden={false} />
-				<Text style={mainStyle.styledH1}> {community?.title} </Text>
+				<View style={[mainStyle.inline, { marginBottom: 20 }]}>
+					<Text
+						style={[
+							mainStyle.styledH1,
+							{
+								marginBottom: 0,
+								width: '80%',
+								textAlign: 'center',
+							},
+						]}
+					>
+						{community?.title}
+					</Text>
+					{isAdmin && (
+						<Ionicons
+							name="settings-sharp"
+							size={24}
+							color={colors.brandGreen}
+							onPress={() => {
+								navigation.navigate('CommunitySettings', {
+									community: community,
+								});
+							}}
+						/>
+					)}
+				</View>
 				<Text> {community?.description} </Text>
 
 				{/* Show join code for admins */}
@@ -261,43 +286,6 @@ const CommunityView = ({ route }: Props) => {
 							</Text>
 						)}
 					</>
-				)}
-
-				{/* Admin-only storage list access */}
-				{isAdmin && (
-					<TouchableOpacity
-						style={[
-							buttonStyle.submitColorfulButton,
-							mainStyle.inline,
-							{ marginBottom: '2%' },
-						]}
-						onPress={() =>
-							navigation.navigate('StorageList', {
-								communityId: id,
-								isAdmin: isAdmin,
-							})
-						}
-					>
-						<Text style={buttonStyle.submitColorfulButtonText}>
-							Visos maisto laikymo vietos
-						</Text>
-					</TouchableOpacity>
-				)}
-
-				{isAdmin && (
-					<TouchableOpacity
-						style={buttonStyle.submitColorfulButton}
-						onPress={() =>
-							navigation.navigate('TagsList', {
-								communityId: id,
-								isAdmin: isAdmin,
-							})
-						}
-					>
-						<Text style={buttonStyle.submitColorfulButtonText}>
-							Visos žymos
-						</Text>
-					</TouchableOpacity>
 				)}
 
 				{/* User-only "Leave community" button */}
