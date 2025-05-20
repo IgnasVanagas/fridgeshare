@@ -37,7 +37,7 @@ public class User
 
     private User(int id, string name, string lastName, string email, string username, string password, bool active, bool isAdmin)
     {
-        if(id != -1)
+        if (id != -1)
         {
             Id = id;
         }
@@ -55,7 +55,8 @@ public class User
     {
         List<Error> errors = ValidateUser(name, lastName, email, username, password);
 
-        if (errors.Count > 0) {
+        if (errors.Count > 0)
+        {
             return errors;
         }
 
@@ -67,7 +68,7 @@ public class User
         return Create(-1, request.Name, request.LastName, request.Email, request.Username, request.Password, request.Active, request.IsAdmin);
     }
 
-    public static ErrorOr<User>From(int id, UpdateUserRequest request)
+    public static ErrorOr<User> From(int id, UpdateUserRequest request)
     {
         return Create(id, request.Name, request.LastName, request.Email, request.Username, request.Password, request.Active, request.IsAdmin);
     }
@@ -82,7 +83,7 @@ public class User
     {
         List<Error> errors = new List<Error>();
 
-        if(name.Length is < MinNameLength or > MaxNameLength)
+        if (name.Length is < MinNameLength or > MaxNameLength)
         {
             errors.Add(Errors.User.InvalidName);
         }
@@ -92,7 +93,7 @@ public class User
             errors.Add(Errors.User.InvalidLastName);
         }
 
-        if(username.Length is < MinUsernameLength or > MaxUsernameLength)
+        if (username.Length is < MinUsernameLength or > MaxUsernameLength)
         {
             errors.Add(Errors.User.InvalidUsername);
         }
@@ -102,21 +103,54 @@ public class User
             errors.Add(Errors.User.InvalidPassword);
         }
         Regex containsNumber = new Regex("[0-9]");
-        if(!containsNumber.IsMatch(password))
+        if (!containsNumber.IsMatch(password))
         {
             errors.Add(Errors.User.PasswordWithoutNumbers);
         }
 
-        if(email.Length > MaxEmailLength)
+        if (email.Length > MaxEmailLength)
         {
             errors.Add(Errors.User.InvalidEmail);
         }
 
         Regex validateEmailRegex = new Regex("^\\S+@\\S+\\.\\S+$");
-        if(!validateEmailRegex.IsMatch(email))
+        if (!validateEmailRegex.IsMatch(email))
         {
             errors.Add(Errors.User.InvalidEmailFormat);
         }
         return errors;
     }
+    public ErrorOr<Success> UpdatePassword(string oldPassword, string newPassword)
+{
+    if (Password != oldPassword)
+    {
+        return Errors.User.IncorrectPassword;
+    }
+
+    if (newPassword.Length < MinPasswordLength || newPassword.Length > MaxPasswordLength)
+    {
+        return Errors.User.InvalidPassword;
+    }
+
+    Regex containsNumber = new Regex("[0-9]");
+    if (!containsNumber.IsMatch(newPassword))
+    {
+        return Errors.User.PasswordWithoutNumbers;
+    }
+
+    Password = newPassword;
+    return Result.Success;
+}
+
+public ErrorOr<Success> UpdateUsername(string newUsername)
+{
+    if (newUsername.Length < MinUsernameLength || newUsername.Length > MaxUsernameLength)
+    {
+        return Errors.User.InvalidUsername;
+    }
+
+    Username = newUsername;
+    return Result.Success;
+}
+
 }

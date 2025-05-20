@@ -17,7 +17,8 @@ public class UserController : ApiController
     public async Task<IActionResult> GetUser(int id)
     {
         var getUserResult = await _userService.GetUser(id);
-        if (getUserResult.IsError) {
+        if (getUserResult.IsError)
+        {
             return Problem(getUserResult.Errors);
         }
 
@@ -44,12 +45,13 @@ public class UserController : ApiController
     public async Task<IActionResult> CreateUser(CreateUserRequest request)
     {
         var getUser = await _userService.GetUser(request.Username);
-        if(!getUser.IsError)
+        if (!getUser.IsError)
         {
             return Conflict(new { message = "Username is not unique!" });
         }
         var requestToUserResult = FridgeShare.Models.User.From(request);
-        if (requestToUserResult.IsError) {
+        if (requestToUserResult.IsError)
+        {
             return Problem(requestToUserResult.Errors);
         }
 
@@ -62,7 +64,7 @@ public class UserController : ApiController
     public async Task<IActionResult> LoginUser(LoginUserRequest request)
     {
         var loginUserResult = await _userService.LoginUser(request.Username, request.Password);
-        if(loginUserResult.IsError)
+        if (loginUserResult.IsError)
         {
             return Problem(loginUserResult.Errors);
         }
@@ -83,7 +85,8 @@ public class UserController : ApiController
 
         var user = createUserRequest.Value;
         var updateUserResult = await _userService.UpdateUser(user);
-        if (updateUserResult.IsError) {
+        if (updateUserResult.IsError)
+        {
             return Problem(updateUserResult.Errors);
         }
 
@@ -99,8 +102,28 @@ public class UserController : ApiController
     {
         return CreatedAtAction(
             actionName: nameof(GetUser),
-            routeValues: new { id=user.Id },
+            routeValues: new { id = user.Id },
             value: MapUserResponse(user)
         );
     }
+    [HttpPatch("{id:int}/username")]
+    public async Task<IActionResult> ChangeUsername(int id, ChangeUsernameRequest request)
+    {
+        var result = await _userService.ChangeUsername(id, request.Username);
+        if (result.IsError)
+            return Problem(result.Errors);
+
+        return NoContent();
+    }
+    [HttpPatch("{id:int}/password")]
+    public async Task<IActionResult> ChangePassword(int id, ChangePasswordRequest request)
+    {
+        var result = await _userService.ChangePassword(id, request.OldPassword, request.NewPassword);
+        if (result.IsError)
+            return Problem(result.Errors);
+
+        return NoContent();
+    }
+
+
 }

@@ -20,7 +20,7 @@ public class UserService : IUserService
         var user = await _dbContext.Users
             .Include(u => u.ProductsTaken)
             .FirstOrDefaultAsync(u => u.Id == userId);
-        if(user is null)
+        if (user is null)
         {
             return Errors.User.NotFound;
         }
@@ -40,12 +40,12 @@ public class UserService : IUserService
     public async Task<ErrorOr<Deleted>> DeleteUser(int id)
     {
         var user = await _dbContext.Users.FindAsync(id);
-        if ( user is null)
+        if (user is null)
         {
             return Errors.User.NotFound;
         }
         var userDeactivation = user.DeactivateUser();
-        if(userDeactivation.IsError)
+        if (userDeactivation.IsError)
         {
             return userDeactivation.Errors;
         }
@@ -75,11 +75,11 @@ public class UserService : IUserService
     public async Task<ErrorOr<User>> LoginUser(string username, string password)
     {
         var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.Username == username && u.Active);
-        if(user is null)
+        if (user is null)
         {
             return Errors.User.NotFound;
         }
-        if(password != null && user.Password != password)
+        if (password != null && user.Password != password)
         {
             return Errors.User.IncorrectPassword;
         }
@@ -116,4 +116,38 @@ public class UserService : IUserService
         await _dbContext.SaveChangesAsync();
         return new UpdatedUser(isCreated);
     }
+    public async Task<ErrorOr<Updated>> ChangeUsername(int userId, string newUsername)
+{
+    var user = await _dbContext.Users.FindAsync(userId);
+    if (user is null)
+        return Errors.User.NotFound;
+
+    var exists = await _dbContext.Users.AnyAsync(u => u.Username == newUsername && u.Id != userId);
+    if (exists)
+        return Error.Conflict("Username is already taken.");
+
+    var updateResult = user.UpdateUsername(newUsername);
+    if (updateResult.IsError)
+        return updateResult.Errors;
+
+    await _dbContext.SaveChangesAsync();
+    return Result.Updated;
+}
+
+public async Task<ErrorOr<Updated>> ChangePassword(int userId, string oldPassword, string newPassword)
+{
+    var user = await _dbContext.Users.FindAsync(userId);
+    if (user is null)
+        return Errors.User.NotFound;
+
+    var updateResult = user.UpdatePassword(oldPassword, newPassword);
+    if (updateResult.IsError)
+        return updateResult.Errors;
+
+    await _dbContext.SaveChangesAsync();
+    return Result.Updated;
+}
+
+
+
 }

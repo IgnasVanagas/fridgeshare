@@ -13,6 +13,9 @@ import Feather from '@expo/vector-icons/Feather';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { UserCommunity, Community } from '@/constants/communityType';
 import buttonStyle from '@/styles/buttons';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback } from 'react';
+
 
 const CommunityList = () => {
 	const navigation = useNavigation();
@@ -25,36 +28,32 @@ const CommunityList = () => {
 		Community[]
 	>([]);
 
-	useEffect(() => {
+	useFocusEffect(
+	useCallback(() => {
 		const fetchCommunitiesData = async () => {
-			await axios
-				.get(`${API_BASE_URL}/usercommunity/user/${id}`, {
-					headers: {
-						'Content-Type': 'application/json',
-					},
-				})
-				.then(function (response) {
-					setListOfCommunities(response.data);
-				})
-				.catch(function (error) {
-					console.log(error);
-				});
+			try {
+				const res = await axios.get(`${API_BASE_URL}/usercommunity/user/${id}`);
+				setListOfCommunities(res.data);
+			} catch (err) {
+				console.error('Klaida gaunant bendruomenes:', err);
+			}
 		};
 
 		const fetchManagedCommunitiesData = async () => {
-			await axios
-				.get(`${API_BASE_URL}/community/user/${id}`)
-				.then(function (response) {
-					setListOfManagedCommunities(response.data);
-				})
-				.catch(function (error) {
-					console.log(error);
-				});
+			try {
+				const res = await axios.get(`${API_BASE_URL}/community/user/${id}`);
+				setListOfManagedCommunities(res.data);
+			} catch (err) {
+				console.error('Klaida gaunant valdomas bendruomenes:', err);
+			}
 		};
 
 		fetchCommunitiesData();
 		fetchManagedCommunitiesData();
-	}, []);
+
+	}, [id])
+);
+
 
 	return (
 		<ScrollView

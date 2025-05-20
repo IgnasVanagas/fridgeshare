@@ -65,13 +65,13 @@ public class UserCommunityService : IUserCommunityService
         var userCommunity = await _dbContext.UserCommunities
             .Include(c => c.Community)
             .Where(uc => uc.UserId == userId && uc.DateJoined != null).ToListAsync();
-        if(userCommunity == null)
+        if (userCommunity == null)
         {
             return Errors.UserCommunity.NotFound;
         }
 
         var managedCommunities = await _dbContext.Communities.Where(c => c.ManagerId == userId).ToListAsync();
-        if(managedCommunities == null)
+        if (managedCommunities == null)
         {
             return Errors.Community.NotFound;
         }
@@ -85,7 +85,7 @@ public class UserCommunityService : IUserCommunityService
             .Where(uc => uc.UserId == userId && uc.DateJoined == null)
             .OrderBy(uc => uc.RequestSent)
             .ToListAsync();
-        if(userCommunity == null)
+        if (userCommunity == null)
         {
             return Errors.UserCommunity.NotFound;
         }
@@ -115,5 +115,35 @@ public class UserCommunityService : IUserCommunityService
 
         return users;
     }
+        public async Task<ErrorOr<Deleted>> LeaveCommunity(int userId, int communityId)
+    {
+        var userCommunity = await _dbContext.UserCommunities
+            .FirstOrDefaultAsync(uc => uc.UserId == userId && uc.CommunityId == communityId);
+
+        if (userCommunity == null)
+        {
+            return Errors.UserCommunity.NotFound;
+        }
+
+        var community = await _dbContext.Communities
+            .FirstOrDefaultAsync(c => c.Id == communityId);
+
+        if (community == null)
+        {
+            return Errors.Community.NotFound;
+        }
+
+        if (community.ManagerId == userId)
+        {
+            return Error.Conflict(description: "Community managers cannot leave their own community.");
+        }
+
+        _dbContext.UserCommunities.Remove(userCommunity);
+        await _dbContext.SaveChangesAsync();
+
+        return Result.Deleted;
+    }
+
+    
 
 }
