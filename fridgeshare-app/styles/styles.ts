@@ -6,17 +6,20 @@ const mainStyle = StyleSheet.create({
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
+		backgroundColor: colors.white,
 	},
 	container2: {
 		padding: 24,
 		flex: 1,
 		alignItems: 'center',
 		justifyContent: 'center',
+		backgroundColor: colors.white,
 	},
 	container3: {
 		padding: 24,
 		flex: 1,
 		alignItems: 'center',
+		backgroundColor: colors.white,
 	},
 	text: {
 		color: colors.black,

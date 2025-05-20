@@ -107,6 +107,25 @@ public class TagsController : ApiController
         return NoContent();
     }
 
+    [HttpGet("community/{communityId:int}")]
+    public async Task<IActionResult> GetCommunityTags(int communityId)
+    {
+        var getTagsResult = await _tagService.GetAllTagsOfCommunity(communityId);
+        if (getTagsResult.IsError)
+        {
+            return Problem(getTagsResult.Errors);
+        }
+        var tags = getTagsResult.Value;
+        var getCommunity = await _communityService.GetCommunity(communityId);
+        if (getCommunity.IsError)
+        {
+            return Problem(getCommunity.Errors);
+        }
+        var community = getCommunity.Value;
+        var response = tags.Select(tag => MapTagResponse(tag, community)).ToList();
+        return Ok(response);
+    }
+
     private IActionResult CreatedAtGetTag(Tag tag)
     {
         return CreatedAtAction(

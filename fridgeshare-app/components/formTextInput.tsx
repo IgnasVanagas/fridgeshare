@@ -37,6 +37,7 @@ const FormTextInput = ({
 				<TextInput
 					style={mainStyle.formInputText}
 					placeholder={placeholder}
+					placeholderTextColor={colors.lightGrey}
 					onChangeText={onChangeText}
 					onBlur={onBlur}
 					value={value}
