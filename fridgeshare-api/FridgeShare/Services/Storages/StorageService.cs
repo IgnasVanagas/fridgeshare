@@ -58,11 +58,17 @@ public class StorageService : IStorageService
 
     public async Task<ErrorOr<Deleted>> DeleteStorage(Guid id)
     {
-        var storage = await _dbContext.Storages.FindAsync(id);
+        var storage = await _dbContext.Storages
+            .Include(s => s.Products).FirstOrDefaultAsync(s => s.Id == id);
 
         if (storage is null)
         {
             return Errors.Storage.NotFound;
+        }
+
+        if(storage.Products != null && storage.Products.Count > 0)
+        {
+            return Errors.Storage.HasProducts;
         }
 
         _dbContext.Storages.Remove(storage);
@@ -87,5 +93,19 @@ public class StorageService : IStorageService
         await _dbContext.SaveChangesAsync();
 
         return storage;
+    }
+
+    public async Task<ErrorOr<List<Storage>>> GetAllStorages(int id)
+    {
+        var storages = await _dbContext.Storages
+            .Include(s => s.Community)
+            .Where(s => s.CommunityId == id).OrderBy(s => s.Title.ToLower()).ThenBy(s => s.DateAdded)
+            .ToListAsync();
+        if (storages is null)
+        {
+            return Errors.Storage.NotFound;
+        }
+        return storages;
+
     }
 }

@@ -79,11 +79,16 @@ const CommunityList = () => {
 					</Text>
 				</TouchableOpacity>
 				<TouchableOpacity
-  style={[buttonStyle.submitColorfulButton, { marginTop: 10 }]}
-  onPress={() => navigation.navigate('CreateCommunity')}
->
-  <Text style={buttonStyle.submitColorfulButtonText}>Sukurti naują bendruomenę</Text>
-</TouchableOpacity>
+					style={[
+						buttonStyle.submitColorfulButton,
+						{ marginTop: 10 },
+					]}
+					onPress={() => navigation.navigate('CreateCommunity')}
+				>
+					<Text style={buttonStyle.submitColorfulButtonText}>
+						Sukurti naują bendruomenę
+					</Text>
+				</TouchableOpacity>
 
 				{listOfManagedCommunities.length > 0 && (
 					<Text>Jūsų įkurtos bendruomenės:</Text>
@@ -131,15 +136,7 @@ const CommunityList = () => {
 					listOfCommunities.map((community, index) => (
 						<TouchableOpacity
 							key={community.communityId}
-							style={{
-								borderColor: colors.brandGreen,
-								borderStyle: 'solid',
-								borderWidth: 1,
-								padding: 15,
-								width: '90%',
-								borderRadius: 15,
-								marginBottom: 15,
-							}}
+							style={buttonStyle.touchableOpacityListItem}
 							onPress={() => {
 								navigation.navigate('CommunityView', {
 									id: community.communityId,
@@ -147,14 +144,7 @@ const CommunityList = () => {
 							}}
 						>
 							<View>
-								<Text
-									style={{
-										textAlign: 'center',
-										fontSize: 16,
-										fontWeight: 'bold',
-										color: colors.brandGreen,
-									}}
-								>
+								<Text style={buttonStyle.touchableOpacityText}>
 									{community.communityTitle}
 								</Text>
 								<Text>

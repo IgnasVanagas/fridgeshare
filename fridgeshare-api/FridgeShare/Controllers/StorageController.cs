@@ -118,6 +118,25 @@ public class StoragesController : ApiController
         return NoContent();
     }
 
+    [HttpGet("community/{id:int}")]
+    public async Task<IActionResult> GetStoragesOfCommunity(int id)
+    {
+        var getStoragesResult = await _storageService.GetAllStorages(id);
+        if (getStoragesResult.IsError)
+        {
+            return Problem(getStoragesResult.Errors);
+        }
+        var storages = getStoragesResult.Value;
+        var communityResult = await _communityService.GetCommunity(id);
+        if (communityResult.IsError)
+        {
+            return Problem(communityResult.Errors);
+        }
+        var community = communityResult.Value;
+        var storageResponses = storages.Select(storage => MapStorageResponse(storage, community)).ToList();
+        return Ok(storageResponses);
+    }
+
     private IActionResult CreatedAtGetStorage(Storage storage, Community community)
     {
         return CreatedAtAction(
