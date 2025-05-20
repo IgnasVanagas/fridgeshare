@@ -17,6 +17,8 @@ const TagsList = ({ route }: Props) => {
 	const navigation = useNavigation();
 	const [tags, setTags] = useState<Tag[]>([]);
 	const [colors, setColors] = useState<string[]>([]);
+	const [error, setError] = useState<string | null>(null);
+	const [errorId, setErrorId] = useState<number | null>(null);
 
 	useFocusEffect(
 		useCallback(() => {
@@ -56,6 +58,27 @@ const TagsList = ({ route }: Props) => {
 			}
 		});
 		setColors(allColors);
+	};
+
+	const onClickDelete = (tagId: number) => {
+		const deleteTag = async () => {
+			await axios
+				.delete(`${API_BASE_URL}/tags/${tagId}`)
+				.then(function () {
+					const filteredTags = tags.filter((tag) => tag.id != tagId);
+					setTags(filteredTags);
+					setError(null);
+					setErrorId(null);
+				})
+				.catch(function (e) {
+					console.log(e);
+					setError('Klaida šalinant žymą!');
+					setErrorId(tagId);
+					console.log(tagId);
+				});
+		};
+
+		deleteTag();
 	};
 
 	return (
@@ -103,6 +126,50 @@ const TagsList = ({ route }: Props) => {
 							<Text style={{ color: colors[index] }}>
 								{tag.color}
 							</Text>
+							{errorId && errorId == tag.id && (
+								<Text
+									style={{
+										color: colors[index],
+										fontWeight: 'bold',
+									}}
+								>
+									{error}
+								</Text>
+							)}
+
+							<View style={mainStyle.inline}>
+								<TouchableOpacity
+									style={{
+										borderColor: colors[index],
+										borderStyle: 'solid',
+										borderWidth: 1,
+										marginTop: 10,
+										padding: 5,
+										borderRadius: 5,
+									}}
+								>
+									<Text style={{ color: colors[index] }}>
+										Redaguoti
+									</Text>
+								</TouchableOpacity>
+								<TouchableOpacity
+									style={{
+										borderColor: colors[index],
+										borderStyle: 'solid',
+										borderWidth: 1,
+										marginTop: 10,
+										padding: 5,
+										borderRadius: 5,
+									}}
+									onPress={() => {
+										onClickDelete(tag.id);
+									}}
+								>
+									<Text style={{ color: colors[index] }}>
+										Pašalinti
+									</Text>
+								</TouchableOpacity>
+							</View>
 						</View>
 					))
 				)}

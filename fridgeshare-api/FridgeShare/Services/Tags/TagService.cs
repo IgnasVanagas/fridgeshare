@@ -38,7 +38,7 @@ public class TagService : ITagService
 
     public async Task<ErrorOr<Deleted>> DeleteTag(int id)
     {
-        var tag = await _dbContext.Tags.FindAsync(id);
+        var tag = await _dbContext.Tags.Include(t => t.ProductTags).FirstOrDefaultAsync(t => t.Id == id);
         if (tag is null)
         {
             return Errors.Tag.NotFound;
