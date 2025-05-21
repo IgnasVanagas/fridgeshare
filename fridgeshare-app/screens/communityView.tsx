@@ -120,7 +120,10 @@ const CommunityView = ({ route }: Props) => {
 						)}
 					</View>
 				</View>
-				<Text> {community?.description} </Text>
+				{community?.description && (
+					<Text>{community?.description}</Text>
+				)}
+
 				<Text style={{ marginTop: 10 }}>-----content-----</Text>
 			</SafeAreaView>
 		</ScrollView>

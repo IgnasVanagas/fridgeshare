@@ -17,12 +17,39 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { useNavigation } from 'expo-router';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ParamList } from '@/constants/paramList';
+import axios from 'axios';
+import { API_BASE_URL } from '@/api_config';
+import { useEffect, useState } from 'react';
 
 type Props = NativeStackScreenProps<ParamList, 'CommunitySettings'>;
 
 const CommunitySettings = ({ route }: Props) => {
 	const { community } = route.params;
+	const [joiningCode, setJoiningCode] = useState<string>('');
+	const [error, setError] = useState<string | null>(null);
 	const navigation = useNavigation();
+
+	useEffect(() => {
+		if (community) {
+			setJoiningCode(community.joiningCode);
+		}
+	}, [community]);
+
+	const handleRegenerate = () => {
+		const regenerateCode = async () => {
+			await axios
+				.patch(`${API_BASE_URL}/community/${community.id}/regenerate`)
+				.then(function (response) {
+					setJoiningCode(response.data.joiningCode);
+					setError(null);
+				})
+				.catch(function () {
+					setError('Klaida generuojant prisijungimo kodą');
+				});
+		};
+
+		regenerateCode();
+	};
 	return (
 		<ScrollView
 			keyboardShouldPersistTaps="handled"
@@ -37,10 +64,14 @@ const CommunitySettings = ({ route }: Props) => {
 					}}
 				>
 					<Text style={{ marginBottom: 10, fontWeight: 'bold' }}>
-						Prisijungimo kodas: {community?.joiningCode}
+						Prisijungimo kodas: {joiningCode}
 					</Text>
+					{error && (
+						<Text style={{ color: colors.red }}>{error}</Text>
+					)}
 					<TouchableOpacity
 						style={[buttonStyle.greenBorder, { marginBottom: 25 }]}
+						onPress={() => handleRegenerate()}
 					>
 						<View style={mainStyle.inlineWithIcon}>
 							<FontAwesome

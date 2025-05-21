@@ -96,6 +96,24 @@ public class CommunityController : ApiController
         return NoContent();
     }
 
+    [HttpPatch("{id:int}/regenerate")]
+    public async Task<IActionResult> RegenerateJoiningCode(int id)
+    {
+        var newJoiningCode = await _communityService.GenerateUniqueJoiningCode();
+        if (newJoiningCode.IsError)
+        {
+            return Problem(newJoiningCode.Errors);
+        }
+        var joiningCode = newJoiningCode.Value;
+
+        var community = await _communityService.UpdateJoiningCode(id, joiningCode);
+        if (community.IsError)
+        {
+            return Problem(community.Errors);
+        }
+        return Ok(new { joiningCode });
+    }
+
     private IActionResult CreatedAtGetCommunity(Community community)
     {
         return CreatedAtAction(
