@@ -14,7 +14,6 @@ import {
 } from 'react-native';
 import { Community } from '@/constants/communityType';
 import { useAuth } from '@/context/authContext';
-import buttonStyle from '@/styles/buttons';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import colors from '@/constants/colors';

@@ -49,6 +49,16 @@ const buttonStyle = StyleSheet.create({
 		borderWidth: 1,
 		padding: 10,
 	},
+	greenButton: {
+		backgroundColor: 'green',
+		padding: 8,
+		borderRadius: 5,
+	},
+	redButton: {
+		backgroundColor: 'red',
+		padding: 8,
+		borderRadius: 5,
+	},
 });
 
 export default buttonStyle;

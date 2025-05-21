@@ -9,10 +9,10 @@ import {
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ParamList } from '@/constants/paramList';
-import { useNavigation } from '@react-navigation/native';
 import { useEffect, useState } from 'react';
 import { API_BASE_URL } from '@/api_config';
 import axios from 'axios';
+import buttonStyle from '@/styles/buttons';
 
 interface UserCommunityResponse {
 	userId: number;
@@ -27,13 +27,9 @@ type Props = NativeStackScreenProps<ParamList, 'PendingRequests'>;
 
 const PendingRequests = ({ route }: Props) => {
 	const { communityId } = route.params;
-	const navigation = useNavigation();
 	const [allUserRelations, setAllUserRelations] = useState<
 		UserCommunityResponse[]
 	>([]);
-	const acceptedMembers = allUserRelations.filter(
-		(u) => u.dateJoined !== null
-	);
 	const pendingRequests = allUserRelations.filter(
 		(u) => u.dateJoined === null
 	);
@@ -117,12 +113,12 @@ const PendingRequests = ({ route }: Props) => {
 							<View style={mainStyle.inline}>
 								<TouchableOpacity
 									onPress={() => handleAccept(req.userId)}
-									style={{
-										backgroundColor: 'green',
-										padding: 8,
-										borderRadius: 5,
-										width: '40%',
-									}}
+									style={[
+										{
+											width: '40%',
+										},
+										buttonStyle.greenButton,
+									]}
 								>
 									<Text
 										style={{
@@ -135,12 +131,12 @@ const PendingRequests = ({ route }: Props) => {
 								</TouchableOpacity>
 								<TouchableOpacity
 									onPress={() => handleReject(req.userId)}
-									style={{
-										backgroundColor: 'red',
-										padding: 8,
-										borderRadius: 5,
-										width: '40%',
-									}}
+									style={[
+										{
+											width: '40%',
+										},
+										buttonStyle.redButton,
+									]}
 								>
 									<Text
 										style={{
