@@ -16,7 +16,6 @@ import buttonStyle from '@/styles/buttons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
 
-
 const CommunityList = () => {
 	const navigation = useNavigation();
 
@@ -29,31 +28,33 @@ const CommunityList = () => {
 	>([]);
 
 	useFocusEffect(
-	useCallback(() => {
-		const fetchCommunitiesData = async () => {
-			try {
-				const res = await axios.get(`${API_BASE_URL}/usercommunity/user/${id}`);
-				setListOfCommunities(res.data);
-			} catch (err) {
-				console.error('Klaida gaunant bendruomenes:', err);
-			}
-		};
+		useCallback(() => {
+			const fetchCommunitiesData = async () => {
+				try {
+					const res = await axios.get(
+						`${API_BASE_URL}/usercommunity/user/${id}`
+					);
+					setListOfCommunities(res.data);
+				} catch (err) {
+					console.error('Klaida gaunant bendruomenes:', err);
+				}
+			};
 
-		const fetchManagedCommunitiesData = async () => {
-			try {
-				const res = await axios.get(`${API_BASE_URL}/community/user/${id}`);
-				setListOfManagedCommunities(res.data);
-			} catch (err) {
-				console.error('Klaida gaunant valdomas bendruomenes:', err);
-			}
-		};
+			const fetchManagedCommunitiesData = async () => {
+				try {
+					const res = await axios.get(
+						`${API_BASE_URL}/community/user/${id}`
+					);
+					setListOfManagedCommunities(res.data);
+				} catch (err) {
+					console.error('Klaida gaunant valdomas bendruomenes:', err);
+				}
+			};
 
-		fetchCommunitiesData();
-		fetchManagedCommunitiesData();
-
-	}, [id])
-);
-
+			fetchCommunitiesData();
+			fetchManagedCommunitiesData();
+		}, [id])
+	);
 
 	return (
 		<ScrollView
@@ -62,9 +63,6 @@ const CommunityList = () => {
 		>
 			<SafeAreaView style={[mainStyle.container3, { padding: 0 }]}>
 				<StatusBar style="dark" hidden={false} />
-				<Text style={mainStyle.styledH1}>
-					Bendruomenės, kurioms priklausote
-				</Text>
 				<TouchableOpacity
 					style={[
 						buttonStyle.submitColorfulButton,

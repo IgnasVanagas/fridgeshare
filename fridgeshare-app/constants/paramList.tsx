@@ -1,3 +1,4 @@
+import { Community } from './communityType';
 import { Storage } from './storage';
 import { Tag } from './tag';
 export type ParamList = {
@@ -11,4 +12,7 @@ export type ParamList = {
 	StorageList: { communityId: number; isAdmin: boolean };
 	AddTag: { communityId: number; tag?: Tag };
 	TagsList: { communityId: number; isAdmin: boolean };
+	CommunitySettings: { community: Community };
+	PendingRequests: { communityId: number };
+	AllUsersList: { communityId: number; isAdmin: boolean };
 };

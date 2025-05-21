@@ -76,6 +76,11 @@ const mainStyle = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'space-between',
 	},
+	inlineWithIcon: {
+		flexDirection: 'row',
+		alignItems: 'center',
+		justifyContent: 'flex-start',
+	},
 	link: {
 		textDecorationLine: 'underline',
 		color: colors.brandGreen,

@@ -150,4 +150,17 @@ public class CommunityService : ICommunityService
 
         return randomString;
     }
+
+    public async Task<ErrorOr<Community>> UpdateJoiningCode(int communityId, string code)
+    {
+        var community = await _dbContext.Communities
+            .FirstOrDefaultAsync(c => c.Id == communityId && c.Active);
+        if (community is null)
+        {
+            return Errors.Community.NotFound;
+        }
+        community.JoiningCode = code;
+        await _dbContext.SaveChangesAsync();
+        return community;
+    }
 }
