@@ -68,6 +68,21 @@ public class CommunityController : ApiController
         return Ok(result);
     }
 
+    [HttpGet("")]
+    public async Task<IActionResult> GetAllCommunities()
+    {
+        var getResult = await _communityService.GetAllActive();
+        if (getResult.IsError)
+            return Problem(getResult.Errors);
+        var communities = getResult.Value;
+        List<CommunityResponse> result = new List<CommunityResponse>();
+        foreach (var comm in communities)
+        {
+            result.Add(MapCommunityResponse(comm));
+        }
+        return Ok(result);
+    }
+
     [HttpPut("{id:int}")]
     public async Task<IActionResult> UpdateCommunity(int id, [FromBody] UpdateCommunityRequest request)
     {

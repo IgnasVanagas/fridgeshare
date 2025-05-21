@@ -50,7 +50,11 @@ const LoginScreen = () => {
 					}
 				)
 				.then(function (response) {
-					login(response.data['username'], '' + response.data['id']);
+					login(
+						response.data['username'],
+						'' + response.data['id'],
+						response.data['isAdmin']
+					);
 					navigation.navigate('Index');
 					// router.push('/');
 				})
