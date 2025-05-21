@@ -118,4 +118,18 @@ public class StorageService : IStorageService
         }
         return storages;
     }
+
+    public async Task<ErrorOr<List<Storage>>> GetNeedsServiceStorages()
+    {
+        var storages = await _dbContext.Storages
+            .Include(s => s.Community)
+            .Where(s => s.NeedsMaintenance)
+            .ToListAsync();
+        if (storages == null)
+        {
+            return Errors.Storage.NotFound;
+        }
+
+        return storages;
+    }
 }

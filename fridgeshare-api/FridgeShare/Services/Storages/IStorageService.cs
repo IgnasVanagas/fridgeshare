@@ -13,4 +13,5 @@ public interface IStorageService
     Task<ErrorOr<Deleted>> DeleteStorage(Guid id);
 
     Task<ErrorOr<Storage>> AddProduct(Guid storageId, Product product);
+    Task<ErrorOr<List<Storage>>> GetNeedsServiceStorages();
 }

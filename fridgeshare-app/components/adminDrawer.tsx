@@ -1,6 +1,6 @@
 import colors from '@/constants/colors';
 import { useAuth } from '@/context/authContext';
-import AuthIndex from '@/screens/authIndex';
+import AdminIndex from '@/screens/adminIndex';
 import CompanyStorageList from '@/screens/companyStorage';
 import userSettings from '@/screens/userSettings';
 import {
@@ -34,7 +34,7 @@ const AdminDrawerNavigation = () => {
 				</View>
 			)}
 		>
-			<Drawer.Screen name="Pagrindinis langas" component={AuthIndex} />
+			<Drawer.Screen name="Pagrindinis langas" component={AdminIndex} />
 			<Drawer.Screen
 				name="Kompanijos maisto laikymo vietos"
 				component={CompanyStorageList}
