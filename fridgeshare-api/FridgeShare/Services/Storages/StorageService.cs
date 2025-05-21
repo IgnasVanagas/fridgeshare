@@ -26,6 +26,7 @@ public class StorageService : IStorageService
     {
         var storage = await _dbContext.Storages
             .Include(s => s.Products)
+                .ThenInclude(p => p.ProductTags)
             .FirstOrDefaultAsync(s => s.Id == id);
 
         if (storage is null)

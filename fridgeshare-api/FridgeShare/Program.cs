@@ -35,11 +35,8 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<FridgeShareDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy("AllowAll",
-        builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-});
+//  CORS configuration
+builder.Services.AddCors();
 
 //  Dependency Injection
 builder.Services.AddScoped<IProductService, ProductService>();
@@ -51,7 +48,6 @@ builder.Services.AddScoped<IProductTakenService, ProductTakenService>();
 builder.Services.AddScoped<IUserCommunityService, UserCommunityService>();
 
 var app = builder.Build();
-app.UseCors("AllowAll");
 
 //  Middleware
 if (app.Environment.IsDevelopment())
@@ -59,6 +55,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseCors(x => x
+    .AllowAnyMethod()
+    .AllowAnyHeader()
+    .AllowAnyOrigin());
 
 app.UseExceptionHandler("/error");  // Global error handler
 //app.UseHttpsRedirection();
