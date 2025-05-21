@@ -18,6 +18,7 @@ import TagForm from '@/screens/tagForm';
 import TagsList from '@/screens/tagList';
 import CommunitySettings from '@/screens/communitySettings';
 import PendingRequests from '@/screens/pendingRequests';
+import AllUsersList from '@/screens/allUsersList';
 
 const Stack1 = createNativeStackNavigator();
 
@@ -55,6 +56,7 @@ export function AuthStackNavigation() {
 				component={CommunitySettings}
 			/>
 			<Stack2.Screen name="PendingRequests" component={PendingRequests} />
+			<Stack2.Screen name="AllUsersList" component={AllUsersList} />
 		</Stack2.Navigator>
 	);
 }

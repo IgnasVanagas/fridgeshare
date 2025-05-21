@@ -17,15 +17,7 @@ import { useAuth } from '@/context/authContext';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import colors from '@/constants/colors';
-
-interface UserCommunityResponse {
-	userId: number;
-	communityId: number;
-	username?: string;
-	communityTitle?: string;
-	requestSent: string;
-	dateJoined: string | null;
-}
+import FontAwesome from '@expo/vector-icons/FontAwesome';
 
 type Props = NativeStackScreenProps<ParamList, 'CommunityView'>;
 
@@ -35,13 +27,6 @@ const CommunityView = ({ route }: Props) => {
 	const { id: userId } = useAuth();
 	const [community, setCommunity] = useState<Community | null>(null);
 	const [isAdmin, setIsAdmin] = useState(false);
-	const [allUserRelations, setAllUserRelations] = useState<
-		UserCommunityResponse[]
-	>([]);
-
-	const acceptedMembers = allUserRelations.filter(
-		(u) => u.dateJoined !== null
-	);
 
 	useEffect(() => {
 		const getCommunity = async () => {
@@ -68,34 +53,6 @@ const CommunityView = ({ route }: Props) => {
 		}
 	}, [community, userId]);
 
-	useEffect(() => {
-		const fetchAllUserRelations = async () => {
-			try {
-				const res = await axios.get(
-					`${API_BASE_URL}/usercommunity/community/${id}/members`
-				);
-				setAllUserRelations(res.data);
-			} catch (err) {
-				console.error('Klaida gaunant vartotojus:', err);
-			}
-		};
-
-		fetchAllUserRelations();
-	}, [isAdmin, id]);
-
-	const handleLeaveCommunity = async () => {
-		try {
-			await axios.delete(
-				`${API_BASE_URL}/usercommunity/leave/${userId}/${id}`
-			);
-			// Navigate back or update UI
-			alert('Palikote bendruomenę.');
-		} catch (err) {
-			console.error('Klaida paliekant bendruomenę:', err);
-			alert('Nepavyko palikti bendruomenės.');
-		}
-	};
-
 	return (
 		<ScrollView
 			keyboardShouldPersistTaps="handled"
@@ -103,7 +60,16 @@ const CommunityView = ({ route }: Props) => {
 		>
 			<SafeAreaView style={mainStyle.container3}>
 				<StatusBar style="dark" hidden={false} />
-				<View style={[mainStyle.inline, { marginBottom: 20 }]}>
+				<View
+					style={[
+						mainStyle.inline,
+						{
+							marginBottom: 20,
+							width: '90%',
+							justifyContent: 'center',
+						},
+					]}
+				>
 					<Text
 						style={[
 							mainStyle.styledH1,
@@ -111,92 +77,51 @@ const CommunityView = ({ route }: Props) => {
 								marginBottom: 0,
 								width: '80%',
 								textAlign: 'center',
+								alignSelf: 'center',
+								paddingLeft: '18%',
 							},
 						]}
 					>
 						{community?.title}
 					</Text>
-					{isAdmin && (
-						<Ionicons
-							name="settings-sharp"
+					<View
+						style={[
+							mainStyle.inline,
+							{
+								width: '20%',
+								justifyContent: isAdmin
+									? 'space-between'
+									: 'flex-end',
+							},
+						]}
+					>
+						<FontAwesome
+							name="user"
 							size={24}
 							color={colors.brandGreen}
-							onPress={() => {
-								navigation.navigate('CommunitySettings', {
-									community: community,
-								});
-							}}
+							onPress={() =>
+								navigation.navigate('AllUsersList', {
+									communityId: id,
+									isAdmin: isAdmin,
+								})
+							}
 						/>
-					)}
+						{isAdmin && (
+							<Ionicons
+								name="settings-sharp"
+								size={24}
+								color={colors.brandGreen}
+								onPress={() => {
+									navigation.navigate('CommunitySettings', {
+										community: community,
+									});
+								}}
+							/>
+						)}
+					</View>
 				</View>
 				<Text> {community?.description} </Text>
-
-				{/* Show join code for admins */}
-				{isAdmin && (
-					<Text style={{ marginTop: 10, fontWeight: 'bold' }}>
-						Prisijungimo kodas: {community?.joiningCode}
-					</Text>
-				)}
-
-				{/* Member List */}
-				<Text
-					style={{ marginTop: 20, fontWeight: 'bold', fontSize: 16 }}
-				>
-					Bendruomenės nariai:
-				</Text>
-				{acceptedMembers.length > 0 ? (
-					acceptedMembers.map((member) => (
-						<View
-							key={member.userId}
-							style={{
-								borderWidth: 1,
-								borderColor: 'lightgray',
-								padding: 10,
-								marginVertical: 5,
-								borderRadius: 10,
-							}}
-						>
-							<Text>
-								Vartotojas: {member.username ?? 'Nežinomas'}
-							</Text>
-							<Text>
-								Prisijungė:{' '}
-								{new Date(
-									member.dateJoined!
-								).toLocaleDateString()}
-							</Text>
-						</View>
-					))
-				) : (
-					<Text style={{ marginTop: 5 }}>
-						Nėra patvirtintų narių.
-					</Text>
-				)}
-
-				{/* User-only "Leave community" button */}
-				{!isAdmin &&
-					acceptedMembers.some(
-						(m) => m.userId.toString() === userId
-					) && (
-						<TouchableOpacity
-							onPress={handleLeaveCommunity}
-							style={{
-								marginTop: 20,
-								backgroundColor: 'orange',
-								padding: 10,
-								borderRadius: 5,
-								alignItems: 'center',
-							}}
-						>
-							<Text
-								style={{ color: 'white', fontWeight: 'bold' }}
-							>
-								Palikti bendruomenę
-							</Text>
-						</TouchableOpacity>
-					)}
-
-				<Text style={{ marginTop: 30 }}>-----content-------</Text>
+				<Text style={{ marginTop: 10 }}>-----content-----</Text>
 			</SafeAreaView>
 		</ScrollView>
 	);

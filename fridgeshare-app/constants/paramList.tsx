@@ -14,4 +14,5 @@ export type ParamList = {
 	TagsList: { communityId: number; isAdmin: boolean };
 	CommunitySettings: { community: Community };
 	PendingRequests: { communityId: number };
+	AllUsersList: { communityId: number; isAdmin: boolean };
 };
