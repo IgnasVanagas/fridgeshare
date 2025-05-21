@@ -5,7 +5,6 @@ import mainStyle from '@/styles/styles';
 import axios from 'axios';
 import { useFocusEffect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { func } from 'prop-types';
 import { useCallback, useEffect, useState } from 'react';
 import {
 	SafeAreaView,
@@ -42,6 +41,7 @@ const AdminIndex = () => {
 
 	useEffect(() => {
 		if (storages && storages.length > 0) {
+			console.log(storages);
 			const grouped = storages.reduce((acc, storage) => {
 				const { communityName } = storage;
 				if (!acc[communityName]) {
@@ -51,13 +51,15 @@ const AdminIndex = () => {
 				return acc;
 			}, {} as Record<string, Storage[]>);
 			setGroupStorages(grouped);
+		} else if (storages.length == 0) {
+			setGroupStorages(null);
 		}
 	}, [storages]);
 
 	const handleFixed = (storage: Storage) => {
 		const updateStorage = async () => {
-			await axios
-				.put(`${API_BASE_URL}/storages/${storage.id}`, {
+			try {
+				await axios.put(`${API_BASE_URL}/storages/${storage.id}`, {
 					title: storage.title,
 					location: storage.location,
 					type: storage.type,
@@ -67,18 +69,19 @@ const AdminIndex = () => {
 					propertyOfCompany: storage.propertyOfCompany,
 					isEmpty: storage.isEmpty,
 					needsMaintenance: false,
-				})
-				.then(function () {
-					getStorages();
-					setErrorId(null);
-				})
-				.catch(function (error) {
-					setErrorId(storage.id);
 				});
+				const filtered = storages.filter((s) => s.id !== storage.id);
+				setStorages(filtered);
+				console.log(storages);
+			} catch (e) {
+				console.log(e);
+				setErrorId(storage.id);
+			}
 		};
 
 		updateStorage();
 	};
+
 	return (
 		<ScrollView
 			keyboardShouldPersistTaps="handled"
@@ -90,7 +93,7 @@ const AdminIndex = () => {
 				<Text style={[mainStyle.styledH1, { fontSize: 15 }]}>
 					kurioms reikia tech. apžiūros:
 				</Text>
-				{groupedStorages &&
+				{groupedStorages ? (
 					Object.keys(groupedStorages).map((communityName) => (
 						<View
 							key={communityName}
@@ -99,6 +102,7 @@ const AdminIndex = () => {
 								{
 									width: '80%',
 									padding: 15,
+									marginBottom: 30,
 								},
 							]}
 						>
@@ -126,7 +130,9 @@ const AdminIndex = () => {
 									<Text>
 										Paskutinis tech. tvarkymas:{' '}
 										{storage.lastMaintenanceDate
-											? storage.lastMaintenanceDate
+											? storage.lastMaintenanceDate.split(
+													'T'
+											  )[0]
 											: 'Nežinoma'}
 									</Text>
 									{errorId == storage.id && (
@@ -149,7 +155,10 @@ const AdminIndex = () => {
 								</View>
 							))}
 						</View>
-					))}
+					))
+				) : (
+					<Text>Niekam nereikia tech. apžiūros</Text>
+				)}
 			</SafeAreaView>
 		</ScrollView>
 	);

@@ -5,8 +5,9 @@ import buttonStyle from '@/styles/buttons';
 import mainStyle from '@/styles/styles';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
+import { useFocusEffect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import {
 	SafeAreaView,
 	ScrollView,
@@ -22,22 +23,24 @@ const CompanyStorageList = () => {
 		string | null
 	>();
 	const [errorMsg, setErrorMsg] = useState<string | null>(null);
-	useEffect(() => {
-		const getStorages = async () => {
-			await axios
-				.get(`${API_BASE_URL}/storages/company`)
-				.then(function (response) {
-					setStorages(response.data);
-					setStorageRemoveErrorId(null);
-					setErrorMsg(null);
-				})
-				.catch(function (error) {
-					console.log(error);
-				});
-		};
+	useFocusEffect(
+		useCallback(() => {
+			const getStorages = async () => {
+				await axios
+					.get(`${API_BASE_URL}/storages/company`)
+					.then(function (response) {
+						setStorages(response.data);
+						setStorageRemoveErrorId(null);
+						setErrorMsg(null);
+					})
+					.catch(function (error) {
+						console.log(error);
+					});
+			};
 
-		getStorages();
-	}, []);
+			getStorages();
+		}, [])
+	);
 
 	const getStorageName = (storageNameEn: string) => {
 		let dict = new Map();

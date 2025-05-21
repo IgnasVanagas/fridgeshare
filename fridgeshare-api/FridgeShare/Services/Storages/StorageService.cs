@@ -123,7 +123,7 @@ public class StorageService : IStorageService
     {
         var storages = await _dbContext.Storages
             .Include(s => s.Community)
-            .Where(s => s.NeedsMaintenance)
+            .Where(s => s.NeedsMaintenance && s.PropertyOfCompany)
             .ToListAsync();
         if (storages == null)
         {
