@@ -63,7 +63,30 @@ public class StoragesController : ApiController
         return Ok(MapStorageResponse(storage, community));
     }
 
-    [HttpPut("{id:guid}")]
+    [HttpGet("company")]
+    public async Task<IActionResult> GetCompanyStorage()
+    {
+        var getStorageResult = await _storageService.GetCompanyStorage();
+        if (getStorageResult.IsError)
+        {
+            return Problem(getStorageResult.Errors);
+        }
+        var storages = getStorageResult.Value;
+        List<StorageResponse> storages1 = new List<StorageResponse>();
+        foreach (var storage in storages){
+            var communityResult = await _communityService.GetCommunity(storage.CommunityId);
+            if (communityResult.IsError)
+            {
+                return Problem(communityResult.Errors);
+            }
+            var community = communityResult.Value;
+            storages1.Add(MapStorageResponse(storage, community));
+        }
+
+        return Ok(storages1);
+    }
+
+        [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateStorage(Guid id, UpdateStorageRequest request)
     {
         var createStorageResult = Storage.From(id, request);

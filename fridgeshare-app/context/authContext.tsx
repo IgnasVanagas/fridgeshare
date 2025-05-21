@@ -5,7 +5,8 @@ interface AuthContext {
 	username: string | null;
 	id: string | null;
 	isLoggedIn: boolean;
-	login: (token: string, id: string) => Promise<void>;
+	isAdmin: boolean;
+	login: (token: string, id: string, isAdmin: boolean) => Promise<void>;
 	logout: () => Promise<void>;
 }
 
@@ -15,6 +16,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 	children,
 }) => {
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [isAdmin, setIsAdmin] = useState(false);
 	const [username, setUsername] = useState<string | null>(null);
 	const [id, setId] = useState<string | null>(null);
 
@@ -28,30 +30,39 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 			if (id) {
 				setId(id);
 			}
+
+			const isAdmin = await AsyncStorage.getItem('isAdmin');
+			if (isAdmin) {
+				setIsAdmin(isAdmin === 'true' ? true : false);
+			}
 		};
 
 		checkLogin();
 	}, []);
 
-	const login = async (token: string, id: string) => {
+	const login = async (token: string, id: string, isAdmin: boolean) => {
 		await AsyncStorage.setItem('token', token);
 		await AsyncStorage.setItem('id', id);
+		await AsyncStorage.setItem('isAdmin', isAdmin.toString());
 		setIsLoggedIn(true);
 		setUsername(token);
 		setId(id);
+		setIsAdmin(isAdmin);
 	};
 
 	const logout = async () => {
 		await AsyncStorage.removeItem('token');
 		await AsyncStorage.removeItem('id');
+		await AsyncStorage.removeItem('isAdmin');
 		setIsLoggedIn(false);
+		setIsAdmin(false);
 		setUsername(null);
 		setId(null);
 	};
 
 	return (
 		<AuthContext.Provider
-			value={{ username, id, isLoggedIn, login, logout }}
+			value={{ username, id, isLoggedIn, isAdmin, login, logout }}
 		>
 			{children}
 		</AuthContext.Provider>

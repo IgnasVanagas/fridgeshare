@@ -108,4 +108,14 @@ public class StorageService : IStorageService
         return storages;
 
     }
+
+    public async Task<ErrorOr<List<Storage>>> GetCompanyStorage()
+    {
+        var storages = await _dbContext.Storages.Where(s => s.PropertyOfCompany).ToListAsync();
+        if (storages is null)
+        {
+            return Errors.Storage.NotFound;
+        }
+        return storages;
+    }
 }
