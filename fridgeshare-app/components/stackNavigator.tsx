@@ -20,6 +20,8 @@ import CommunitySettings from '@/screens/communitySettings';
 import PendingRequests from '@/screens/pendingRequests';
 import AllUsersList from '@/screens/allUsersList';
 import AdminDrawerNavigation from './adminDrawer';
+import { AdminParamList } from '@/constants/paramListAdmin';
+import ChooseCommunityToCreateStorage from '@/screens/chooseCommunity';
 
 const Stack1 = createNativeStackNavigator();
 
@@ -62,11 +64,16 @@ export function AuthStackNavigation() {
 	);
 }
 
-const Stack3 = createNativeStackNavigator<ParamList>();
+const Stack3 = createNativeStackNavigator<AdminParamList>();
 export function AdminStackNavigation() {
 	return (
 		<Stack3.Navigator screenOptions={{ headerShown: false }}>
 			<Stack3.Screen name="Drawer" component={AdminDrawerNavigation} />
+			<Stack3.Screen name="AddStorage" component={AddStorage} />
+			<Stack3.Screen
+				name="ChooseCommunity"
+				component={ChooseCommunityToCreateStorage}
+			/>
 		</Stack3.Navigator>
 	);
 }

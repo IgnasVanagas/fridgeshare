@@ -163,4 +163,15 @@ public class CommunityService : ICommunityService
         await _dbContext.SaveChangesAsync();
         return community;
     }
+
+    public async Task<ErrorOr<List<Community>>> GetAllActive()
+    {
+        var communities = await _dbContext.Communities.Where(c => c.Active).OrderBy(c => c.Title).ToListAsync();
+        if(communities == null)
+        {
+            return Errors.Community.NotFound;
+        }
+
+        return communities;
+    }
 }

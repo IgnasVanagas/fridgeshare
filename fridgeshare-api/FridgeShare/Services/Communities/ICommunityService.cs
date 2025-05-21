@@ -15,4 +15,5 @@ public interface ICommunityService
     Task<ErrorOr<List<Community>>> GetUserManagedCommunities(int userId);
     Task<ErrorOr<string>> GenerateUniqueJoiningCode();
     Task<ErrorOr<Community>> UpdateJoiningCode(int communityId, string code);
+    Task<ErrorOr<List<Community>>> GetAllActive();
 }

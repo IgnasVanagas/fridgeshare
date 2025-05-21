@@ -111,7 +111,7 @@ public class StorageService : IStorageService
 
     public async Task<ErrorOr<List<Storage>>> GetCompanyStorage()
     {
-        var storages = await _dbContext.Storages.Where(s => s.PropertyOfCompany).ToListAsync();
+        var storages = await _dbContext.Storages.Where(s => s.PropertyOfCompany).OrderBy(s => s.Title).ToListAsync();
         if (storages is null)
         {
             return Errors.Storage.NotFound;

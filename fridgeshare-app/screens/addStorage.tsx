@@ -34,7 +34,7 @@ type FormValues = {
 type Props = NativeStackScreenProps<ParamList, 'AddStorage'>;
 
 const AddStorage = ({ route }: Props) => {
-	const { communityId, storage } = route.params;
+	const { communityId, storage, adminAdd } = route.params;
 	const navigation = useNavigation();
 	const isEditing = !!storage;
 
@@ -57,7 +57,11 @@ const AddStorage = ({ route }: Props) => {
 			title: storage?.title || '',
 			location: storage?.location || '',
 			type: storage?.type || 0,
-			propertyOfCompany: storage?.propertyOfCompany || false,
+			propertyOfCompany: adminAdd
+				? true
+				: storage
+				? storage?.propertyOfCompany
+				: false,
 			id: storage?.id || null,
 		},
 		validationSchema: addStorageValidation,
@@ -73,9 +77,14 @@ const AddStorage = ({ route }: Props) => {
 								communityId: communityId,
 								propertyOfCompany: values['propertyOfCompany'],
 							})
-							.then(function (response) {
-								console.log(response);
-								navigation.goBack();
+							.then(function () {
+								if (adminAdd) {
+									navigation.navigate('Drawer', {
+										screen: 'Kompanijos maisto laikymo vietos',
+									});
+								} else {
+									navigation.goBack();
+								}
 							})
 							.catch(function (error) {
 								console.log(error);
@@ -90,9 +99,14 @@ const AddStorage = ({ route }: Props) => {
 							communityId: communityId,
 							propertyOfCompany: values['propertyOfCompany'],
 						})
-						.then(function (response) {
-							console.log(response);
-							navigation.goBack();
+						.then(function () {
+							if (adminAdd) {
+								navigation.navigate('Drawer', {
+									screen: 'Kompanijos maisto laikymo vietos',
+								});
+							} else {
+								navigation.goBack();
+							}
 						})
 						.catch(function (error) {
 							console.log(error);
