@@ -3,6 +3,7 @@ import { Storage } from './storage';
 import { Tag } from './tag';
 export type ParamList = {
 	CommunityView: { id: number };
+	EditCommunity: { id: number };
 	Drawer: undefined;
 	AuthIndex: undefined;
 	RequestList: undefined;
