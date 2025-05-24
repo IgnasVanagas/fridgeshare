@@ -84,18 +84,24 @@ const CommunitySettings = ({ route }: Props) => {
 						</View>
 					</TouchableOpacity>
 					<TouchableOpacity
-						style={[buttonStyle.greenBorder, { marginBottom: 25 }]}
-					>
-						<View style={mainStyle.inlineWithIcon}>
-							<FontAwesome6
-								name="pencil"
-								size={24}
-								color={colors.brandGreen}
-								style={{ marginRight: 15 }}
-							/>
-							<Text>Redaguoti bendruomenę</Text>
-						</View>
-					</TouchableOpacity>
+	style={[buttonStyle.greenBorder, { marginBottom: 25 }]}
+	onPress={() =>
+		navigation.navigate('EditCommunity', {
+	id: community.id,
+})
+	}
+>
+	<View style={mainStyle.inlineWithIcon}>
+		<FontAwesome6
+			name="pencil"
+			size={24}
+			color={colors.brandGreen}
+			style={{ marginRight: 15 }}
+		/>
+		<Text>Redaguoti bendruomenę</Text>
+	</View>
+</TouchableOpacity>
+
 					<TouchableOpacity
 						style={[buttonStyle.greenBorder, { marginBottom: 25 }]}
 						onPress={() => {

@@ -22,6 +22,8 @@ import AllUsersList from '@/screens/allUsersList';
 import AdminDrawerNavigation from './adminDrawer';
 import { AdminParamList } from '@/constants/paramListAdmin';
 import ChooseCommunityToCreateStorage from '@/screens/chooseCommunity';
+import EditCommunity from '@/screens/EditCommunity';
+
 
 const Stack1 = createNativeStackNavigator();
 
@@ -60,6 +62,8 @@ export function AuthStackNavigation() {
 			/>
 			<Stack2.Screen name="PendingRequests" component={PendingRequests} />
 			<Stack2.Screen name="AllUsersList" component={AllUsersList} />
+			<Stack2.Screen name="EditCommunity" component={EditCommunity} />
+
 		</Stack2.Navigator>
 	);
 }
