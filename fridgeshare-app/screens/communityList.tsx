@@ -3,7 +3,7 @@ import colors from '@/constants/colors';
 import { useAuth } from '@/context/authContext';
 import mainStyle from '@/styles/styles';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,6 +15,7 @@ import { UserCommunity, Community } from '@/constants/communityType';
 import buttonStyle from '@/styles/buttons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 const CommunityList = () => {
 	const navigation = useNavigation();
@@ -63,30 +64,47 @@ const CommunityList = () => {
 		>
 			<SafeAreaView style={[mainStyle.container3, { padding: 0 }]}>
 				<StatusBar style="dark" hidden={false} />
-				<TouchableOpacity
-					style={[
-						buttonStyle.submitColorfulButton,
-						mainStyle.inline,
-						{ marginBottom: '2%' },
-					]}
-					onPress={() => navigation.navigate('JoinCommunity')}
-				>
-					<Feather name="plus" size={20} color={colors.white} />
-					<Text style={buttonStyle.submitColorfulButtonText}>
-						Prisijungti prie naujos bendruomenės
-					</Text>
-				</TouchableOpacity>
-				<TouchableOpacity
-					style={[
-						buttonStyle.submitColorfulButton,
-						{ marginTop: 10 },
-					]}
-					onPress={() => navigation.navigate('CreateCommunity')}
-				>
-					<Text style={buttonStyle.submitColorfulButtonText}>
-						Sukurti naują bendruomenę
-					</Text>
-				</TouchableOpacity>
+				<View style={mainStyle.inline}>
+					<TouchableOpacity
+						style={[
+							buttonStyle.submitColorfulButton,
+							mainStyle.inline,
+							{
+								width: '35%',
+								marginRight: 20,
+								padding: 5,
+								justifyContent: 'center',
+							},
+						]}
+						onPress={() => navigation.navigate('JoinCommunity')}
+					>
+						<Feather name="plus" size={20} color={colors.white} />
+						<Text style={buttonStyle.submitColorfulButtonText}>
+							Prisijungti
+						</Text>
+					</TouchableOpacity>
+					<TouchableOpacity
+						style={[
+							buttonStyle.submitColorfulButton,
+							mainStyle.inlineWithIcon,
+							{
+								width: '35%',
+								padding: 5,
+								justifyContent: 'center',
+							},
+						]}
+						onPress={() => navigation.navigate('CreateCommunity')}
+					>
+						<MaterialIcons
+							name="create"
+							size={20}
+							color={colors.white}
+						/>
+						<Text style={buttonStyle.submitColorfulButtonText}>
+							Sukurti naują
+						</Text>
+					</TouchableOpacity>
+				</View>
 
 				{listOfManagedCommunities.length > 0 && (
 					<Text>Jūsų įkurtos bendruomenės:</Text>

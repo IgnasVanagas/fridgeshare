@@ -5,6 +5,7 @@ import {
 	Platform,
 	TouchableWithoutFeedback,
 	Keyboard,
+	TouchableOpacity,
 } from 'react-native';
 import { Link, router } from 'expo-router';
 
@@ -56,7 +57,6 @@ const LoginScreen = () => {
 						response.data['isAdmin']
 					);
 					navigation.navigate('Index');
-					// router.push('/');
 				})
 				.catch(function (error) {
 					console.log(error);
@@ -104,9 +104,13 @@ const LoginScreen = () => {
 
 						<View style={[mainStyle.inline, { marginTop: 10 }]}>
 							<Text>Neturite anketos?</Text>
-							<Link href="/signup" style={mainStyle.link}>
-								Registruotis
-							</Link>
+							<TouchableOpacity
+								onPress={() =>
+									navigation.navigate('Registruotis')
+								}
+							>
+								<Text style={mainStyle.link}>Registruotis</Text>
+							</TouchableOpacity>
 						</View>
 					</View>
 				</View>
