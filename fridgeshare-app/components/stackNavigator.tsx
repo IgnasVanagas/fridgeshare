@@ -11,8 +11,8 @@ import SentOutRequestList from '@/screens/sentOutRequestList';
 import JoinCommunity from '@/screens/joinCommunity';
 import AddStorage from '@/screens/addStorage';
 import CreateCommunity from '@/screens/createCommunity';
-import ChangeUsername from '@/screens/ChangeUsername';
-import ChangePasswordScreen from '@/screens/ChangePasswordScreen';
+import ChangeUsername from '@/screens/changeUsername';
+import ChangePasswordScreen from '@/screens/changePasswordScreen';
 import StorageList from '@/screens/storageList';
 import TagForm from '@/screens/tagForm';
 import TagsList from '@/screens/tagList';
@@ -23,7 +23,6 @@ import AdminDrawerNavigation from './adminDrawer';
 import { AdminParamList } from '@/constants/paramListAdmin';
 import ChooseCommunityToCreateStorage from '@/screens/chooseCommunity';
 import EditCommunity from '@/screens/EditCommunity';
-
 
 const Stack1 = createNativeStackNavigator();
 
@@ -63,7 +62,6 @@ export function AuthStackNavigation() {
 			<Stack2.Screen name="PendingRequests" component={PendingRequests} />
 			<Stack2.Screen name="AllUsersList" component={AllUsersList} />
 			<Stack2.Screen name="EditCommunity" component={EditCommunity} />
-
 		</Stack2.Navigator>
 	);
 }
