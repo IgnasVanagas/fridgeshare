@@ -13,7 +13,6 @@ import axios from 'axios';
 import { API_BASE_URL } from '@/api_config';
 import mainStyle from '@/styles/styles';
 import buttonStyle from '@/styles/buttons';
-import colors from '@/constants/colors';
 import { useAuth } from '@/context/authContext';
 import { StatusBar } from 'expo-status-bar';
 

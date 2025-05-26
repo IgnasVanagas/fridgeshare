@@ -7,7 +7,6 @@ import {
 	Keyboard,
 	TouchableOpacity,
 } from 'react-native';
-import { Link, router } from 'expo-router';
 
 import { useFormik } from 'formik';
 import * as yup from 'yup';

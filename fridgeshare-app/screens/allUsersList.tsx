@@ -15,7 +15,6 @@ import axios from 'axios';
 import { API_BASE_URL } from '@/api_config';
 import { useAuth } from '@/context/authContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import buttonStyle from '@/styles/buttons';
 
 type Props = NativeStackScreenProps<ParamList, 'AllUsersList'>;
 interface UserCommunityResponse {

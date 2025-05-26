@@ -5,13 +5,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import {
-	SafeAreaView,
-	ScrollView,
-	Text,
-	TouchableOpacity,
-	View,
-} from 'react-native';
+import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 import { Community } from '@/constants/communityType';
 import { useAuth } from '@/context/authContext';
 import { useNavigation } from '@react-navigation/native';
