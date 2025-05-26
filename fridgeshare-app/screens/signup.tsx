@@ -6,6 +6,7 @@ import {
 	Platform,
 	TouchableWithoutFeedback,
 	Keyboard,
+	TouchableOpacity,
 } from 'react-native';
 
 import { useFormik } from 'formik';
@@ -88,7 +89,11 @@ const SignupScreen = () => {
 					}
 				)
 				.then(function (response) {
-					login(response.data['username'], '' + response.data['id']);
+					login(
+						response.data['username'],
+						'' + response.data['id'],
+						response.data['isAdmin']
+					);
 					navigation.navigate('Index');
 				})
 				.catch(function (error) {
@@ -178,9 +183,13 @@ const SignupScreen = () => {
 						/>
 						<View style={[mainStyle.inline, { marginTop: 10 }]}>
 							<Text>Turite paskyrą?</Text>
-							<Link href="/login" style={mainStyle.link}>
-								Prisijungti
-							</Link>
+							<TouchableOpacity
+								onPress={() =>
+									navigation.navigate('Prisijungti')
+								}
+							>
+								<Text style={mainStyle.link}>Prisijungti</Text>
+							</TouchableOpacity>
 						</View>
 					</View>
 				</View>

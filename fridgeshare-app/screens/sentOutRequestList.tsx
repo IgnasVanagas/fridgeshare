@@ -16,7 +16,6 @@ import {
 } from 'react-native';
 
 const SentOutRequestList = () => {
-	const navigation = useNavigation();
 	const [requestList, setRequestList] = useState<UserCommunity[]>([]);
 	const { id } = useAuth();
 

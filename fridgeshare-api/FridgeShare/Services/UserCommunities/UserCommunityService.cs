@@ -105,7 +105,9 @@ public class UserCommunityService : IUserCommunityService
     {
         var users = await _dbContext
             .UserCommunities
+            .Include(uc => uc.User)
             .Where(uc => uc.CommunityId == communityId)
+            .OrderBy(uc => uc.User!.Username)
             .ToListAsync();
 
         if (users == null)

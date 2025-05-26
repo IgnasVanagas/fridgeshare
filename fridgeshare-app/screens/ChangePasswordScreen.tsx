@@ -10,61 +10,66 @@ import axios from 'axios';
 import { API_BASE_URL } from '@/api_config';
 
 const ChangePasswordScreen = () => {
-  const navigation = useNavigation();
-  const { id: userId } = useAuth();
+	const navigation = useNavigation();
+	const { id: userId } = useAuth();
 
-  const [oldPassword, setOldPassword] = useState('');
-  const [newPassword, setNewPassword] = useState('');
+	const [oldPassword, setOldPassword] = useState('');
+	const [newPassword, setNewPassword] = useState('');
 
-  const handleChangePassword = async () => {
-    if (!oldPassword || !newPassword) {
-      Alert.alert('Klaida', 'Visi laukai privalomi.');
-      return;
-    }
+	const handleChangePassword = async () => {
+		if (!oldPassword || !newPassword) {
+			Alert.alert('Klaida', 'Visi laukai privalomi.');
+			return;
+		}
 
-    try {
-      await axios.patch(`${API_BASE_URL}/user/${userId}/password`, {
-        oldPassword,
-        newPassword,
-      });
+		try {
+			await axios.patch(`${API_BASE_URL}/user/${userId}/password`, {
+				oldPassword,
+				newPassword,
+			});
 
-      Alert.alert('Pavyko', 'Slaptažodis pakeistas.');
-      navigation.goBack();
-    } catch (error) {
-      console.error('Klaida keičiant slaptažodį:', error);
-      Alert.alert('Klaida', 'Nepavyko pakeisti slaptažodžio.');
-    }
-  };
+			Alert.alert('Pavyko', 'Slaptažodis pakeistas.');
+			navigation.goBack();
+		} catch (error) {
+			console.error('Klaida keičiant slaptažodį:', error);
+			Alert.alert('Klaida', 'Nepavyko pakeisti slaptažodžio.');
+		}
+	};
 
-  return (
-    <SafeAreaView style={mainStyle.container3}>
-      <StatusBar style="dark" hidden={false} />
-      <Text style={mainStyle.styledH1}>Keisti slaptažodį</Text>
+	return (
+		<SafeAreaView style={mainStyle.container3}>
+			<StatusBar style="dark" hidden={false} />
+			<Text style={mainStyle.styledH1}>Keisti slaptažodį</Text>
+			<View style={{ width: '80%' }}>
+				<Text>Senas slaptažodis</Text>
+				<TextInput
+					style={mainStyle.formInput}
+					secureTextEntry
+					value={oldPassword}
+					onChangeText={setOldPassword}
+				/>
+				<Text>Naujas slaptažodis</Text>
+				<TextInput
+					style={mainStyle.formInput}
+					secureTextEntry
+					value={newPassword}
+					onChangeText={setNewPassword}
+				/>
 
-      <TextInput
-        style={mainStyle.input}
-        placeholder="Senas slaptažodis"
-        secureTextEntry
-        value={oldPassword}
-        onChangeText={setOldPassword}
-      />
-
-      <TextInput
-        style={mainStyle.input}
-        placeholder="Naujas slaptažodis"
-        secureTextEntry
-        value={newPassword}
-        onChangeText={setNewPassword}
-      />
-
-      <TouchableOpacity
-        style={[buttonStyle.submitColorfulButton, { marginTop: 20 }]}
-        onPress={handleChangePassword}
-      >
-        <Text style={buttonStyle.submitColorfulButtonText}>Išsaugoti</Text>
-      </TouchableOpacity>
-    </SafeAreaView>
-  );
+				<TouchableOpacity
+					style={[
+						buttonStyle.submitColorfulButton,
+						{ marginTop: 20 },
+					]}
+					onPress={handleChangePassword}
+				>
+					<Text style={buttonStyle.submitColorfulButtonText}>
+						Išsaugoti
+					</Text>
+				</TouchableOpacity>
+			</View>
+		</SafeAreaView>
+	);
 };
 
 export default ChangePasswordScreen;

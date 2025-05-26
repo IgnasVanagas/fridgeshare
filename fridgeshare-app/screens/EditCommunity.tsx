@@ -22,9 +22,9 @@ import { Community } from '@/constants/communityType';
 
 const EditCommunity = () => {
 	const navigation = useNavigation();
-    type EditCommunityRouteProp = RouteProp<ParamList, 'EditCommunity'>;
-    const route = useRoute<EditCommunityRouteProp>();
-    const { id } = route.params;
+	type EditCommunityRouteProp = RouteProp<ParamList, 'EditCommunity'>;
+	const route = useRoute<EditCommunityRouteProp>();
+	const { id } = route.params;
 
 	const [community, setCommunity] = useState<Community | null>(null);
 	const [title, setTitle] = useState('');
@@ -33,43 +33,44 @@ const EditCommunity = () => {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-	console.log('Received ID from route params:', id);
+		console.log('Received ID from route params:', id);
 
-	if (!id) {
-		setError('Bendruomenės ID nerastas.');
-		setLoading(false);
-		return;
-	}
-
-	const fetchCommunity = async () => {
-		try {
-			const response = await axios.get(`${API_BASE_URL}/community/${Number(id)}`);
-			const fetched = response.data;
-			console.log('Fetched community:', fetched);
-			setCommunity(fetched);
-			setTitle(fetched.title);
-			setDescription(fetched.description || '');
-		} catch (e) {
-			console.error('Failed to fetch community:', e);
-			setError('Nepavyko gauti bendruomenės duomenų.');
-		} finally {
+		if (!id) {
+			setError('Bendruomenės ID nerastas.');
 			setLoading(false);
+			return;
 		}
-	};
 
-	fetchCommunity();
-}, [id]);
+		const fetchCommunity = async () => {
+			try {
+				const response = await axios.get(
+					`${API_BASE_URL}/community/${Number(id)}`
+				);
+				const fetched = response.data;
+				console.log('Fetched community:', fetched);
+				setCommunity(fetched);
+				setTitle(fetched.title);
+				setDescription(fetched.description || '');
+			} catch (e) {
+				console.error('Failed to fetch community:', e);
+				setError('Nepavyko gauti bendruomenės duomenų.');
+			} finally {
+				setLoading(false);
+			}
+		};
 
+		fetchCommunity();
+	}, [id]);
 
 	const handleSave = async () => {
 		try {
 			await axios.put(`${API_BASE_URL}/community/${community?.id}`, {
-	title,
-	description,
-	managerId: community?.managerId,  // required by `Community.From()` model
-	joiningCode: community?.joiningCode, // also required
-	active: community?.active // and this
-});
+				title,
+				description,
+				managerId: community?.managerId, // required by `Community.From()` model
+				joiningCode: community?.joiningCode, // also required
+				active: community?.active, // and this
+			});
 			Alert.alert('Sėkmingai!', 'Bendruomenė atnaujinta.');
 			navigation.goBack();
 		} catch (e) {
@@ -105,26 +106,40 @@ const EditCommunity = () => {
 					<TextInput
 						value={title}
 						onChangeText={setTitle}
-						style={mainStyle.textInput}
+						style={mainStyle.formInput}
 						placeholder="Įveskite pavadinimą"
 					/>
 
-					<Text style={{ fontWeight: 'bold', marginTop: 20 }}>Aprašymas</Text>
+					<Text style={{ fontWeight: 'bold', marginTop: 20 }}>
+						Aprašymas
+					</Text>
 					<TextInput
 						value={description}
 						onChangeText={setDescription}
-						style={[mainStyle.textInput, { height: 100 }]}
+						style={[mainStyle.formInput, { height: 100 }]}
 						placeholder="Įveskite aprašymą"
 						multiline
 					/>
 
-					{error && <Text style={{ color: colors.red }}>{error}</Text>}
+					{error && (
+						<Text style={{ color: colors.red }}>{error}</Text>
+					)}
 
 					<TouchableOpacity
-						style={[buttonStyle.greenBorder, { marginTop: 30 }]}
+						style={[
+							buttonStyle.submitColorfulButton,
+							{ marginTop: 30 },
+						]}
 						onPress={handleSave}
 					>
-						<Text style={{ textAlign: 'center' }}>Išsaugoti</Text>
+						<Text
+							style={[
+								{ textAlign: 'center' },
+								buttonStyle.submitColorfulButtonText,
+							]}
+						>
+							Išsaugoti
+						</Text>
 					</TouchableOpacity>
 				</View>
 			</SafeAreaView>

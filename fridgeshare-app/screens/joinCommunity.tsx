@@ -62,7 +62,7 @@ const JoinCommunity = () => {
 				<Text style={mainStyle.styledH1}>
 					Prisijungti prie bendruomenės
 				</Text>
-				<View style={[mainStyle.form]}>
+				<View style={mainStyle.form}>
 					<FormTextInput
 						label="Prisijungimo kodas"
 						error={formik.errors.code}
