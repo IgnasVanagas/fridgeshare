@@ -11,7 +11,7 @@ import { StatusBar } from 'expo-status-bar';
 
 const ChangeUsername = () => {
 	const navigation = useNavigation();
-	const { id: userId, username, setUsername } = useAuth(); // make sure `setUsername` is available if you want instant UI update
+	const { id: userId, username, setUsername } = useAuth(); 
 	const [newUsername, setNewUsername] = useState(username ?? '');
 
 	const handleChangeUsername = async () => {
