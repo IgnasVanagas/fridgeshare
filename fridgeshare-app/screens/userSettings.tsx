@@ -16,34 +16,21 @@ const SettingsScreen = () => {
 	return (
 		<SafeAreaView style={mainStyle.container3}>
 			<StatusBar style="dark" hidden={false} />
-
 			<Text style={mainStyle.styledH1}>Nustatymai</Text>
 
-			{/* Profile section */}
-			<View
-				style={{
-					padding: 20,
-					borderWidth: 1,
-					borderColor: 'lightgray',
-					borderRadius: 10,
-					marginBottom: 20,
-				}}
-			>
-				<Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-					Prisijungęs kaip:
-				</Text>
+			<View style={{ padding: 20 }}>
+				<Text style={{ fontSize: 18, fontWeight: 'bold' }}>Vartotojas</Text>
 				<Text style={{ fontSize: 16, marginTop: 5 }}>{username}</Text>
 			</View>
 
-			{/* Settings Options */}
 			<ScrollView style={{ width: '100%' }}>
-                <TouchableOpacity
-                style={[mainStyle.inline, { marginTop: 20 }]}
-                onPress={() => navigation.navigate('ChangeUsername')}
-                >
-                <Ionicons name="person" size={20} color={colors.brandGreen} />
-                <Text style={{ paddingLeft: 10 }}>Keisti vartotojo vardą</Text>
-                </TouchableOpacity>
+				<TouchableOpacity
+					style={[mainStyle.inline, { marginTop: 20 }]}
+					onPress={() => navigation.navigate('ChangeUsername')}
+				>
+					<Ionicons name="person" size={20} color={colors.brandGreen} />
+					<Text style={{ paddingLeft: 10 }}>Keisti vartotojo vardą</Text>
+				</TouchableOpacity>
 
 				<TouchableOpacity
 					style={[mainStyle.inline, { marginTop: 20 }]}
@@ -55,7 +42,7 @@ const SettingsScreen = () => {
 
 				<TouchableOpacity
 					style={[mainStyle.inline, { marginTop: 20 }]}
-					onPress={() => navigation.navigate('NotificationSettings')}
+					onPress={() => navigation.navigate('Notifications')}
 				>
 					<Feather name="bell" size={20} color={colors.brandGreen} />
 					<Text style={{ paddingLeft: 10 }}>Pranešimų nustatymai</Text>
@@ -63,24 +50,23 @@ const SettingsScreen = () => {
 
 				<TouchableOpacity
 					style={[mainStyle.inline, { marginTop: 20 }]}
-					onPress={() => navigation.navigate('PrivacySettings')}
+					onPress={() => navigation.navigate('Privacy')}
 				>
 					<Feather name="shield" size={20} color={colors.brandGreen} />
 					<Text style={{ paddingLeft: 10 }}>Privatumas</Text>
 				</TouchableOpacity>
 
-                {isAdmin && (
-                    <TouchableOpacity
-                        style={[mainStyle.inline, { marginTop: 20 }]}
-                        onPress={() => navigation.navigate('ManageNews')}
-                    >
-                        <Feather name="file-text" size={20} color={colors.brandGreen} />
-                        <Text style={{ paddingLeft: 10 }}>Valdyti naujienas</Text>
-                    </TouchableOpacity>
-                )}
+				{isAdmin && (
+					<TouchableOpacity
+						style={[mainStyle.inline, { marginTop: 20 }]}
+						onPress={() => navigation.navigate('ManageNews')}
+					>
+						<Feather name="file-text" size={20} color={colors.brandGreen} />
+						<Text style={{ paddingLeft: 10 }}>Valdyti naujienas</Text>
+					</TouchableOpacity>
+				)}
 			</ScrollView>
 
-			{/* Logout */}
 			<TouchableOpacity
 				style={[
 					buttonStyle.submitColorfulButton,
