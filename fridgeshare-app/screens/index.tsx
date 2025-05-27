@@ -1,12 +1,22 @@
+import React from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
-
+import { useAuth } from '@/context/authContext';
 import mainStyle from '@/styles/styles';
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import buttonStyle from '@/styles/buttons';
 
+type RootStackParamList = {
+	Registruotis: undefined;
+	Prisijungti: undefined;
+};
+
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 export default function Index() {
-	const navigation = useNavigation();
+	const navigation = useNavigation<NavigationProp>();
+	const { isLoggedIn } = useAuth();
 
 	return (
 		<View style={mainStyle.container}>

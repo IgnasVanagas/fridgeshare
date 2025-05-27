@@ -11,4 +11,8 @@ export type ParamList = {
 	StorageList: { communityId: number; isAdmin: boolean };
 	AddTag: { communityId: number; tag?: Tag };
 	TagsList: { communityId: number; isAdmin: boolean };
+	CommunityList: undefined;
+	AddProduct: { communityId?: number };
+	ChangeUsername: undefined;
+	ChangePassword: undefined;
 };

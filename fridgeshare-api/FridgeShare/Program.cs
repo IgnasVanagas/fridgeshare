@@ -9,6 +9,7 @@ using FridgeShare.Services.Users;
 using FridgeShare.Services.ProductsTaken;
 using Microsoft.AspNetCore.Hosting;
 using FridgeShare.Services.UserCommunities;
+using FridgeShare.Services.News;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +47,7 @@ builder.Services.AddScoped<ITagService, TagService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IProductTakenService, ProductTakenService>();
 builder.Services.AddScoped<IUserCommunityService, UserCommunityService>();
+builder.Services.AddScoped<INewsService, NewsService>();
 
 var app = builder.Build();
 

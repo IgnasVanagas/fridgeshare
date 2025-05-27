@@ -11,7 +11,7 @@ import { useAuth } from '@/context/authContext';
 
 const SettingsScreen = () => {
 	const navigation = useNavigation();
-	const { logout, username } = useAuth(); // Assuming authContext provides logout and username
+	const { logout, username, isAdmin } = useAuth();
 
 	return (
 		<SafeAreaView style={mainStyle.container3}>
@@ -37,7 +37,6 @@ const SettingsScreen = () => {
 
 			{/* Settings Options */}
 			<ScrollView style={{ width: '100%' }}>
-
                 <TouchableOpacity
                 style={[mainStyle.inline, { marginTop: 20 }]}
                 onPress={() => navigation.navigate('ChangeUsername')}
@@ -69,6 +68,16 @@ const SettingsScreen = () => {
 					<Feather name="shield" size={20} color={colors.brandGreen} />
 					<Text style={{ paddingLeft: 10 }}>Privatumas</Text>
 				</TouchableOpacity>
+
+                {isAdmin && (
+                    <TouchableOpacity
+                        style={[mainStyle.inline, { marginTop: 20 }]}
+                        onPress={() => navigation.navigate('ManageNews')}
+                    >
+                        <Feather name="file-text" size={20} color={colors.brandGreen} />
+                        <Text style={{ paddingLeft: 10 }}>Valdyti naujienas</Text>
+                    </TouchableOpacity>
+                )}
 			</ScrollView>
 
 			{/* Logout */}

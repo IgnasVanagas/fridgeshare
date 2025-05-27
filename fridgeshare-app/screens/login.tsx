@@ -16,7 +16,7 @@ import mainStyle from '@/styles/styles';
 import FormTextInput from '@/components/formTextInput';
 import GreenSubmitButton from '@/components/submitButton';
 import axios from 'axios';
-import { API_BASE_URL } from '@/api_config';
+import { API_BASE_URL } from '../api_config';
 import { useAuth } from '@/context/authContext';
 import { useNavigation } from '@react-navigation/native';
 
