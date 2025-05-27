@@ -1,5 +1,5 @@
-import colors from '@/constants/colors';
 import { StyleSheet } from 'react-native';
+import colors from '@/constants/colors';
 
 const mainStyle = StyleSheet.create({
 	container: {
@@ -35,6 +35,12 @@ const mainStyle = StyleSheet.create({
 		fontSize: 20,
 		fontWeight: 'bold',
 		marginBottom: 20,
+	},
+	styledH2: {
+		fontSize: 20,
+		fontWeight: 'bold',
+		marginBottom: 12,
+		color: colors.brandGreen,
 	},
 	form: {
 		borderStyle: 'solid',
@@ -76,14 +82,12 @@ const mainStyle = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'space-between',
 	},
-	inlineWithIcon: {
-		flexDirection: 'row',
-		alignItems: 'center',
-		justifyContent: 'flex-start',
-	},
 	link: {
 		textDecorationLine: 'underline',
 		color: colors.brandGreen,
+	},
+	section: {
+		marginBottom: 24,
 	},
 });
 

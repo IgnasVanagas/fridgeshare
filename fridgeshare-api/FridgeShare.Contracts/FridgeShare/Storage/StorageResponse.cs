@@ -1,3 +1,5 @@
+using FridgeShare.Contracts.FridgeShare.Product;
+
 namespace FridgeShare.Contracts.FridgeShare.Storage;
 
 public record StorageResponse
@@ -14,5 +16,6 @@ public record StorageResponse
     bool PropertyOfCompany,
     bool NeedsMaintenance,
     int CommunityId,
-    string CommunityName
+    string CommunityName,
+    List<ProductResponse>? Products = null
 );
