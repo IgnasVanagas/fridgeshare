@@ -25,6 +25,8 @@ import ChooseCommunityToCreateStorage from '@/screens/chooseCommunity';
 import EditCommunity from '@/screens/EditCommunity';
 import PrivacySettings from '@/screens/privacySettings';
 import NotificationSettings from '@/screens/notificationSettings';
+import CommunityList from '@/screens/communityList';
+import AddProduct from '@/screens/productForm';
 
 const Stack1 = createNativeStackNavigator();
 
@@ -55,8 +57,6 @@ export function AuthStackNavigation() {
 			/>
 			<Stack2.Screen name="StorageList" component={StorageList} />
 			<Stack2.Screen name="AddStorage" component={AddStorage} />
-			<Stack2.Screen name="AddTag" component={TagForm} />
-			<Stack2.Screen name="TagsList" component={TagsList} />
 			<Stack2.Screen
 				name="CommunitySettings"
 				component={CommunitySettings}
@@ -66,11 +66,15 @@ export function AuthStackNavigation() {
 			<Stack2.Screen name="EditCommunity" component={EditCommunity} />
 			<Stack2.Screen name="Privacy" component={PrivacySettings} />
 			<Stack2.Screen name="Notifications" component={NotificationSettings} />
+			<Stack2.Screen name="AddTag" component={TagForm} />
+			<Stack2.Screen name="TagsList" component={TagsList} />
+			<Stack2.Screen name="CommunityList" component={CommunityList} />
+			<Stack2.Screen name="AddProduct" component={AddProduct} />
 		</Stack2.Navigator>
 	);
 }
 
-const Stack3 = createNativeStackNavigator<AdminParamList>();
+nst Stack3 = createNativeStackNavigator<AdminParamList>();
 export function AdminStackNavigation() {
 	return (
 		<Stack3.Navigator screenOptions={{ headerShown: false }}>

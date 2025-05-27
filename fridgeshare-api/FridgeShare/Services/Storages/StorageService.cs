@@ -26,6 +26,7 @@ public class StorageService : IStorageService
     {
         var storage = await _dbContext.Storages
             .Include(s => s.Products)
+                .ThenInclude(p => p.ProductTags)
             .FirstOrDefaultAsync(s => s.Id == id);
 
         if (storage is null)
@@ -108,7 +109,6 @@ public class StorageService : IStorageService
         return storages;
 
     }
-
     public async Task<ErrorOr<List<Storage>>> GetCompanyStorage()
     {
         var storages = await _dbContext.Storages.Where(s => s.PropertyOfCompany).OrderBy(s => s.Title).ToListAsync();

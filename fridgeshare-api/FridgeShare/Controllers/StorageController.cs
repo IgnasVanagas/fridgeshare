@@ -1,6 +1,7 @@
 using ErrorOr;
-using FridgeShare.Contracts.FridgeShare.Community;
 using FridgeShare.Contracts.FridgeShare.Storage;
+using FridgeShare.Contracts.FridgeShare.Community;
+using FridgeShare.Contracts.FridgeShare.Product;
 using FridgeShare.Models;
 using FridgeShare.Services.Communities;
 using FridgeShare.Services.Storages;
@@ -63,8 +64,7 @@ public class StoragesController : ApiController
         var community = communityResult.Value;
         return Ok(MapStorageResponse(storage, community));
     }
-
-    [HttpGet("company")]
+ [HttpGet("company")]
     public async Task<IActionResult> GetCompanyStorage()
     {
         var getStorageResult = await _storageService.GetCompanyStorage();
@@ -194,10 +194,19 @@ public class StoragesController : ApiController
 
     private static StorageResponse MapStorageResponse(Storage storage, Community community)
     {
+        var products = storage.Products?.Select(p => new ProductResponse(
+            p.Id, p.Title, p.Description,
+            (int)p.Category, p.Category.ToString(),
+            (int)p.TypeOfMeasurement, p.TypeOfMeasurement.ToString(),
+            p.Quantity, p.InStock, p.StorageId,
+            storage.Title, p.ProductTags.Select(pt => pt.TagId).ToList(),
+            p.AddedOn, p.ExpiryDate, p.PreparationDate, p.BoughtOn
+        )).ToList();
+
         return new StorageResponse(
             storage.Id, storage.Title, storage.Location, storage.IsEmpty,
             storage.DateAdded, storage.LastCleaningDate, storage.LastMaintenanceDate,
             (int)storage.Type, storage.Type.ToString(), storage.PropertyOfCompany, storage.NeedsMaintenance,
-            storage.CommunityId, community.Title);
+            storage.CommunityId, community.Title, products);
     }
 }

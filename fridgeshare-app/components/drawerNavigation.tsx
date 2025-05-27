@@ -2,13 +2,15 @@ import colors from '@/constants/colors';
 import { useAuth } from '@/context/authContext';
 import AuthIndex from '@/screens/authIndex';
 import CommunityList from '@/screens/communityList';
+import AddProduct from '@/screens/productForm';
+import ListOfProducts from '@/screens/productList';
 import userSettings from '@/screens/userSettings';
 import {
 	createDrawerNavigator,
 	DrawerContentScrollView,
 	DrawerItemList,
 } from '@react-navigation/drawer';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity, Settings } from 'react-native';
 
 const Drawer = createDrawerNavigator();
 const DrawerNavigation = () => {
@@ -35,6 +37,8 @@ const DrawerNavigation = () => {
 		>
 			<Drawer.Screen name="Pagrindinis langas" component={AuthIndex} />
 			<Drawer.Screen name="Bendruomenės" component={CommunityList} />
+			<Drawer.Screen name="Pridėti prekę" component={AddProduct} />
+			<Drawer.Screen name="Prekių sąrašas" component={ListOfProducts} />
 			<Drawer.Screen name="Nustatymai" component={userSettings} />
 		</Drawer.Navigator>
 	);

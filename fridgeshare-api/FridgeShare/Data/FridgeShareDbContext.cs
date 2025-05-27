@@ -19,6 +19,7 @@ public class FridgeShareDbContext : DbContext
     public DbSet<ProductTaken> ProductsTaken { get; set; }
     public DbSet<Comment> Comments { get; set; }
     public DbSet<UserCommunity> UserCommunities { get; set; }
+    public DbSet<NewsPost> NewsPosts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -48,7 +49,12 @@ public class FridgeShareDbContext : DbContext
             .WithMany(c => c.UserCommunities)
             .HasForeignKey(uc => uc.CommunityId)
             .OnDelete(DeleteBehavior.Restrict);
-    }
 
+        modelBuilder.Entity<NewsPost>()
+            .HasOne(np => np.Author)
+            .WithMany()
+            .HasForeignKey(np => np.AuthorId)
+            .OnDelete(DeleteBehavior.Restrict);
+    }
 }
 

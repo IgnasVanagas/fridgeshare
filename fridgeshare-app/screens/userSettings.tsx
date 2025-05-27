@@ -11,26 +11,15 @@ import { useAuth } from '@/context/authContext';
 
 const SettingsScreen = () => {
 	const navigation = useNavigation();
-	const { logout, username } = useAuth();
+	const { logout, username, isAdmin } = useAuth();
 
 	return (
 		<SafeAreaView style={mainStyle.container3}>
 			<StatusBar style="dark" hidden={false} />
-
 			<Text style={mainStyle.styledH1}>Nustatymai</Text>
 
-			<View
-				style={{
-					padding: 20,
-					borderWidth: 1,
-					borderColor: 'lightgray',
-					borderRadius: 10,
-					marginBottom: 20,
-				}}
-			>
-				<Text style={{ fontSize: 18, fontWeight: 'bold' }}>
-					Prisijungęs kaip:
-				</Text>
+			<View style={{ padding: 20 }}>
+				<Text style={{ fontSize: 18, fontWeight: 'bold' }}>Vartotojas</Text>
 				<Text style={{ fontSize: 16, marginTop: 5 }}>{username}</Text>
 			</View>
 
@@ -39,49 +28,43 @@ const SettingsScreen = () => {
 					style={[mainStyle.inline, { marginTop: 20 }]}
 					onPress={() => navigation.navigate('ChangeUsername')}
 				>
-					<Ionicons
-						name="person"
-						size={20}
-						color={colors.brandGreen}
-					/>
-					<Text style={{ paddingLeft: 10 }}>
-						Keisti vartotojo vardą
-					</Text>
+					<Ionicons name="person" size={20} color={colors.brandGreen} />
+					<Text style={{ paddingLeft: 10 }}>Keisti vartotojo vardą</Text>
 				</TouchableOpacity>
 
 				<TouchableOpacity
 					style={[mainStyle.inline, { marginTop: 20 }]}
 					onPress={() => navigation.navigate('ChangePassword')}
 				>
-					<Ionicons
-						name="lock-closed"
-						size={20}
-						color={colors.brandGreen}
-					/>
+					<Ionicons name="lock-closed" size={20} color={colors.brandGreen} />
 					<Text style={{ paddingLeft: 10 }}>Keisti slaptažodį</Text>
 				</TouchableOpacity>
 
-				<TouchableOpacity 
-    style={[mainStyle.inline, { marginTop: 20 }]}
-    onPress={() => navigation.navigate('Notifications')}
->
-    <Feather name="bell" size={20} color={colors.brandGreen} />
-    <Text style={{ paddingLeft: 10 }}>
-        Pranešimų nustatymai
-    </Text>
-</TouchableOpacity>
+				<TouchableOpacity
+					style={[mainStyle.inline, { marginTop: 20 }]}
+					onPress={() => navigation.navigate('Notifications')}
+				>
+					<Feather name="bell" size={20} color={colors.brandGreen} />
+					<Text style={{ paddingLeft: 10 }}>Pranešimų nustatymai</Text>
+				</TouchableOpacity>
 
-<TouchableOpacity 
-    style={[mainStyle.inline, { marginTop: 20 }]}
-    onPress={() => navigation.navigate('Privacy')}
->
-    <Feather
-        name="shield"
-        size={20}
-        color={colors.brandGreen}
-    />
-    <Text style={{ paddingLeft: 10 }}>Privatumas</Text>
-</TouchableOpacity>
+				<TouchableOpacity
+					style={[mainStyle.inline, { marginTop: 20 }]}
+					onPress={() => navigation.navigate('Privacy')}
+				>
+					<Feather name="shield" size={20} color={colors.brandGreen} />
+					<Text style={{ paddingLeft: 10 }}>Privatumas</Text>
+				</TouchableOpacity>
+
+				{isAdmin && (
+					<TouchableOpacity
+						style={[mainStyle.inline, { marginTop: 20 }]}
+						onPress={() => navigation.navigate('ManageNews')}
+					>
+						<Feather name="file-text" size={20} color={colors.brandGreen} />
+						<Text style={{ paddingLeft: 10 }}>Valdyti naujienas</Text>
+					</TouchableOpacity>
+				)}
 			</ScrollView>
 
 			<TouchableOpacity
@@ -91,9 +74,7 @@ const SettingsScreen = () => {
 				]}
 				onPress={logout}
 			>
-				<Text style={buttonStyle.submitColorfulButtonText}>
-					Atsijungti
-				</Text>
+				<Text style={buttonStyle.submitColorfulButtonText}>Atsijungti</Text>
 			</TouchableOpacity>
 		</SafeAreaView>
 	);
