@@ -6,6 +6,7 @@ interface AuthContext {
 	id: string | null;
 	isLoggedIn: boolean;
 	isAdmin: boolean;
+	setUsername: (username: string) => void;
 	login: (token: string, id: string, isAdmin: boolean) => Promise<void>;
 	logout: () => Promise<void>;
 }
@@ -62,7 +63,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
 	return (
 		<AuthContext.Provider
-			value={{ username, id, isLoggedIn, isAdmin, login, logout }}
+			value={{ username, id, isLoggedIn, isAdmin, setUsername, login, logout }}
 		>
 			{children}
 		</AuthContext.Provider>

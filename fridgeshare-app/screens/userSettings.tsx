@@ -61,21 +61,27 @@ const SettingsScreen = () => {
 					<Text style={{ paddingLeft: 10 }}>Keisti slaptažodį</Text>
 				</TouchableOpacity>
 
-				<TouchableOpacity style={[mainStyle.inline, { marginTop: 20 }]}>
-					<Feather name="bell" size={20} color={colors.brandGreen} />
-					<Text style={{ paddingLeft: 10 }}>
-						Pranešimų nustatymai
-					</Text>
-				</TouchableOpacity>
+				<TouchableOpacity 
+    style={[mainStyle.inline, { marginTop: 20 }]}
+    onPress={() => navigation.navigate('Notifications')}
+>
+    <Feather name="bell" size={20} color={colors.brandGreen} />
+    <Text style={{ paddingLeft: 10 }}>
+        Pranešimų nustatymai
+    </Text>
+</TouchableOpacity>
 
-				<TouchableOpacity style={[mainStyle.inline, { marginTop: 20 }]}>
-					<Feather
-						name="shield"
-						size={20}
-						color={colors.brandGreen}
-					/>
-					<Text style={{ paddingLeft: 10 }}>Privatumas</Text>
-				</TouchableOpacity>
+<TouchableOpacity 
+    style={[mainStyle.inline, { marginTop: 20 }]}
+    onPress={() => navigation.navigate('Privacy')}
+>
+    <Feather
+        name="shield"
+        size={20}
+        color={colors.brandGreen}
+    />
+    <Text style={{ paddingLeft: 10 }}>Privatumas</Text>
+</TouchableOpacity>
 			</ScrollView>
 
 			<TouchableOpacity
