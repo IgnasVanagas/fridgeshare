@@ -6,6 +6,7 @@ import mainStyle from '@/styles/styles';
 import { NewsFeed } from '@/components/NewsFeed';
 import colors from '@/constants/colors';
 import { Ionicons } from '@expo/vector-icons';
+import { API_BASE_URL } from '@/api_config';
 
 interface NewsPost {
 	id: number;
@@ -26,7 +27,7 @@ export default function AuthIndex() {
 
 	const fetchPosts = async () => {
 		try {
-			const response = await fetch('http://localhost:5001/api/news', {
+			const response = await fetch(`${API_BASE_URL}/news`, {
 				headers: {
 					'Authorization': `Bearer ${id}`
 				}

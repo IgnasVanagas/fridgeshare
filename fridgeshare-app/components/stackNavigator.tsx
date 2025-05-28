@@ -74,7 +74,7 @@ export function AuthStackNavigation() {
 	);
 }
 
-nst Stack3 = createNativeStackNavigator<AdminParamList>();
+const Stack3 = createNativeStackNavigator<AdminParamList>();
 export function AdminStackNavigation() {
 	return (
 		<Stack3.Navigator screenOptions={{ headerShown: false }}>
