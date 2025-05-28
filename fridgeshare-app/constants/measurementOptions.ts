@@ -1,9 +1,9 @@
 const measurementOptions = [
-	{ id: 1, label: 'g' },
-	{ id: 2, label: 'kg' },
-	{ id: 3, label: 'l' },
-	{ id: 4, label: 'ml' },
-	{ id: 5, label: 'vnt' },
+  { id: 0, label: 'g' },    // matches FoodMeasurement.g
+  { id: 1, label: 'kg' },   // matches FoodMeasurement.kg
+  { id: 2, label: 'ml' },   // matches FoodMeasurement.ml
+  { id: 3, label: 'l' },    // matches FoodMeasurement.l
+  { id: 4, label: 'vnt' }   // matches FoodMeasurement.pcs
 ];
 
 export default measurementOptions;

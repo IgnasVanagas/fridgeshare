@@ -8,6 +8,7 @@ import {
 	ScrollView,
 	StyleSheet,
 	TextInput,
+    TouchableOpacity
 } from 'react-native';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -78,6 +79,11 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 	const [communities, setCommunities] = useState<Community[]>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
+	const [showDatePicker, setShowDatePicker] = useState({
+		expiryDate: false,
+		dateMade: false,
+		dateBought: false
+	});
 
 	useEffect(() => {
 		setError(null);
@@ -113,7 +119,7 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 			})
 			.min(0.001, 'Reikia įvesti kiekį, kuris yra didesnis nei 0.001')
 			.required('Privaloma!'),
-		selectedMeasurement: yup.number().min(1).max(5).required(),
+		selectedMeasurement: yup.number().min(0).max(4).required(),
 		selectedCategory: yup.number().min(1).max(11).required(),
 		selectedStorage: yup.string().required('Privaloma pasirinkti sandėliavimą!'),
 		selectedTags: yup.array().of(yup.number()),
@@ -128,7 +134,7 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 			dateMade: new Date(),
 			expiryDate: new Date(),
 			quantity: 0,
-			selectedMeasurement: 1,
+			selectedMeasurement: 0, // Change from 1 to 0
 			selectedCategory: 1,
 			selectedStorage: '',
 			selectedTags: [],
@@ -513,28 +519,23 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 									]}
 								>
 									<Text>Pirkimo data:</Text>
-									<DateTimePicker
-										value={
-											formik.values.dateBought
-												? formik.values.dateBought
-												: todaysDate
-										}
-										mode="date"
-										onChange={(event, selectedDate) => {
-											if (selectedDate) {
-												formik.setFieldValue(
-													'dateBought',
-													selectedDate
-												);
-											}
-										}}
-									/>
-									{formik.touched.dateBought &&
-										formik.errors.dateBought && (
-											<Text style={mainStyle.formError}>
-												{formik.errors.dateBought}
-											</Text>
-										)}
+									<TouchableOpacity onPress={() => setShowDatePicker(prev => ({ ...prev, dateBought: true }))}>
+										<Text>
+											{formik.values.dateBought ? formik.values.dateBought.toLocaleDateString() : 'Pasirinkti datą'}
+										</Text>
+									</TouchableOpacity>
+									{showDatePicker.dateBought && (
+										<DateTimePicker
+											value={formik.values.dateBought || todaysDate}
+											mode="date"
+											onChange={(event, selectedDate) => {
+												setShowDatePicker(prev => ({ ...prev, dateBought: false }));
+												if (event.type !== 'dismissed' && selectedDate) {
+													formik.setFieldValue('dateBought', selectedDate);
+												}
+											}}
+										/>
+									)}
 								</View>
 							)}
 
@@ -555,28 +556,23 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 									]}
 								>
 									<Text>Pagaminimo data:</Text>
-									<DateTimePicker
-										value={
-											formik.values.dateMade
-												? formik.values.dateMade
-												: todaysDate
-										}
-										mode="date"
-										onChange={(event, selectedDate) => {
-											if (selectedDate) {
-												formik.setFieldValue(
-													'dateMade',
-													selectedDate
-												);
-											}
-										}}
-									/>
-									{formik.touched.dateMade &&
-										formik.errors.dateMade && (
-											<Text style={mainStyle.formError}>
-												{formik.errors.dateMade}
-											</Text>
-										)}
+									<TouchableOpacity onPress={() => setShowDatePicker(prev => ({ ...prev, dateMade: true }))}>
+										<Text>
+											{formik.values.dateMade ? formik.values.dateMade.toLocaleDateString() : 'Pasirinkti datą'}
+										</Text>
+									</TouchableOpacity>
+									{showDatePicker.dateMade && (
+										<DateTimePicker
+											value={formik.values.dateMade || todaysDate}
+											mode="date"
+											onChange={(event, selectedDate) => {
+												setShowDatePicker(prev => ({ ...prev, dateMade: false }));
+												if (event.type !== 'dismissed' && selectedDate) {
+													formik.setFieldValue('dateMade', selectedDate);
+												}
+											}}
+										/>
+									)}
 								</View>
 							)}
 
@@ -605,28 +601,23 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 									]}
 								>
 									<Text>Galiojimo data:</Text>
-									<DateTimePicker
-										value={
-											formik.values.expiryDate
-												? formik.values.expiryDate
-												: todaysDate
-										}
-										mode="date"
-										onChange={(event, selectedDate) => {
-											if (selectedDate) {
-												formik.setFieldValue(
-													'expiryDate',
-													selectedDate
-												);
-											}
-										}}
-									/>
-									{formik.touched.expiryDate &&
-										formik.errors.expiryDate && (
-											<Text style={mainStyle.formError}>
-												{formik.errors.expiryDate}
-											</Text>
-										)}
+									<TouchableOpacity onPress={() => setShowDatePicker(prev => ({ ...prev, expiryDate: true }))}>
+										<Text>
+											{formik.values.expiryDate ? formik.values.expiryDate.toLocaleDateString() : 'Pasirinkti datą'}
+										</Text>
+									</TouchableOpacity>
+									{showDatePicker.expiryDate && (
+										<DateTimePicker
+											value={formik.values.expiryDate || todaysDate}
+											mode="date"
+											onChange={(event, selectedDate) => {
+												setShowDatePicker(prev => ({ ...prev, expiryDate: false }));
+												if (event.type !== 'dismissed' && selectedDate) {
+													formik.setFieldValue('expiryDate', selectedDate);
+												}
+											}}
+										/>
+									)}
 								</View>
 							)}
 
