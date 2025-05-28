@@ -1,12 +1,10 @@
 using FridgeShare.Contracts.FridgeShare.News;
 using FridgeShare.Models;
 using FridgeShare.Services.News;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FridgeShare.Controllers;
 
-[Authorize]
 public class NewsController : ApiController
 {
     private readonly INewsService _newsService;
@@ -42,12 +40,13 @@ public class NewsController : ApiController
         return Ok(response);
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpPost]
     public async Task<IActionResult> CreateNews(CreateNewsPostRequest request)
     {
-        var userId = int.Parse(User.FindFirst("UserId")?.Value ?? "0");
-        var newsPost = NewsPost.Create(request.Title, request.Content, userId);
+        var newsPost = NewsPost.Create(
+            request.Title,
+            request.Content,
+            request.UserId);
 
         var createResult = await _newsService.CreateNewsPost(newsPost);
         if (createResult.IsError)
@@ -61,9 +60,8 @@ public class NewsController : ApiController
             value: MapNewsPostResponse(newsPost));
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> UpdateNews(int id, CreateNewsPostRequest request)
+    public async Task<IActionResult> UpdateNews(int id, UpdateNewsPostRequest request)
     {
         var newsResult = await _newsService.GetNewsPost(id);
         if (newsResult.IsError)
@@ -83,7 +81,6 @@ public class NewsController : ApiController
         return NoContent();
     }
 
-    [Authorize(Roles = "Admin")]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteNews(int id)
     {
@@ -107,4 +104,4 @@ public class NewsController : ApiController
             newsPost.UpdatedAt
         );
     }
-} 
+}
