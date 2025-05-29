@@ -181,6 +181,7 @@ const StorageList = ({ route }: Props) => {
 										mainStyle.inline,
 										{
 											justifyContent: 'flex-start',
+											marginBottom: 10,
 										},
 									]}
 								>
@@ -194,7 +195,7 @@ const StorageList = ({ route }: Props) => {
 									<Text
 										style={[
 											buttonStyle.touchableOpacityText,
-											{ fontSize: 20, marginBottom: 10 },
+											{ fontSize: 20 },
 										]}
 									>
 										{storage.title}
@@ -221,7 +222,7 @@ const StorageList = ({ route }: Props) => {
 									</Text>
 								)}
 								{storage.lastMaintenanceDate && (
-									<Text>
+									<Text style={{ marginBottom: 10 }}>
 										Paskutinį kartą taisytas:{' '}
 										{
 											storage.lastMaintenanceDate?.split(

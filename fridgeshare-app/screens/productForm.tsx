@@ -618,8 +618,8 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 										</Text>
 									)}
 							</View>
-							{/* <View style={style.pickerContainer}>
-								<Text>Žymės:</Text>
+							<View style={style.pickerContainer}>
+								<Text>Žymos:</Text>
 								<View style={style.tagsContainer}>
 									{tags.map((tag) => (
 										<View
@@ -652,7 +652,7 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 										</View>
 									))}
 								</View>
-							</View> */}
+							</View>
 							<View
 								style={[mainStyle.inline, { marginBottom: 15 }]}
 							>

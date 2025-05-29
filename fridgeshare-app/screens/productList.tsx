@@ -210,29 +210,21 @@ const ListOfProducts = () => {
 	return (
 		<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 			<SafeAreaView style={mainStyle.container3}>
-				<Text style={[mainStyle.welcomeSign, { fontSize: 20 }]}>
-					Jūsų bendruomenės produktai
-				</Text>
-
 				<View style={{ width: '90%', marginBottom: 20 }}>
-					<Text>Bendruomenė:</Text>
 					<Picker
 						selectedValue={selectedCommunity}
 						onValueChange={(value) => setSelectedCommunity(value)}
-						style={{
-							width: '100%',
-							height: 50,
-							backgroundColor: colors.white,
-							borderRadius: 5,
-							borderWidth: 1,
-							borderColor: colors.brandGreen,
-							color: colors.black,
-						}}
+						itemStyle={{ color: colors.black }}
+						// style={{
+						// 	width: '100%',
+						// 	height: 50,
+						// 	backgroundColor: colors.white,
+						// 	borderRadius: 5,
+						// 	borderWidth: 1,
+						// 	borderColor: colors.brandGreen,
+						// 	color: colors.black,
+						// }}
 					>
-						<Picker.Item
-							label="Pasirinkite bendruomenę"
-							value={0}
-						/>
 						{communities.map((community) => (
 							<Picker.Item
 								key={community.id}

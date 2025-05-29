@@ -1,5 +1,6 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { useAuth } from '@/context/authContext';
 import colors from '@/constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 
@@ -16,7 +17,7 @@ interface NewsFeedProps {
 	posts: NewsPost[];
 }
 
-export const NewsFeed: React.FC<NewsFeedProps> = ({ posts }) => {
+export const NewsFeed: React.FC<NewsFeedProps> = ({ posts = [] }) => {
 	if (~posts || posts.length === 0) {
 		return (
 			<View style={styles.emptyContainer}>
