@@ -7,8 +7,7 @@ import {
 	Text,
 	ScrollView,
 	StyleSheet,
-	TextInput,
-    TouchableOpacity
+	TouchableOpacity,
 } from 'react-native';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
@@ -82,7 +81,7 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 	const [showDatePicker, setShowDatePicker] = useState({
 		expiryDate: false,
 		dateMade: false,
-		dateBought: false
+		dateBought: false,
 	});
 
 	useEffect(() => {
@@ -121,9 +120,13 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 			.required('Privaloma!'),
 		selectedMeasurement: yup.number().min(0).max(4).required(),
 		selectedCategory: yup.number().min(1).max(11).required(),
-		selectedStorage: yup.string().required('Privaloma pasirinkti sandėliavimą!'),
+		selectedStorage: yup
+			.string()
+			.required('Privaloma pasirinkti sandėliavimą!'),
 		selectedTags: yup.array().of(yup.number()),
-		selectedCommunity: yup.number().required('Privaloma pasirinkti bendruomenę!'),
+		selectedCommunity: yup
+			.number()
+			.required('Privaloma pasirinkti bendruomenę!'),
 	});
 
 	const formik = useFormik<FormValues>({
@@ -149,7 +152,9 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 				}
 
 				if (values.title.length < 3 || values.title.length > 50) {
-					setError('Pavadinimo ilgis turi būti nuo 3 iki 50 simbolių');
+					setError(
+						'Pavadinimo ilgis turi būti nuo 3 iki 50 simbolių'
+					);
 					return;
 				}
 
@@ -164,8 +169,14 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 				}
 
 				// Ensure at least one date is provided
-				if (!values.expiryDate && !values.dateMade && !values.dateBought) {
-					setError('Privaloma nurodyti bent vieną datą: galiojimo, pagaminimo arba pirkimo');
+				if (
+					!values.expiryDate &&
+					!values.dateMade &&
+					!values.dateBought
+				) {
+					setError(
+						'Privaloma nurodyti bent vieną datą: galiojimo, pagaminimo arba pirkimo'
+					);
 					return;
 				}
 
@@ -178,62 +189,99 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 					inStock: true,
 					storageId: values.selectedStorage,
 					tagIds: values.selectedTags || [],
-					expiryDate: values.expiryDate ? new Date(values.expiryDate).toISOString().split('T')[0] : null,
-					preparationDate: values.dateMade ? new Date(values.dateMade).toISOString().split('T')[0] : null,
-					boughOn: values.dateBought ? new Date(values.dateBought).toISOString().split('T')[0] : null,
+					expiryDate: values.expiryDate
+						? new Date(values.expiryDate)
+								.toISOString()
+								.split('T')[0]
+						: null,
+					preparationDate: values.dateMade
+						? new Date(values.dateMade).toISOString().split('T')[0]
+						: null,
+					boughOn: values.dateBought
+						? new Date(values.dateBought)
+								.toISOString()
+								.split('T')[0]
+						: null,
 				};
 
 				console.log('Sending data to API:', dataToSend);
-				const response = await axios.post(`${API_BASE_URL}/products`, dataToSend);
+				const response = await axios.post(
+					`${API_BASE_URL}/products`,
+					dataToSend
+				);
 				console.log('API Response:', response.data);
 
 				try {
-					console.log('Verifying product was added to storage:', values.selectedStorage);
-					
-					await new Promise(resolve => setTimeout(resolve, 1000));
-					
-					const storageResponse = await axios.get(`${API_BASE_URL}/storages/${values.selectedStorage}`);
-					console.log('Storage details response:', JSON.stringify(storageResponse.data, null, 2));
+					console.log(
+						'Verifying product was added to storage:',
+						values.selectedStorage
+					);
+
+					await new Promise((resolve) => setTimeout(resolve, 1000));
+
+					const storageResponse = await axios.get(
+						`${API_BASE_URL}/storages/${values.selectedStorage}`
+					);
+					console.log(
+						'Storage details response:',
+						JSON.stringify(storageResponse.data, null, 2)
+					);
 					const storageDetails = storageResponse.data;
-					
+
 					if (!storageDetails.products) {
-						console.warn('Storage has no products array:', storageDetails);
+						console.warn(
+							'Storage has no products array:',
+							storageDetails
+						);
 					} else {
-						console.log(`Storage has ${storageDetails.products.length} products`);
+						console.log(
+							`Storage has ${storageDetails.products.length} products`
+						);
 					}
-					
-					const addedProduct = storageDetails.products?.find((p: { id: string }) => p.id === response.data.id);
+
+					const addedProduct = storageDetails.products?.find(
+						(p: { id: string }) => p.id === response.data.id
+					);
 					if (addedProduct) {
 						console.log('Product successfully added to storage:', {
 							id: addedProduct.id,
 							title: addedProduct.title,
 							quantity: addedProduct.quantity,
-							storage: storageDetails.title
+							storage: storageDetails.title,
 						});
 					} else {
-						console.warn('Product was created but not found in storage:', {
-							createdProductId: response.data.id,
-							storageId: values.selectedStorage,
-							storageTitle: storageDetails.title,
-							availableProducts: storageDetails.products?.map((p: any) => ({ id: p.id, title: p.title }))
-						});
+						console.warn(
+							'Product was created but not found in storage:',
+							{
+								createdProductId: response.data.id,
+								storageId: values.selectedStorage,
+								storageTitle: storageDetails.title,
+								availableProducts: storageDetails.products?.map(
+									(p: any) => ({ id: p.id, title: p.title })
+								),
+							}
+						);
 					}
 				} catch (verifyErr) {
-					console.error('Error verifying product addition:', verifyErr);
+					console.error(
+						'Error verifying product addition:',
+						verifyErr
+					);
 					if (axios.isAxiosError(verifyErr)) {
-						console.error('Verification API Error:', verifyErr.response?.data);
+						console.error(
+							'Verification API Error:',
+							verifyErr.response?.data
+						);
 					}
 				}
 
-	
 				setError('Produktas sėkmingai pridėtas!');
-				
-				
+
 				formik.resetForm();
 				setIsBought(false);
 				setIsMade(false);
 				setHasExpiryDate(false);
-				
+
 				setTimeout(() => {
 					navigation.goBack();
 				}, 2000);
@@ -243,26 +291,41 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 					console.error('API Error Response:', err.response.data);
 					if (err.response.data.errors) {
 						const errorMap: { [key: string]: string } = {
-							'Product.InvalidTitle': 'Neteisingas pavadinimo formatas',
+							'Product.InvalidTitle':
+								'Neteisingas pavadinimo formatas',
 							'Product.InvalidDescription': 'Aprašymas per ilgas',
-							'Product.InvalidMeasurement': 'Neteisingas matavimo vienetas',
+							'Product.InvalidMeasurement':
+								'Neteisingas matavimo vienetas',
 							'Product.InvalidCategory': 'Neteisinga kategorija',
-							'Product.DateIsMissing': 'Privaloma nurodyti bent vieną datą',
-							'Product.InvalidDate': 'Data negali būti vėlesnė nei šiandien',
-							'Product.StorageIdMissing': 'Privaloma pasirinkti sandėliavimą',
-							'Product.IncorrectQuantity': 'Neteisingas kiekio formatas'
+							'Product.DateIsMissing':
+								'Privaloma nurodyti bent vieną datą',
+							'Product.InvalidDate':
+								'Data negali būti vėlesnė nei šiandien',
+							'Product.StorageIdMissing':
+								'Privaloma pasirinkti sandėliavimą',
+							'Product.IncorrectQuantity':
+								'Neteisingas kiekio formatas',
 						};
 
-						const errorMessages = Object.entries(err.response.data.errors)
+						const errorMessages = Object.entries(
+							err.response.data.errors
+						)
 							.map(([key, value]) => {
 								const message = errorMap[key] || value;
-								return Array.isArray(value) ? value.map(v => errorMap[v] || v) : message;
+								return Array.isArray(value)
+									? value.map((v) => errorMap[v] || v)
+									: message;
 							})
 							.flat();
 
 						setError(errorMessages.join('\n'));
 					} else {
-						setError('Nepavyko sukurti produkto: ' + (err.response.data.title || err.response.data.detail || 'Nežinoma klaida'));
+						setError(
+							'Nepavyko sukurti produkto: ' +
+								(err.response.data.title ||
+									err.response.data.detail ||
+									'Nežinoma klaida')
+						);
 					}
 				} else {
 					setError('Nepavyko sukurti produkto. Bandykite dar kartą.');
@@ -280,34 +343,53 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 			try {
 				setLoading(true);
 				console.log('Fetching communities for user:', id);
-				
-				const communitiesResponse = await axios.get(`${API_BASE_URL}/usercommunity/user/${id}`);
-				const managedCommunitiesResponse = await axios.get(`${API_BASE_URL}/community/user/${id}`);
-				
-				console.log('Raw joined communities response:', JSON.stringify(communitiesResponse.data, null, 2));
-				console.log('Raw managed communities response:', JSON.stringify(managedCommunitiesResponse.data, null, 2));
-				
-				const joinedCommunities = communitiesResponse.data.map((uc: any) => {
-					console.log('Processing joined community:', uc);
-					return {
-						id: uc.communityId,
-						title: uc.communityTitle
-					};
-				});
-				
-				const managedCommunities = managedCommunitiesResponse.data.map((c: any) => {
-					console.log('Processing managed community:', c);
-					return {
-						id: c.id,
-						title: c.title
-					};
-				});
 
-				const allCommunities = [...managedCommunities, ...joinedCommunities];
+				const communitiesResponse = await axios.get(
+					`${API_BASE_URL}/usercommunity/user/${id}`
+				);
+				const managedCommunitiesResponse = await axios.get(
+					`${API_BASE_URL}/community/user/${id}`
+				);
+
+				console.log(
+					'Raw joined communities response:',
+					JSON.stringify(communitiesResponse.data, null, 2)
+				);
+				console.log(
+					'Raw managed communities response:',
+					JSON.stringify(managedCommunitiesResponse.data, null, 2)
+				);
+
+				const joinedCommunities = communitiesResponse.data.map(
+					(uc: any) => {
+						console.log('Processing joined community:', uc);
+						return {
+							id: uc.communityId,
+							title: uc.communityTitle,
+						};
+					}
+				);
+
+				const managedCommunities = managedCommunitiesResponse.data.map(
+					(c: any) => {
+						console.log('Processing managed community:', c);
+						return {
+							id: c.id,
+							title: c.title,
+						};
+					}
+				);
+
+				const allCommunities = [
+					...managedCommunities,
+					...joinedCommunities,
+				];
 				console.log('Final communities array:', allCommunities);
-				
+
 				if (allCommunities.length === 0) {
-					setError('Jūs neturite jokių bendruomenių. Pirmiausia sukurkite arba prisijunkite prie bendruomenės.');
+					setError(
+						'Jūs neturite jokių bendruomenių. Pirmiausia sukurkite arba prisijunkite prie bendruomenės.'
+					);
 					setLoading(false);
 					return;
 				}
@@ -315,19 +397,27 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 				setCommunities(allCommunities);
 
 				if (communityId) {
-					const storagesResponse = await axios.get(`${API_BASE_URL}/storages/community/${communityId}`);
+					const storagesResponse = await axios.get(
+						`${API_BASE_URL}/storages/community/${communityId}`
+					);
 					setStorages(storagesResponse.data);
 
-					const tagsResponse = await axios.get(`${API_BASE_URL}/tags/community/${communityId}`);
+					const tagsResponse = await axios.get(
+						`${API_BASE_URL}/tags/community/${communityId}`
+					);
 					setTags(tagsResponse.data);
 				}
-				
+
 				setLoading(false);
 			} catch (err) {
 				console.error('Error fetching data:', err);
 				if (axios.isAxiosError(err)) {
 					console.error('API Error Response:', err.response?.data);
-					setError(`Nepavyko užkrauti duomenų: ${err.response?.data?.title || err.message}`);
+					setError(
+						`Nepavyko užkrauti duomenų: ${
+							err.response?.data?.title || err.message
+						}`
+					);
 				} else {
 					setError('Nepavyko užkrauti duomenų');
 				}
@@ -340,12 +430,19 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 
 	useEffect(() => {
 		const fetchCommunityData = async () => {
-			if (formik.values.selectedCommunity && formik.values.selectedCommunity !== 0) {
+			if (
+				formik.values.selectedCommunity &&
+				formik.values.selectedCommunity !== 0
+			) {
 				try {
-					const storagesResponse = await axios.get(`${API_BASE_URL}/storages/community/${formik.values.selectedCommunity}`);
+					const storagesResponse = await axios.get(
+						`${API_BASE_URL}/storages/community/${formik.values.selectedCommunity}`
+					);
 					setStorages(storagesResponse.data);
 
-					const tagsResponse = await axios.get(`${API_BASE_URL}/tags/community/${formik.values.selectedCommunity}`);
+					const tagsResponse = await axios.get(
+						`${API_BASE_URL}/tags/community/${formik.values.selectedCommunity}`
+					);
 					setTags(tagsResponse.data);
 				} catch (err) {
 					console.error('Error fetching community data:', err);
@@ -429,21 +526,39 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 							<View style={style.pickerContainer}>
 								<Text>Bendruomenė:</Text>
 								<Picker
-									selectedValue={formik.values.selectedCommunity}
+									selectedValue={
+										formik.values.selectedCommunity
+									}
 									onValueChange={(value) => {
-										formik.setFieldValue('selectedCommunity', value);
-										formik.setFieldValue('selectedStorage', ''); 
+										formik.setFieldValue(
+											'selectedCommunity',
+											value
+										);
+										formik.setFieldValue(
+											'selectedStorage',
+											''
+										);
 									}}
 									style={style.picker}
 								>
-									<Picker.Item label="Pasirinkite bendruomenę" value={0} />
+									<Picker.Item
+										label="Pasirinkite bendruomenę"
+										value={0}
+									/>
 									{communities.map((community) => (
-										<Picker.Item key={community.id} label={community.title} value={community.id} />
+										<Picker.Item
+											key={community.id}
+											label={community.title}
+											value={community.id}
+										/>
 									))}
 								</Picker>
-								{formik.touched.selectedCommunity && formik.errors.selectedCommunity && (
-									<Text style={mainStyle.formError}>{formik.errors.selectedCommunity}</Text>
-								)}
+								{formik.touched.selectedCommunity &&
+									formik.errors.selectedCommunity && (
+										<Text style={mainStyle.formError}>
+											{formik.errors.selectedCommunity}
+										</Text>
+									)}
 							</View>
 							<FormTextInput
 								label="Pavadinimas"
@@ -470,31 +585,64 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 							<View style={style.pickerContainer}>
 								<Text>Sandėliavimo vieta:</Text>
 								<Picker
-									selectedValue={formik.values.selectedStorage}
-									onValueChange={(value) => formik.setFieldValue('selectedStorage', value)}
+									selectedValue={
+										formik.values.selectedStorage
+									}
+									onValueChange={(value) =>
+										formik.setFieldValue(
+											'selectedStorage',
+											value
+										)
+									}
 									style={style.picker}
 								>
-									<Picker.Item label="Pasirinkite sandėliavimą" value="" />
+									<Picker.Item
+										label="Pasirinkite sandėliavimą"
+										value=""
+									/>
 									{storages.map((storage) => (
-										<Picker.Item key={storage.id} label={storage.title} value={storage.id} />
+										<Picker.Item
+											key={storage.id}
+											label={storage.title}
+											value={storage.id}
+										/>
 									))}
 								</Picker>
-								{formik.touched.selectedStorage && formik.errors.selectedStorage && (
-									<Text style={mainStyle.formError}>{formik.errors.selectedStorage}</Text>
-								)}
+								{formik.touched.selectedStorage &&
+									formik.errors.selectedStorage && (
+										<Text style={mainStyle.formError}>
+											{formik.errors.selectedStorage}
+										</Text>
+									)}
 							</View>
 							<View style={style.pickerContainer}>
 								<Text>Žymės:</Text>
 								<View style={style.tagsContainer}>
 									{tags.map((tag) => (
-										<View key={tag.id} style={style.tagItem}>
+										<View
+											key={tag.id}
+											style={style.tagItem}
+										>
 											<Checkbox
-												value={formik.values.selectedTags.includes(tag.id)}
+												value={formik.values.selectedTags.includes(
+													tag.id
+												)}
 												onValueChange={(checked) => {
 													const newTags = checked
-														? [...formik.values.selectedTags, tag.id]
-														: formik.values.selectedTags.filter(id => id !== tag.id);
-													formik.setFieldValue('selectedTags', newTags);
+														? [
+																...formik.values
+																	.selectedTags,
+																tag.id,
+														  ]
+														: formik.values.selectedTags.filter(
+																(id) =>
+																	id !==
+																	tag.id
+														  );
+													formik.setFieldValue(
+														'selectedTags',
+														newTags
+													);
 												}}
 											/>
 											<Text>{tag.name}</Text>
@@ -519,19 +667,41 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 									]}
 								>
 									<Text>Pirkimo data:</Text>
-									<TouchableOpacity onPress={() => setShowDatePicker(prev => ({ ...prev, dateBought: true }))}>
+									<TouchableOpacity
+										onPress={() =>
+											setShowDatePicker((prev) => ({
+												...prev,
+												dateBought: true,
+											}))
+										}
+									>
 										<Text>
-											{formik.values.dateBought ? formik.values.dateBought.toLocaleDateString() : 'Pasirinkti datą'}
+											{formik.values.dateBought
+												? formik.values.dateBought.toLocaleDateString()
+												: 'Pasirinkti datą'}
 										</Text>
 									</TouchableOpacity>
 									{showDatePicker.dateBought && (
 										<DateTimePicker
-											value={formik.values.dateBought || todaysDate}
+											value={
+												formik.values.dateBought ||
+												todaysDate
+											}
 											mode="date"
 											onChange={(event, selectedDate) => {
-												setShowDatePicker(prev => ({ ...prev, dateBought: false }));
-												if (event.type !== 'dismissed' && selectedDate) {
-													formik.setFieldValue('dateBought', selectedDate);
+												setShowDatePicker((prev) => ({
+													...prev,
+													dateBought: false,
+												}));
+												if (
+													event.type !==
+														'dismissed' &&
+													selectedDate
+												) {
+													formik.setFieldValue(
+														'dateBought',
+														selectedDate
+													);
 												}
 											}}
 										/>
@@ -556,19 +726,41 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 									]}
 								>
 									<Text>Pagaminimo data:</Text>
-									<TouchableOpacity onPress={() => setShowDatePicker(prev => ({ ...prev, dateMade: true }))}>
+									<TouchableOpacity
+										onPress={() =>
+											setShowDatePicker((prev) => ({
+												...prev,
+												dateMade: true,
+											}))
+										}
+									>
 										<Text>
-											{formik.values.dateMade ? formik.values.dateMade.toLocaleDateString() : 'Pasirinkti datą'}
+											{formik.values.dateMade
+												? formik.values.dateMade.toLocaleDateString()
+												: 'Pasirinkti datą'}
 										</Text>
 									</TouchableOpacity>
 									{showDatePicker.dateMade && (
 										<DateTimePicker
-											value={formik.values.dateMade || todaysDate}
+											value={
+												formik.values.dateMade ||
+												todaysDate
+											}
 											mode="date"
 											onChange={(event, selectedDate) => {
-												setShowDatePicker(prev => ({ ...prev, dateMade: false }));
-												if (event.type !== 'dismissed' && selectedDate) {
-													formik.setFieldValue('dateMade', selectedDate);
+												setShowDatePicker((prev) => ({
+													...prev,
+													dateMade: false,
+												}));
+												if (
+													event.type !==
+														'dismissed' &&
+													selectedDate
+												) {
+													formik.setFieldValue(
+														'dateMade',
+														selectedDate
+													);
 												}
 											}}
 										/>
@@ -601,19 +793,41 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 									]}
 								>
 									<Text>Galiojimo data:</Text>
-									<TouchableOpacity onPress={() => setShowDatePicker(prev => ({ ...prev, expiryDate: true }))}>
+									<TouchableOpacity
+										onPress={() =>
+											setShowDatePicker((prev) => ({
+												...prev,
+												expiryDate: true,
+											}))
+										}
+									>
 										<Text>
-											{formik.values.expiryDate ? formik.values.expiryDate.toLocaleDateString() : 'Pasirinkti datą'}
+											{formik.values.expiryDate
+												? formik.values.expiryDate.toLocaleDateString()
+												: 'Pasirinkti datą'}
 										</Text>
 									</TouchableOpacity>
 									{showDatePicker.expiryDate && (
 										<DateTimePicker
-											value={formik.values.expiryDate || todaysDate}
+											value={
+												formik.values.expiryDate ||
+												todaysDate
+											}
 											mode="date"
 											onChange={(event, selectedDate) => {
-												setShowDatePicker(prev => ({ ...prev, expiryDate: false }));
-												if (event.type !== 'dismissed' && selectedDate) {
-													formik.setFieldValue('expiryDate', selectedDate);
+												setShowDatePicker((prev) => ({
+													...prev,
+													expiryDate: false,
+												}));
+												if (
+													event.type !==
+														'dismissed' &&
+													selectedDate
+												) {
+													formik.setFieldValue(
+														'expiryDate',
+														selectedDate
+													);
 												}
 											}}
 										/>
@@ -635,7 +849,9 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 							<View style={style.pickerContainer}>
 								<Text>Matavimo vienetas:</Text>
 								<Picker
-									selectedValue={formik.values.selectedMeasurement}
+									selectedValue={
+										formik.values.selectedMeasurement
+									}
 									onValueChange={(value) =>
 										formik.setFieldValue(
 											'selectedMeasurement',
@@ -657,7 +873,9 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 							<View style={style.pickerContainer}>
 								<Text>Kategorija:</Text>
 								<Picker
-									selectedValue={formik.values.selectedCategory}
+									selectedValue={
+										formik.values.selectedCategory
+									}
 									onValueChange={(value) =>
 										formik.setFieldValue(
 											'selectedCategory',

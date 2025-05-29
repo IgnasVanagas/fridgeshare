@@ -66,7 +66,7 @@ const StorageList = ({ route }: Props) => {
 					? _needsMaintenance
 					: storage.needsMaintenance,
 			})
-			.then(function (response) {
+			.then(function () {
 				getStorage();
 			})
 			.catch(function (error) {
@@ -87,7 +87,7 @@ const StorageList = ({ route }: Props) => {
 		const deleteStorage = async (storageId: string) => {
 			await axios
 				.delete(`${API_BASE_URL}/storages/${storageId}`)
-				.then(function (response) {
+				.then(function () {
 					getStorage();
 					setDeleteError(null);
 					setDeleteErrorId(null);
@@ -122,7 +122,7 @@ const StorageList = ({ route }: Props) => {
 						style={[
 							buttonStyle.submitColorfulButton,
 							mainStyle.inline,
-							{ marginBottom: '2%' },
+							{ marginBottom: '2%', paddingHorizontal: 5 },
 						]}
 						onPress={() =>
 							navigation.navigate('AddStorage', {
@@ -130,7 +130,12 @@ const StorageList = ({ route }: Props) => {
 							})
 						}
 					>
-						<Feather name="plus" size={20} color={colors.white} />
+						<Feather
+							name="plus"
+							size={20}
+							color={colors.white}
+							style={{ paddingLeft: 8 }}
+						/>
 						<Text style={buttonStyle.submitColorfulButtonText}>
 							Pridėti maisto laikymo vietą
 						</Text>
@@ -141,17 +146,22 @@ const StorageList = ({ route }: Props) => {
 					<View
 						style={[
 							mainStyle.inline,
-							{ justifyContent: 'flex-start' },
+							{
+								justifyContent: 'flex-start',
+								marginVertical: 15,
+								width: '80%',
+								flexWrap: 'wrap',
+							},
 						]}
 					>
-						<Text>Simboliu </Text>
-						<FontAwesome5
-							name="exclamation"
-							size={20}
-							color={colors.brandGreen}
-						/>
-						<Text>
-							{' '}
+						<Text style={{ flexShrink: 1 }}>
+							Simboliu{'   '}
+							<FontAwesome5
+								name="exclamation"
+								size={20}
+								color={colors.brandGreen}
+							/>
+							{'   '}
 							pažymėtos saugojimo vietos priklauso "FridgeShare"
 						</Text>
 					</View>
@@ -160,7 +170,10 @@ const StorageList = ({ route }: Props) => {
 					storages.map((storage) => (
 						<View
 							key={storage.id}
-							style={buttonStyle.touchableOpacityListItem}
+							style={[
+								buttonStyle.touchableOpacityListItem,
+								{ marginBottom: '7%' },
+							]}
 						>
 							<View>
 								<View
@@ -181,14 +194,19 @@ const StorageList = ({ route }: Props) => {
 									<Text
 										style={[
 											buttonStyle.touchableOpacityText,
-											{ fontSize: 20 },
+											{ fontSize: 20, marginBottom: 10 },
 										]}
 									>
 										{storage.title}
 									</Text>
 								</View>
 
-								<View style={mainStyle.inline}>
+								<View
+									style={[
+										mainStyle.inline,
+										{ marginBottom: 10 },
+									]}
+								>
 									<Text>
 										{storageNameInLithuanian[
 											storage.typeName
@@ -197,7 +215,7 @@ const StorageList = ({ route }: Props) => {
 									<Text>{storage.location}</Text>
 								</View>
 								{storage.lastCleaningDate && (
-									<Text>
+									<Text style={{ marginBottom: 15 }}>
 										Paskutinį kartą valytas:{' '}
 										{storage.lastCleaningDate.split('T')[0]}
 									</Text>
@@ -213,30 +231,27 @@ const StorageList = ({ route }: Props) => {
 									</Text>
 								)}
 								{storage.needsMaintenance && (
-									<Text style={{ color: colors.red }}>
+									<Text
+										style={{
+											color: colors.red,
+											marginBottom: 10,
+										}}
+									>
 										Reikia techninės priežiūros!
 									</Text>
 								)}
 								<View style={mainStyle.inline}>
-									<TouchableOpacity
-										style={buttonStyle.submitColorfulButton}
-										onPress={() => handleCleaned(storage)}
+									<View
+										style={{
+											width: '35%',
+										}}
 									>
-										<Text
-											style={
-												buttonStyle.submitColorfulButtonText
-											}
-										>
-											Išvalytas
-										</Text>
-									</TouchableOpacity>
-									{!storage.needsMaintenance && (
 										<TouchableOpacity
 											style={
 												buttonStyle.submitColorfulButton
 											}
 											onPress={() =>
-												handleNeedsMaintenance(storage)
+												handleCleaned(storage)
 											}
 										>
 											<Text
@@ -244,9 +259,35 @@ const StorageList = ({ route }: Props) => {
 													buttonStyle.submitColorfulButtonText
 												}
 											>
-												Reikia taisyti
+												Išvalytas
 											</Text>
 										</TouchableOpacity>
+									</View>
+									{!storage.needsMaintenance && (
+										<View
+											style={{
+												width: '35%',
+											}}
+										>
+											<TouchableOpacity
+												style={
+													buttonStyle.submitColorfulButton
+												}
+												onPress={() =>
+													handleNeedsMaintenance(
+														storage
+													)
+												}
+											>
+												<Text
+													style={
+														buttonStyle.submitColorfulButtonText
+													}
+												>
+													Reikia taisyti
+												</Text>
+											</TouchableOpacity>
+										</View>
 									)}
 								</View>
 								<View
@@ -255,35 +296,57 @@ const StorageList = ({ route }: Props) => {
 										{ marginTop: 20 },
 									]}
 								>
-									<TouchableOpacity
-										style={buttonStyle.submitColorfulButton}
-										onPress={() =>
-											navigation.navigate('AddStorage', {
-												communityId: communityId,
-												storage: storage,
-											})
-										}
+									<View
+										style={{
+											width: '35%',
+										}}
 									>
-										<Text
+										<TouchableOpacity
 											style={
-												buttonStyle.submitColorfulButtonText
+												buttonStyle.submitColorfulButton
+											}
+											onPress={() =>
+												navigation.navigate(
+													'AddStorage',
+													{
+														communityId:
+															communityId,
+														storage: storage,
+													}
+												)
 											}
 										>
-											Redaguoti
-										</Text>
-									</TouchableOpacity>
-									<TouchableOpacity
-										style={buttonStyle.submitColorfulButton}
-										onPress={() => handleDelete(storage.id)}
+											<Text
+												style={
+													buttonStyle.submitColorfulButtonText
+												}
+											>
+												Redaguoti
+											</Text>
+										</TouchableOpacity>
+									</View>
+									<View
+										style={{
+											width: '35%',
+										}}
 									>
-										<Text
+										<TouchableOpacity
 											style={
-												buttonStyle.submitColorfulButtonText
+												buttonStyle.submitColorfulButton
+											}
+											onPress={() =>
+												handleDelete(storage.id)
 											}
 										>
-											Pašalinti
-										</Text>
-									</TouchableOpacity>
+											<Text
+												style={
+													buttonStyle.submitColorfulButtonText
+												}
+											>
+												Pašalinti
+											</Text>
+										</TouchableOpacity>
+									</View>
 								</View>
 								{deleteErrorId &&
 									deleteErrorId == storage.id && (

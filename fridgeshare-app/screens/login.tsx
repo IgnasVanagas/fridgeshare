@@ -19,10 +19,13 @@ import axios from 'axios';
 import { API_BASE_URL } from '@/api_config';
 import { useAuth } from '@/context/authContext';
 import { useNavigation } from '@react-navigation/native';
+import { useState } from 'react';
+import colors from '@/constants/colors';
 
 const LoginScreen = () => {
 	const navigation = useNavigation();
 	const { login } = useAuth();
+	const [showError, setShowError] = useState(false);
 	let initialUsername = '';
 	let initialPassword = '';
 
@@ -56,9 +59,11 @@ const LoginScreen = () => {
 						response.data['isAdmin']
 					);
 					navigation.navigate('Index');
+					setShowError(false);
 				})
 				.catch(function (error) {
 					console.log(error);
+					setShowError(true);
 				});
 		},
 	});
@@ -95,6 +100,11 @@ const LoginScreen = () => {
 							value={formik.values.password}
 							isPassword={true}
 						/>
+						{showError && (
+							<Text style={{ color: colors.red }}>
+								Klaida prisijungiant
+							</Text>
+						)}
 
 						<GreenSubmitButton
 							label="Prisijungti"

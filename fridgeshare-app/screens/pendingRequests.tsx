@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import { API_BASE_URL } from '@/api_config';
 import axios from 'axios';
 import buttonStyle from '@/styles/buttons';
+import colors from '@/constants/colors';
 
 interface UserCommunityResponse {
 	userId: number;
@@ -96,17 +97,17 @@ const PendingRequests = ({ route }: Props) => {
 							key={req.userId}
 							style={{
 								borderWidth: 1,
-								borderColor: 'gray',
+								borderColor: colors.brandGreen,
 								padding: 10,
 								marginVertical: 5,
 								borderRadius: 10,
 								width: '75%',
 							}}
 						>
-							<Text>
+							<Text style={{ marginBottom: '5%' }}>
 								Vartotojas: {req.username ?? 'Nežinomas'}
 							</Text>
-							<Text>
+							<Text style={{ marginBottom: '5%' }}>
 								Užklausa išsiųsta:{' '}
 								{new Date(req.requestSent).toLocaleDateString()}
 							</Text>
