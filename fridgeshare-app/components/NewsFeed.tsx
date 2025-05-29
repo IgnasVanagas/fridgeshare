@@ -18,7 +18,7 @@ interface NewsFeedProps {
 }
 
 export const NewsFeed: React.FC<NewsFeedProps> = ({ posts = [] }) => {
-	if (~posts || posts.length === 0) {
+	if (posts.length === 0) {
 		return (
 			<View style={styles.emptyContainer}>
 				<Ionicons
