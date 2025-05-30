@@ -44,22 +44,33 @@ const ListOfProducts = () => {
 	useEffect(() => {
 		const fetchCommunities = async () => {
 			try {
-				const communitiesResponse = await axios.get(`${API_BASE_URL}/usercommunity/user/${id}`);
-				const managedCommunitiesResponse = await axios.get(`${API_BASE_URL}/community/user/${id}`);
-				
-				const joinedCommunities = communitiesResponse.data.map((uc: any) => ({
-					id: uc.communityId,
-					title: uc.communityTitle
-				}));
-				
-				const managedCommunities = managedCommunitiesResponse.data.map((c: any) => ({
-					id: c.id,
-					title: c.title
-				}));
+				const communitiesResponse = await axios.get(
+					`${API_BASE_URL}/usercommunity/user/${id}`
+				);
+				const managedCommunitiesResponse = await axios.get(
+					`${API_BASE_URL}/community/user/${id}`
+				);
 
-				const allCommunities = [...managedCommunities, ...joinedCommunities];
+				const joinedCommunities = communitiesResponse.data.map(
+					(uc: any) => ({
+						id: uc.communityId,
+						title: uc.communityTitle,
+					})
+				);
+
+				const managedCommunities = managedCommunitiesResponse.data.map(
+					(c: any) => ({
+						id: c.id,
+						title: c.title,
+					})
+				);
+
+				const allCommunities = [
+					...managedCommunities,
+					...joinedCommunities,
+				];
 				setCommunities(allCommunities);
-				
+
 				// Set first community as selected by default if available
 				if (allCommunities.length > 0) {
 					setSelectedCommunity(allCommunities[0].id);
@@ -82,34 +93,63 @@ const ListOfProducts = () => {
 
 			try {
 				setLoading(true);
-				console.log('Fetching storages for community:', selectedCommunity);
-				const storagesResponse = await axios.get(`${API_BASE_URL}/storages/community/${selectedCommunity}`);
+				console.log(
+					'Fetching storages for community:',
+					selectedCommunity
+				);
+				const storagesResponse = await axios.get(
+					`${API_BASE_URL}/storages/community/${selectedCommunity}`
+				);
 				console.log('Storages response:', storagesResponse.data);
 				const storages = storagesResponse.data;
-				console.log(`Found ${storages.length} storages in community ${selectedCommunity}`);
+				console.log(
+					`Found ${storages.length} storages in community ${selectedCommunity}`
+				);
 
 				const allProducts: Product[] = [];
 				for (const storage of storages) {
 					try {
-						console.log(`Fetching details for storage: ${storage.id} (${storage.title})`);
-						const storageDetailsResponse = await axios.get(`${API_BASE_URL}/storages/${storage.id}`);
+						console.log(
+							`Fetching details for storage: ${storage.id} (${storage.title})`
+						);
+						const storageDetailsResponse = await axios.get(
+							`${API_BASE_URL}/storages/${storage.id}`
+						);
 						const storageDetails = storageDetailsResponse.data;
-						
-						if (storageDetails.products && storageDetails.products.length > 0) {
-							console.log(`Found ${storageDetails.products.length} products in storage ${storage.title}`);
+
+						if (
+							storageDetails.products &&
+							storageDetails.products.length > 0
+						) {
+							console.log(
+								`Found ${storageDetails.products.length} products in storage ${storage.title}`
+							);
 							allProducts.push(...storageDetails.products);
 						} else {
-							console.log(`No products found in storage ${storage.title}`);
+							console.log(
+								`No products found in storage ${storage.title}`
+							);
 						}
 					} catch (storageErr) {
-						console.error(`Error fetching storage details for ${storage.title}:`, storageErr);
+						console.error(
+							`Error fetching storage details for ${storage.title}:`,
+							storageErr
+						);
 						continue;
 					}
 				}
 
-				console.log(`Total products found in community ${selectedCommunity}: ${allProducts.length}`);
+				console.log(
+					`Total products found in community ${selectedCommunity}: ${allProducts.length}`
+				);
 				if (allProducts.length > 0) {
-					console.log('Products found:', allProducts.map(p => `${p.title} (${p.quantity} ${p.typeOfMeasurementName})`));
+					console.log(
+						'Products found:',
+						allProducts.map(
+							(p) =>
+								`${p.title} (${p.quantity} ${p.typeOfMeasurementName})`
+						)
+					);
 				}
 				setProducts(allProducts);
 				setLoading(false);
@@ -120,7 +160,11 @@ const ListOfProducts = () => {
 					if (selectedCommunity === 0) {
 						setError('Pasirinkite bendruomenę');
 					} else {
-						setError(`Nepavyko užkrauti produktų: ${err.response?.data?.title || err.message}`);
+						setError(
+							`Nepavyko užkrauti produktų: ${
+								err.response?.data?.title || err.message
+							}`
+						);
 					}
 				} else {
 					setError('Nepavyko užkrauti produktų');
@@ -137,9 +181,9 @@ const ListOfProducts = () => {
 			await axios.post(`${API_BASE_URL}/producttaken`, {
 				userId: id,
 				productId: product.id,
-				quantityTaken: product.quantity
+				quantityTaken: product.quantity,
 			});
-			const updatedProducts = products.filter(p => p.id !== product.id);
+			const updatedProducts = products.filter((p) => p.id !== product.id);
 			setProducts(updatedProducts);
 		} catch (err) {
 			console.error('Error taking product:', err);
@@ -166,38 +210,43 @@ const ListOfProducts = () => {
 	return (
 		<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
 			<SafeAreaView style={mainStyle.container3}>
-				<Text style={[mainStyle.welcomeSign, { fontSize: 20 }]}>
-					Jūsų bendruomenės produktai
-				</Text>
-				
 				<View style={{ width: '90%', marginBottom: 20 }}>
-					<Text>Bendruomenė:</Text>
 					<Picker
 						selectedValue={selectedCommunity}
 						onValueChange={(value) => setSelectedCommunity(value)}
-						style={{
-							width: '100%',
-							height: 50,
-							backgroundColor: colors.white,
-							borderRadius: 5,
-							borderWidth: 1,
-							borderColor: colors.brandGreen,
-						}}
+						itemStyle={{ color: colors.black }}
+						// style={{
+						// 	width: '100%',
+						// 	height: 50,
+						// 	backgroundColor: colors.white,
+						// 	borderRadius: 5,
+						// 	borderWidth: 1,
+						// 	borderColor: colors.brandGreen,
+						// 	color: colors.black,
+						// }}
 					>
-						<Picker.Item label="Pasirinkite bendruomenę" value={0} />
 						{communities.map((community) => (
-							<Picker.Item key={community.id} label={community.title} value={community.id} />
+							<Picker.Item
+								key={community.id}
+								label={community.title}
+								value={community.id}
+							/>
 						))}
 					</Picker>
 				</View>
 
 				{products.length === 0 ? (
 					<View style={{ alignItems: 'center', marginTop: 20 }}>
-						<Text style={{ fontSize: 16, color: colors.brandGreen }}>
+						<Text
+							style={{ fontSize: 16, color: colors.brandGreen }}
+						>
 							Šioje bendruomenėje dar nėra pridėtų produktų
 						</Text>
-						<Text style={{ marginTop: 10, color: colors.darkerGrey }}>
-							Pridėkite produktą paspaudę mygtuką "Pridėti produktą"
+						<Text
+							style={{ marginTop: 10, color: colors.darkerGrey }}
+						>
+							Pridėkite produktą paspaudę mygtuką "Pridėti
+							produktą"
 						</Text>
 					</View>
 				) : (
@@ -233,13 +282,22 @@ const ListOfProducts = () => {
 								}}
 							>
 								{product.boughtOn && (
-									<Text>Pirkimo data: {product.boughtOn.split('T')[0]}</Text>
+									<Text>
+										Pirkimo data:{' '}
+										{product.boughtOn.split('T')[0]}
+									</Text>
 								)}
 								{product.preparationDate && (
-									<Text>Pagaminimo data: {product.preparationDate.split('T')[0]}</Text>
+									<Text>
+										Pagaminimo data:{' '}
+										{product.preparationDate.split('T')[0]}
+									</Text>
 								)}
 								{product.expiryDate && (
-									<Text>Galioja iki: {product.expiryDate.split('T')[0]}</Text>
+									<Text>
+										Galioja iki:{' '}
+										{product.expiryDate.split('T')[0]}
+									</Text>
 								)}
 							</View>
 							<View
@@ -255,7 +313,9 @@ const ListOfProducts = () => {
 									Likutis: {product.quantity}{' '}
 									{product.typeOfMeasurementName}
 								</Text>
-								<Text>Sandėliavimo vieta: {product.storageTitle}</Text>
+								<Text>
+									Sandėliavimo vieta: {product.storageTitle}
+								</Text>
 							</View>
 							<GreenSubmitButton
 								onPress={() => onTakeProduct(product)}

@@ -15,6 +15,7 @@ import axios from 'axios';
 import { API_BASE_URL } from '@/api_config';
 import { useAuth } from '@/context/authContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import colors from '@/constants/colors';
 
 type Props = NativeStackScreenProps<ParamList, 'AllUsersList'>;
 interface UserCommunityResponse {
@@ -80,8 +81,8 @@ const AllUsersList = ({ route }: Props) => {
 						<TouchableOpacity
 							onPress={handleLeaveCommunity}
 							style={{
-								marginTop: 20,
 								backgroundColor: 'orange',
+								marginBottom: '5%',
 								padding: 10,
 								borderRadius: 5,
 								alignItems: 'center',
@@ -112,14 +113,14 @@ const AllUsersList = ({ route }: Props) => {
 							key={member.userId}
 							style={{
 								borderWidth: 1,
-								borderColor: 'lightgray',
+								borderColor: colors.brandGreen,
 								padding: 10,
-								marginVertical: 5,
+								marginBottom: '4%',
 								borderRadius: 10,
-								width: '90%',
+								width: '80%',
 							}}
 						>
-							<Text>
+							<Text style={{ marginBottom: '3%' }}>
 								Vartotojas: {member.username ?? 'Nežinomas'}
 							</Text>
 							<Text>

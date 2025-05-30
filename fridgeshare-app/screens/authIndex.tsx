@@ -29,8 +29,8 @@ export default function AuthIndex() {
 		try {
 			const response = await fetch(`${API_BASE_URL}/news`, {
 				headers: {
-					'Authorization': `Bearer ${id}`
-				}
+					Authorization: `Bearer ${id}`,
+				},
 			});
 			const data = await response.json();
 			setPosts(data);
@@ -42,11 +42,14 @@ export default function AuthIndex() {
 	return (
 		<View style={mainStyle.container}>
 			<StatusBar style="dark" hidden={false} />
-			<Text style={mainStyle.welcomeSign}>Home page</Text>
-			
+
 			<View style={styles.newsSection}>
 				<View style={styles.newsHeader}>
-					<Ionicons name="newspaper" size={24} color={colors.brandGreen} />
+					<Ionicons
+						name="newspaper"
+						size={24}
+						color={colors.brandGreen}
+					/>
 					<Text style={styles.newsTitle}>Naujienos</Text>
 				</View>
 				<NewsFeed posts={posts} />
