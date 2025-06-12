@@ -17,7 +17,7 @@ const DrawerNavigation = () => {
 	const { logout } = useAuth();
 	return (
 		<Drawer.Navigator
-			initialRouteName="Pagrindinis langas"
+			initialRouteName="Pagrindinis"
 			screenOptions={{
 				headerTintColor: colors.brandGreen,
 				drawerActiveTintColor: colors.brandGreen,
@@ -35,10 +35,10 @@ const DrawerNavigation = () => {
 				</View>
 			)}
 		>
-			<Drawer.Screen name="Pagrindinis langas" component={AuthIndex} />
+			<Drawer.Screen name="Pagrindinis" component={ListOfProducts} />
 			<Drawer.Screen name="Bendruomenės" component={CommunityList} />
 			<Drawer.Screen name="Pridėti prekę" component={AddProduct} />
-			<Drawer.Screen name="Prekių sąrašas" component={ListOfProducts} />
+			<Drawer.Screen name="Naujienos" component={AuthIndex} />
 			<Drawer.Screen name="Nustatymai" component={userSettings} />
 		</Drawer.Navigator>
 	);
