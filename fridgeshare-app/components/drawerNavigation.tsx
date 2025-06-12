@@ -1,6 +1,6 @@
 import colors from '@/constants/colors';
 import { useAuth } from '@/context/authContext';
-import AuthIndex from '@/screens/authIndex';
+import NewsScreen from '@/screens/NewsScreen';
 import CommunityList from '@/screens/communityList';
 import AddProduct from '@/screens/productForm';
 import ListOfProducts from '@/screens/productList';
@@ -38,7 +38,7 @@ const DrawerNavigation = () => {
 			<Drawer.Screen name="Pagrindinis" component={ListOfProducts} />
 			<Drawer.Screen name="Bendruomenės" component={CommunityList} />
 			<Drawer.Screen name="Pridėti prekę" component={AddProduct} />
-			<Drawer.Screen name="Naujienos" component={AuthIndex} />
+			<Drawer.Screen name="Naujienos" component={NewsScreen} />
 			<Drawer.Screen name="Nustatymai" component={userSettings} />
 		</Drawer.Navigator>
 	);

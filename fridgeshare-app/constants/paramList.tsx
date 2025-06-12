@@ -5,7 +5,7 @@ export type ParamList = {
 	CommunityView: { id: number };
 	EditCommunity: { id: number };
 	Drawer: undefined;
-	AuthIndex: undefined;
+	NewsScreen: undefined;
 	RequestList: undefined;
 	JoinCommunity: undefined;
 	CreateCommunity: undefined;
