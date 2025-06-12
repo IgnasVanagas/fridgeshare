@@ -17,7 +17,7 @@ interface NewsPost {
 	updatedAt: string | null;
 }
 
-export default function AuthIndex() {
+export default function NewsScreen() {
 	const { id } = useAuth();
 	const [posts, setPosts] = useState<NewsPost[]>([]);
 
