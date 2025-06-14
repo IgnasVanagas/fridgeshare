@@ -10,7 +10,6 @@ export type ParamList = {
 	JoinCommunity: undefined;
 	CreateCommunity: undefined;
 	AddStorage: { communityId: number; storage?: Storage; adminAdd: boolean };
-	AddStorage: { communityId: number; storage?: Storage };
 	StorageList: { communityId: number; isAdmin: boolean };
 	AddTag: { communityId: number; tag?: Tag };
 	TagsList: { communityId: number; isAdmin: boolean };

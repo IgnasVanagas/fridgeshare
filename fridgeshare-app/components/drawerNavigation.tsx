@@ -1,7 +1,6 @@
 import colors from '@/constants/colors';
 import { useAuth } from '@/context/authContext';
 import NewsScreen from '@/screens/NewsScreen';
-import CommunityList from '@/screens/communityList';
 import AddProduct from '@/screens/productForm';
 import ListOfProducts from '@/screens/productList';
 import userSettings from '@/screens/userSettings';
@@ -10,13 +9,14 @@ import {
 	DrawerContentScrollView,
 	DrawerItemList,
 } from '@react-navigation/drawer';
-import { View, Text, TouchableOpacity, Settings } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import mainStyle from '@/styles/styles';
 import { LinearGradient } from 'expo-linear-gradient';
+import CommunityBottomTabNavigator from './communityBottomTabNavigation';
 
 const Drawer = createDrawerNavigator();
 const DrawerNavigation = () => {
@@ -94,7 +94,7 @@ const DrawerNavigation = () => {
 			/>
 			<Drawer.Screen
 				name="Bendruomenės"
-				component={CommunityList}
+				component={CommunityBottomTabNavigator}
 				options={{
 					drawerIcon: () => (
 						<FontAwesome

@@ -1,4 +1,5 @@
 import { API_BASE_URL } from '@/api_config';
+import GradientBorderView from '@/components/gradientBorderView';
 import colors from '@/constants/colors';
 import { UserCommunity } from '@/constants/communityType';
 import { useAuth } from '@/context/authContext';
@@ -53,26 +54,27 @@ const SentOutRequestList = () => {
 			keyboardShouldPersistTaps="handled"
 			contentContainerStyle={{ flexGrow: 1 }}
 		>
-			<SafeAreaView style={[mainStyle.container3, { padding: 0 }]}>
-				<Text style={mainStyle.styledH1}>Išsiųstos užklausos</Text>
+			<SafeAreaView style={mainStyle.container3}>
 				{requestList.length > 0 ? (
-					requestList.map((request, index) => (
-						<View
+					requestList.map((request) => (
+						<GradientBorderView
 							key={request.communityId}
-							style={[buttonStyle.whiteButton, mainStyle.inline]}
+							style={{ marginTop: 15 }}
 						>
-							<Text>{request.communityTitle}</Text>
-							<TouchableOpacity
-								style={buttonStyle.redButtonCancel}
-								onPress={() =>
-									cancelRequest(request.communityId)
-								}
-							>
-								<Text style={{ color: colors.white }}>
-									Atšaukti
-								</Text>
-							</TouchableOpacity>
-						</View>
+							<View style={mainStyle.inline}>
+								<Text>{request.communityTitle}</Text>
+								<TouchableOpacity
+									style={buttonStyle.redButtonCancel}
+									onPress={() =>
+										cancelRequest(request.communityId)
+									}
+								>
+									<Text style={{ color: colors.white }}>
+										Atšaukti
+									</Text>
+								</TouchableOpacity>
+							</View>
+						</GradientBorderView>
 					))
 				) : (
 					<Text>Neturite išsiųstų užklausų</Text>

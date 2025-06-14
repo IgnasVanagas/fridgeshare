@@ -1,18 +1,13 @@
 import { API_BASE_URL } from '@/api_config';
+import GradientBorderView from '@/components/gradientBorderView';
+import GradientButton from '@/components/gradientButton';
 import colors from '@/constants/colors';
-import buttonStyle from '@/styles/buttons';
 import mainStyle from '@/styles/styles';
 import axios from 'axios';
 import { useFocusEffect } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useCallback, useEffect, useState } from 'react';
-import {
-	SafeAreaView,
-	ScrollView,
-	Text,
-	TouchableOpacity,
-	View,
-} from 'react-native';
+import { SafeAreaView, ScrollView, Text, View } from 'react-native';
 
 const AdminIndex = () => {
 	const [storages, setStorages] = useState<Storage[]>([]);
@@ -95,16 +90,11 @@ const AdminIndex = () => {
 				</Text>
 				{groupedStorages ? (
 					Object.keys(groupedStorages).map((communityName) => (
-						<View
+						<GradientBorderView
 							key={communityName}
-							style={[
-								buttonStyle.greenBorder,
-								{
-									width: '80%',
-									padding: 15,
-									marginBottom: 30,
-								},
-							]}
+							style={{
+								marginBottom: 30,
+							}}
 						>
 							<Text
 								style={{
@@ -127,7 +117,7 @@ const AdminIndex = () => {
 									<Text style={{ fontSize: 15 }}>
 										{storage.title}
 									</Text>
-									<Text>
+									<Text style={{ marginTop: 20 }}>
 										Paskutinis tech. tvarkymas:{' '}
 										{storage.lastMaintenanceDate
 											? storage.lastMaintenanceDate.split(
@@ -140,21 +130,14 @@ const AdminIndex = () => {
 											Klaida atnaujinant
 										</Text>
 									)}
-									<TouchableOpacity
-										style={buttonStyle.submitColorfulButton}
-										onPress={() => handleFixed(storage)}
-									>
-										<Text
-											style={
-												buttonStyle.submitColorfulButtonText
-											}
-										>
-											Sutvarkyta
-										</Text>
-									</TouchableOpacity>
+									<GradientButton
+										label="Sutvarkyta"
+										onSubmit={() => handleFixed(storage)}
+										style={{ marginTop: 20 }}
+									/>
 								</View>
 							))}
-						</View>
+						</GradientBorderView>
 					))
 				) : (
 					<Text>Niekam nereikia tech. apžiūros</Text>

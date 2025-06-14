@@ -10,7 +10,6 @@ import { StatusBar } from 'expo-status-bar';
 import mainStyle from '@/styles/styles';
 import { useNavigation } from '@react-navigation/native';
 import buttonStyle from '@/styles/buttons';
-import colors from '@/constants/colors';
 export default function Index() {
 	const navigation = useNavigation();
 

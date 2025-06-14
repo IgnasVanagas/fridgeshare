@@ -64,8 +64,8 @@ export function AuthStackNavigation() {
 			<Stack2.Screen name="PendingRequests" component={PendingRequests} />
 			<Stack2.Screen name="AllUsersList" component={AllUsersList} />
 			<Stack2.Screen name="EditCommunity" component={EditCommunity} />
-			<Stack2.Screen name="Privacy" component={PrivacySettings} />
-			<Stack2.Screen name="Notifications" component={NotificationSettings} />
+			{/* <Stack2.Screen name="Privacy" component={PrivacySettings} /> */}
+			{/* <Stack2.Screen name="Notifications" component={NotificationSettings} /> */}
 			<Stack2.Screen name="AddTag" component={TagForm} />
 			<Stack2.Screen name="TagsList" component={TagsList} />
 			<Stack2.Screen name="CommunityList" component={CommunityList} />

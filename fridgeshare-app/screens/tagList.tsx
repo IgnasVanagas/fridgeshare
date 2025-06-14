@@ -10,6 +10,8 @@ import { StatusBar } from 'expo-status-bar';
 import mainStyle from '@/styles/styles';
 import buttonStyle from '@/styles/buttons';
 import { TouchableOpacity } from 'react-native';
+import GradientButton from '@/components/gradientButton';
+import { Feather } from '@expo/vector-icons';
 
 type Props = NativeStackScreenProps<ParamList, 'TagsList'>;
 const TagsList = ({ route }: Props) => {
@@ -27,7 +29,6 @@ const TagsList = ({ route }: Props) => {
 					.get(`${API_BASE_URL}/tags/community/${communityId}`)
 					.then(function (response) {
 						setTags(response.data);
-						console.log(response.data);
 					})
 					.catch(function (error) {
 						console.log(error);
@@ -74,7 +75,6 @@ const TagsList = ({ route }: Props) => {
 					console.log(e);
 					setError('Klaida šalinant žymą!');
 					setErrorId(tagId);
-					console.log(tagId);
 				});
 		};
 
@@ -86,25 +86,21 @@ const TagsList = ({ route }: Props) => {
 			keyboardShouldPersistTaps="handled"
 			contentContainerStyle={{ flexGrow: 1 }}
 		>
-			<SafeAreaView style={mainStyle.container3}>
+			<SafeAreaView style={[mainStyle.container3]}>
 				<StatusBar style="dark" hidden={false} />
 				<Text style={mainStyle.styledH1}>Visos žymos</Text>
 				{isAdmin && (
-					<TouchableOpacity
-						style={[
-							buttonStyle.submitColorfulButton,
-							{ marginBottom: 15 },
-						]}
-						onPress={() =>
+					<GradientButton
+						onSubmit={() =>
 							navigation.navigate('AddTag', {
 								communityId: communityId,
 							})
 						}
-					>
-						<Text style={buttonStyle.submitColorfulButtonText}>
-							Pridėti žymą
-						</Text>
-					</TouchableOpacity>
+						label="Pridėti žymą"
+						style={{ width: '85%', marginBottom: 20 }}
+						IconLibrary={Feather}
+						iconName="plus"
+					/>
 				)}
 				{tags.length == 0 ? (
 					<Text>Dar nėra pridėtų žymų</Text>

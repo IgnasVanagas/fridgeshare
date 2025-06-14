@@ -20,7 +20,6 @@ import { Picker } from '@react-native-picker/picker';
 import colors from '@/constants/colors';
 import measurementOptions from '@/constants/measurementOptions';
 import categories from '@/constants/categories';
-import GreenSubmitButton from '@/components/submitButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { API_BASE_URL } from '@/api_config';
 import axios from 'axios';
@@ -29,8 +28,6 @@ import { useRoute, RouteProp } from '@react-navigation/native';
 import { ParamList } from '@/constants/paramList';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { LinearGradient } from 'expo-linear-gradient';
-import buttonStyle from '@/styles/buttons';
 import GradientButton from '@/components/gradientButton';
 import GradientBorderView from '@/components/gradientBorderView';
 

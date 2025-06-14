@@ -4,18 +4,15 @@ import { useAuth } from '@/context/authContext';
 import mainStyle from '@/styles/styles';
 import axios from 'axios';
 import { useState } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { Text, TouchableOpacity, View, StyleSheet } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { StatusBar } from 'expo-status-bar';
-import Feather from '@expo/vector-icons/Feather';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { UserCommunity, Community } from '@/constants/communityType';
-import buttonStyle from '@/styles/buttons';
 import { useFocusEffect } from '@react-navigation/native';
 import { useCallback } from 'react';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import GradientBorderView from '@/components/gradientBorderView';
 
 const CommunityList = () => {
 	const navigation = useNavigation();
@@ -67,140 +64,99 @@ const CommunityList = () => {
 				edges={['bottom']}
 			>
 				<StatusBar style="dark" hidden={false} />
-				<View style={mainStyle.inline}>
-					<TouchableOpacity
-						style={[
-							buttonStyle.submitColorfulButton,
-							mainStyle.inline,
-							{
-								width: '35%',
-								marginRight: 20,
-								padding: 5,
-								justifyContent: 'center',
-							},
-						]}
-						onPress={() => navigation.navigate('JoinCommunity')}
-					>
-						<Feather name="plus" size={20} color={colors.white} />
-						<Text style={buttonStyle.submitColorfulButtonText}>
-							Prisijungti
-						</Text>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={[
-							buttonStyle.submitColorfulButton,
-							mainStyle.inlineWithIcon,
-							{
-								width: '35%',
-								padding: 5,
-								justifyContent: 'center',
-							},
-						]}
-						onPress={() => navigation.navigate('CreateCommunity')}
-					>
-						<MaterialIcons
-							name="create"
-							size={20}
-							color={colors.white}
-						/>
-						<Text style={buttonStyle.submitColorfulButtonText}>
-							Sukurti naują
-						</Text>
-					</TouchableOpacity>
-				</View>
 
 				{listOfManagedCommunities.length > 0 && (
-					<Text>Jūsų įkurtos bendruomenės:</Text>
-				)}
-				{listOfManagedCommunities.length > 0 &&
-					listOfManagedCommunities.map((community, index) => (
-						<TouchableOpacity
-							key={community.id}
-							style={{
-								borderColor: colors.brandGreen,
-								borderStyle: 'solid',
-								borderWidth: 1,
-								padding: 15,
-								width: '90%',
-								borderRadius: 15,
-								marginBottom: 15,
-							}}
-							onPress={() => {
-								navigation.navigate('CommunityView', {
-									id: community.id,
-								});
-							}}
-						>
-							<View>
-								<Text
+					<>
+						<Text style={styles.title}>
+							Jūsų įkurtos bendruomenės:
+						</Text>
+						{listOfManagedCommunities.map((community) => (
+							<GradientBorderView
+								style={styles.gradientStyle}
+								key={community.id}
+							>
+								<TouchableOpacity
 									style={{
-										textAlign: 'center',
-										fontSize: 16,
-										fontWeight: 'bold',
-										color: colors.brandGreen,
+										borderRadius: 10,
+									}}
+									onPress={() => {
+										navigation.navigate('CommunityView', {
+											id: community.id,
+										});
 									}}
 								>
-									{community.title}
-								</Text>
-								<Text>
-									Įkūrėte: {community.createdOn.split('T')[0]}{' '}
-								</Text>
-							</View>
-						</TouchableOpacity>
-					))}
+									<View>
+										<Text style={styles.communityTitle}>
+											{community.title}
+										</Text>
+										<Text>
+											Įkūrėte:{' '}
+											{community.createdOn.split('T')[0]}{' '}
+										</Text>
+									</View>
+								</TouchableOpacity>
+							</GradientBorderView>
+						))}
+					</>
+				)}
+
 				{listOfCommunities.length > 0 && (
-					<Text>Bendruomenės, prie kurių prisijungėte:</Text>
+					<>
+						<Text style={styles.title}>
+							Bendruomenės, prie kurių prisijungėte:
+						</Text>
+					</>
 				)}
 				{listOfCommunities.length > 0 ? (
-					listOfCommunities.map((community, index) => (
-						<TouchableOpacity
+					listOfCommunities.map((community) => (
+						<GradientBorderView
+							style={styles.gradientStyle}
 							key={community.communityId}
-							style={buttonStyle.touchableOpacityListItem}
-							onPress={() => {
-								navigation.navigate('CommunityView', {
-									id: community.communityId,
-								});
-							}}
 						>
-							<View>
-								<Text style={buttonStyle.touchableOpacityText}>
-									{community.communityTitle}
-								</Text>
-								<Text>
-									Prisijungėte:{' '}
-									{community.dateJoined.split('T')[0]}{' '}
-								</Text>
-							</View>
-						</TouchableOpacity>
+							<TouchableOpacity
+								style={{ borderRadius: 10 }}
+								onPress={() => {
+									navigation.navigate('CommunityView', {
+										id: community.communityId,
+									});
+								}}
+							>
+								<View>
+									<Text style={styles.communityTitle}>
+										{community.communityTitle}
+									</Text>
+									<Text>
+										Prisijungėte:{' '}
+										{community.dateJoined.split('T')[0]}{' '}
+									</Text>
+								</View>
+							</TouchableOpacity>
+						</GradientBorderView>
 					))
 				) : (
 					<Text>Nesate prisijungę prie jokios bendruomenės</Text>
 				)}
-
-				<TouchableOpacity
-					style={[
-						mainStyle.inline,
-						{
-							alignItems: 'center',
-							borderRadius: 10,
-							borderColor: colors.brandGreen,
-							borderWidth: 1,
-							borderStyle: 'solid',
-							padding: 10,
-						},
-					]}
-					onPress={() => {
-						navigation.navigate('RequestList');
-					}}
-				>
-					<Ionicons name="send" size={20} color={colors.brandGreen} />
-					<Text style={{ paddingLeft: 10, color: colors.brandGreen }}>
-						Išsiųstos užklausos
-					</Text>
-				</TouchableOpacity>
 			</SafeAreaView>
 		</ScrollView>
 	);
 };
 
 export default CommunityList;
+
+const styles = StyleSheet.create({
+	title: {
+		width: '85%',
+		paddingVertical: 20,
+		fontSize: 16,
+	},
+	gradientStyle: {
+		padding: 1,
+		width: '85%',
+		marginBottom: 15,
+	},
+	communityTitle: {
+		fontSize: 16,
+		fontWeight: 'bold',
+		color: colors.brandGreen,
+	},
+});

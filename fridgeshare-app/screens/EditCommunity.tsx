@@ -19,6 +19,8 @@ import { StatusBar } from 'expo-status-bar';
 import axios from 'axios';
 import { API_BASE_URL } from '@/api_config';
 import { Community } from '@/constants/communityType';
+import GradientBorderView from '@/components/gradientBorderView';
+import GradientButton from '@/components/gradientButton';
 
 const EditCommunity = () => {
 	const navigation = useNavigation();
@@ -96,13 +98,16 @@ const EditCommunity = () => {
 	}
 
 	return (
-		<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
-			<SafeAreaView style={mainStyle.container3}>
+		<ScrollView
+			contentContainerStyle={{ flexGrow: 1 }}
+			keyboardShouldPersistTaps="handled"
+		>
+			<SafeAreaView style={mainStyle.container2}>
 				<StatusBar style="dark" />
 				<Text style={mainStyle.styledH1}>Redaguoti bendruomenę</Text>
 
-				<View style={{ width: '90%', marginTop: 20 }}>
-					<Text style={{ fontWeight: 'bold' }}>Pavadinimas</Text>
+				<GradientBorderView style={{ width: '80%' }}>
+					<Text>Pavadinimas</Text>
 					<TextInput
 						value={title}
 						onChangeText={setTitle}
@@ -110,9 +115,7 @@ const EditCommunity = () => {
 						placeholder="Įveskite pavadinimą"
 					/>
 
-					<Text style={{ fontWeight: 'bold', marginTop: 20 }}>
-						Aprašymas
-					</Text>
+					<Text style={{ marginTop: 20 }}>Aprašymas</Text>
 					<TextInput
 						value={description}
 						onChangeText={setDescription}
@@ -124,24 +127,12 @@ const EditCommunity = () => {
 					{error && (
 						<Text style={{ color: colors.red }}>{error}</Text>
 					)}
-
-					<TouchableOpacity
-						style={[
-							buttonStyle.submitColorfulButton,
-							{ marginTop: 30 },
-						]}
-						onPress={handleSave}
-					>
-						<Text
-							style={[
-								{ textAlign: 'center' },
-								buttonStyle.submitColorfulButtonText,
-							]}
-						>
-							Išsaugoti
-						</Text>
-					</TouchableOpacity>
-				</View>
+					<GradientButton
+						onSubmit={() => handleSave}
+						label="Išsaugoti"
+						style={{ marginTop: 30 }}
+					/>
+				</GradientBorderView>
 			</SafeAreaView>
 		</ScrollView>
 	);

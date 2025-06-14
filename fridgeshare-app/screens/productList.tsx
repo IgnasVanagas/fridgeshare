@@ -1,21 +1,13 @@
 import colors from '@/constants/colors';
 import mainStyle from '@/styles/styles';
-import {
-	SafeAreaView,
-	Text,
-	View,
-	Image,
-	TouchableOpacity,
-} from 'react-native';
+import { SafeAreaView, Text, View, Image } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useEffect, useState } from 'react';
 import { API_BASE_URL } from '@/api_config';
 import axios from 'axios';
 import { useAuth } from '@/context/authContext';
 import { Picker } from '@react-native-picker/picker';
-import { LinearGradient } from 'expo-linear-gradient';
 import categoriesImages from '@/constants/categoriesImages';
-import buttonStyle from '@/styles/buttons';
 import GradientButton from '@/components/gradientButton';
 import GradientBorderView from '@/components/gradientBorderView';
 
