@@ -29,6 +29,10 @@ import { useRoute, RouteProp } from '@react-navigation/native';
 import { ParamList } from '@/constants/paramList';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { LinearGradient } from 'expo-linear-gradient';
+import buttonStyle from '@/styles/buttons';
+import GradientButton from '@/components/gradientButton';
+import GradientBorderView from '@/components/gradientBorderView';
 
 type Storage = {
 	id: string;
@@ -49,9 +53,9 @@ type Community = {
 type FormValues = {
 	title: string;
 	description: string;
-	dateBought?: Date;
-	dateMade?: Date;
-	expiryDate?: Date;
+	dateBought?: Date | null;
+	dateMade?: Date | null;
+	expiryDate?: Date | null;
 	quantity: number;
 	selectedMeasurement: number;
 	selectedCategory: number;
@@ -133,9 +137,9 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 		initialValues: existingProduct || {
 			title: '',
 			description: '',
-			dateBought: new Date(),
-			dateMade: new Date(),
-			expiryDate: new Date(),
+			dateBought: null,
+			dateMade: null,
+			expiryDate: null,
 			quantity: 0,
 			selectedMeasurement: 0, // Change from 1 to 0
 			selectedCategory: 1,
@@ -145,6 +149,7 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 		},
 		validationSchema: AddProductValidation,
 		onSubmit: async (values) => {
+			console.log(values);
 			try {
 				if (!values.title) {
 					setError('Privaloma įvesti produkto pavadinimą');
@@ -342,7 +347,6 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 		const fetchData = async () => {
 			try {
 				setLoading(true);
-				// console.log('Fetching communities for user:', id);
 
 				const communitiesResponse = await axios.get(
 					`${API_BASE_URL}/usercommunity/user/${id}`
@@ -351,18 +355,8 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 					`${API_BASE_URL}/community/user/${id}`
 				);
 
-				// console.log(
-				// 	'Raw joined communities response:',
-				// 	JSON.stringify(communitiesResponse.data, null, 2)
-				// );
-				// console.log(
-				// 	'Raw managed communities response:',
-				// 	JSON.stringify(managedCommunitiesResponse.data, null, 2)
-				// );
-
 				const joinedCommunities = communitiesResponse.data.map(
 					(uc: any) => {
-						// console.log('Processing joined community:', uc);
 						return {
 							id: uc.communityId,
 							title: uc.communityTitle,
@@ -372,7 +366,6 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 
 				const managedCommunities = managedCommunitiesResponse.data.map(
 					(c: any) => {
-						// console.log('Processing managed community:', c);
 						return {
 							id: c.id,
 							title: c.title,
@@ -384,7 +377,6 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 					...managedCommunities,
 					...joinedCommunities,
 				];
-				// console.log('Final communities array:', allCommunities);
 
 				if (allCommunities.length === 0) {
 					setError(
@@ -521,7 +513,7 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 					<SafeAreaView
 						style={[mainStyle.container2, { padding: 0 }]}
 					>
-						<View style={mainStyle.form}>
+						<GradientBorderView>
 							<View style={style.pickerContainer}>
 								<Text>Bendruomenė:</Text>
 								<Picker
@@ -594,7 +586,9 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 												value
 											)
 										}
-										itemStyle={{ color: colors.black }}
+										itemStyle={{
+											color: colors.black,
+										}}
 										// style={style.picker}
 									>
 										{storages.map((storage) => (
@@ -804,11 +798,11 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 											}))
 										}
 									>
-										{/* <Text>
+										<Text>
 											{formik.values.expiryDate
 												? formik.values.expiryDate.toLocaleDateString()
 												: 'Pasirinkti datą'}
-										</Text> */}
+										</Text>
 									</TouchableOpacity>
 									{showDatePicker.expiryDate && (
 										<DateTimePicker
@@ -898,12 +892,11 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 									))}
 								</Picker>
 							</View>
-
-							<GreenSubmitButton
-								onPress={formik.handleSubmit}
+							<GradientButton
+								onSubmit={() => formik.handleSubmit}
 								label="Pridėti produktą"
 							/>
-						</View>
+						</GradientBorderView>
 					</SafeAreaView>
 				</ScrollView>
 			</KeyboardAvoidingView>

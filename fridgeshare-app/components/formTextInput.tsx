@@ -14,6 +14,10 @@ const FormTextInput = ({
 	onBlur,
 	value,
 	isPassword = false,
+	textStyle = null,
+	inputStyle = null,
+	viewStyle = null,
+	labelStyle = null,
 	...rest
 }: {
 	label: string;
@@ -24,6 +28,10 @@ const FormTextInput = ({
 	onBlur: any;
 	value: string;
 	isPassword?: boolean;
+	textStyle?: any;
+	inputStyle?: any;
+	viewStyle?: any;
+	labelStyle?: any;
 	[key: string]: any;
 }) => {
 	const [hidePassword, setHidePassword] = useState(true);
@@ -31,11 +39,11 @@ const FormTextInput = ({
 		setHidePassword((prevState) => !prevState);
 	};
 	return (
-		<View style={mainStyle.formInputView}>
-			<Text>{label}</Text>
-			<View style={mainStyle.formInput}>
+		<View style={[mainStyle.formInputView, viewStyle]}>
+			<Text style={labelStyle}>{label}</Text>
+			<View style={[mainStyle.formInput, inputStyle]}>
 				<TextInput
-					style={mainStyle.formInputText}
+					style={[mainStyle.formInputText, textStyle]}
 					placeholder={placeholder}
 					placeholderTextColor={colors.lightGrey}
 					onChangeText={onChangeText}

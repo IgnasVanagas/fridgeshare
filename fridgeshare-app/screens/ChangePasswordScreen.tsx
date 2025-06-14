@@ -8,6 +8,7 @@ import buttonStyle from '@/styles/buttons';
 import { StatusBar } from 'expo-status-bar';
 import axios from 'axios';
 import { API_BASE_URL } from '@/api_config';
+import GradientButton from '@/components/gradientButton';
 
 const ChangePasswordScreen = () => {
 	const navigation = useNavigation();
@@ -55,18 +56,11 @@ const ChangePasswordScreen = () => {
 					value={newPassword}
 					onChangeText={setNewPassword}
 				/>
-
-				<TouchableOpacity
-					style={[
-						buttonStyle.submitColorfulButton,
-						{ marginTop: 20 },
-					]}
-					onPress={handleChangePassword}
-				>
-					<Text style={buttonStyle.submitColorfulButtonText}>
-						Išsaugoti
-					</Text>
-				</TouchableOpacity>
+				<GradientButton
+					onSubmit={() => handleChangePassword}
+					label="Išsaugoti"
+					style={{ marginTop: 20 }}
+				/>
 			</View>
 		</SafeAreaView>
 	);

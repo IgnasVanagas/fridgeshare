@@ -5,7 +5,7 @@ const buttonStyle = StyleSheet.create({
 	submitColorfulButton: {
 		backgroundColor: colors.brandGreen,
 		alignItems: 'center',
-		borderRadius: 10,
+		borderRadius: 7,
 	},
 	submitColorfulButtonText: {
 		color: colors.white,

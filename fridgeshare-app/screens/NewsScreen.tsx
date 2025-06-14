@@ -44,14 +44,7 @@ export default function NewsScreen() {
 			<StatusBar style="dark" hidden={false} />
 
 			<View style={styles.newsSection}>
-				<View style={styles.newsHeader}>
-					<Ionicons
-						name="newspaper"
-						size={24}
-						color={colors.brandGreen}
-					/>
-					<Text style={styles.newsTitle}>Naujienos</Text>
-				</View>
+				<View style={styles.newsHeader}></View>
 				<NewsFeed posts={posts} />
 			</View>
 		</View>

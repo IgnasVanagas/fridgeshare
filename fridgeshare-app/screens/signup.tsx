@@ -7,6 +7,7 @@ import {
 	TouchableWithoutFeedback,
 	Keyboard,
 	TouchableOpacity,
+	ImageBackground,
 } from 'react-native';
 
 import { useFormik } from 'formik';
@@ -14,11 +15,11 @@ import * as yup from 'yup';
 import { StatusBar } from 'expo-status-bar';
 import FormTextInput from '@/components/formTextInput';
 import GreenSubmitButton from '@/components/submitButton';
-import { Link } from 'expo-router';
 import axios from 'axios';
 import { API_BASE_URL } from '@/api_config';
 import { useAuth } from '@/context/authContext';
 import { useNavigation } from '@react-navigation/native';
+import colors from '@/constants/colors';
 
 const SignupScreen = () => {
 	const { login } = useAuth();
@@ -103,98 +104,147 @@ const SignupScreen = () => {
 	});
 
 	return (
-		<KeyboardAvoidingView
-			style={{ flex: 1 }}
-			behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+		<ImageBackground
+			source={require('../assets/images/fonas.png')}
+			style={{ width: '100%', height: '100%' }}
 		>
-			<TouchableWithoutFeedback
-				onPress={Keyboard.dismiss}
-				style={mainStyle.container}
+			<KeyboardAvoidingView
+				style={{ flex: 1 }}
+				behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
 			>
-				<View style={mainStyle.container2}>
-					<StatusBar style="dark" hidden={false} />
-					<Text style={mainStyle.welcomeSign}>Sveiki!</Text>
-					<View style={mainStyle.form}>
-						<FormTextInput
-							label="Vardas"
-							error={formik.errors.name}
-							touched={formik.touched.name}
-							placeholder=""
-							onChangeText={formik.handleChange('name')}
-							onBlur={formik.handleBlur('name')}
-							value={formik.values.name}
-							isPassword={false}
-						/>
-						<FormTextInput
-							label="Pavardė"
-							error={formik.errors.lastName}
-							touched={formik.touched.lastName}
-							placeholder=""
-							onChangeText={formik.handleChange('lastName')}
-							onBlur={formik.handleBlur('lastName')}
-							value={formik.values.lastName}
-							isPassword={false}
-						/>
-						<FormTextInput
-							label="Prisijungimo vardas"
-							error={formik.errors.username}
-							touched={formik.touched.username}
-							placeholder=""
-							onChangeText={formik.handleChange('username')}
-							onBlur={formik.handleBlur('username')}
-							value={formik.values.username}
-							isPassword={false}
-						/>
-						<FormTextInput
-							label="El. paštas"
-							error={formik.errors.email}
-							touched={formik.touched.email}
-							placeholder=""
-							onChangeText={formik.handleChange('email')}
-							onBlur={formik.handleBlur('email')}
-							value={formik.values.email}
-							isPassword={false}
-						/>
-						<FormTextInput
-							label="Slaptažodis"
-							error={formik.errors.password}
-							touched={formik.touched.password}
-							placeholder=""
-							onChangeText={formik.handleChange('password')}
-							onBlur={formik.handleBlur('password')}
-							value={formik.values.password}
-							isPassword={true}
-						/>
-						<FormTextInput
-							label="Patvirtinkite slaptažodį"
-							error={formik.errors.confirmPassword}
-							touched={formik.touched.confirmPassword}
-							placeholder=""
-							onChangeText={formik.handleChange(
-								'confirmPassword'
-							)}
-							onBlur={formik.handleBlur('confirmPassword')}
-							value={formik.values.confirmPassword}
-							isPassword={true}
-						/>
-						<GreenSubmitButton
-							label="Registruotis"
-							onPress={() => formik.handleSubmit()}
-						/>
-						<View style={[mainStyle.inline, { marginTop: 10 }]}>
-							<Text>Turite paskyrą?</Text>
-							<TouchableOpacity
-								onPress={() =>
-									navigation.navigate('Prisijungti')
-								}
-							>
-								<Text style={mainStyle.link}>Prisijungti</Text>
-							</TouchableOpacity>
+				<TouchableWithoutFeedback
+					onPress={Keyboard.dismiss}
+					style={mainStyle.container}
+				>
+					<View
+						style={[
+							mainStyle.container2,
+							{ backgroundColor: 'transparent' },
+						]}
+					>
+						<StatusBar style="dark" hidden={false} />
+						<Text
+							style={[
+								mainStyle.welcomeSign,
+								{ marginBottom: 20 },
+							]}
+						>
+							Sveiki!
+						</Text>
+						<View style={mainStyle.authForm}>
+							<FormTextInput
+								label="Vardas"
+								error={formik.errors.name}
+								touched={formik.touched.name}
+								placeholder=""
+								onChangeText={formik.handleChange('name')}
+								onBlur={formik.handleBlur('name')}
+								value={formik.values.name}
+								isPassword={false}
+								inputStyle={{
+									backgroundColor: colors.white,
+									borderWidth: 0,
+								}}
+								labelStyle={{ color: colors.brandGreen }}
+							/>
+							<FormTextInput
+								label="Pavardė"
+								error={formik.errors.lastName}
+								touched={formik.touched.lastName}
+								placeholder=""
+								onChangeText={formik.handleChange('lastName')}
+								onBlur={formik.handleBlur('lastName')}
+								value={formik.values.lastName}
+								isPassword={false}
+								inputStyle={{
+									backgroundColor: colors.white,
+									borderWidth: 0,
+								}}
+								labelStyle={{ color: colors.brandGreen }}
+							/>
+							<FormTextInput
+								label="Prisijungimo vardas"
+								error={formik.errors.username}
+								touched={formik.touched.username}
+								placeholder=""
+								onChangeText={formik.handleChange('username')}
+								onBlur={formik.handleBlur('username')}
+								value={formik.values.username}
+								isPassword={false}
+								inputStyle={{
+									backgroundColor: colors.white,
+									borderWidth: 0,
+								}}
+								labelStyle={{ color: colors.brandGreen }}
+							/>
+							<FormTextInput
+								label="El. paštas"
+								error={formik.errors.email}
+								touched={formik.touched.email}
+								placeholder=""
+								onChangeText={formik.handleChange('email')}
+								onBlur={formik.handleBlur('email')}
+								value={formik.values.email}
+								isPassword={false}
+								inputStyle={{
+									backgroundColor: colors.white,
+									borderWidth: 0,
+								}}
+								labelStyle={{ color: colors.brandGreen }}
+							/>
+							<FormTextInput
+								label="Slaptažodis"
+								error={formik.errors.password}
+								touched={formik.touched.password}
+								placeholder=""
+								onChangeText={formik.handleChange('password')}
+								onBlur={formik.handleBlur('password')}
+								value={formik.values.password}
+								isPassword={true}
+								inputStyle={{
+									backgroundColor: colors.white,
+									borderWidth: 0,
+								}}
+								labelStyle={{ color: colors.brandGreen }}
+							/>
+							<FormTextInput
+								label="Patvirtinkite slaptažodį"
+								error={formik.errors.confirmPassword}
+								touched={formik.touched.confirmPassword}
+								placeholder=""
+								onChangeText={formik.handleChange(
+									'confirmPassword'
+								)}
+								onBlur={formik.handleBlur('confirmPassword')}
+								value={formik.values.confirmPassword}
+								isPassword={true}
+								inputStyle={{
+									backgroundColor: colors.white,
+									borderWidth: 0,
+								}}
+								labelStyle={{ color: colors.brandGreen }}
+							/>
+							<GreenSubmitButton
+								label="Registruotis"
+								onPress={() => formik.handleSubmit()}
+							/>
+							<View style={[mainStyle.inline, { marginTop: 10 }]}>
+								<Text>Turite paskyrą?</Text>
+								<TouchableOpacity
+									onPress={() =>
+										navigation.navigate('Prisijungti')
+									}
+								>
+									<Text style={mainStyle.link}>
+										Prisijungti
+									</Text>
+								</TouchableOpacity>
+							</View>
 						</View>
 					</View>
-				</View>
-			</TouchableWithoutFeedback>
-		</KeyboardAvoidingView>
+				</TouchableWithoutFeedback>
+			</KeyboardAvoidingView>
+		</ImageBackground>
 	);
 };
 

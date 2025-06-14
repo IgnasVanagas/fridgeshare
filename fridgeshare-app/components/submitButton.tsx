@@ -1,5 +1,4 @@
 import buttonStyle from '@/styles/buttons';
-import mainStyle from '@/styles/styles';
 import { TouchableOpacity, Text } from 'react-native';
 
 const GreenSubmitButton = ({

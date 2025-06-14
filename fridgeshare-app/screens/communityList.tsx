@@ -62,7 +62,10 @@ const CommunityList = () => {
 			keyboardShouldPersistTaps="handled"
 			contentContainerStyle={{ flexGrow: 1 }}
 		>
-			<SafeAreaView style={[mainStyle.container3, { padding: 0 }]}>
+			<SafeAreaView
+				style={[mainStyle.container3, { padding: 0 }]}
+				edges={['bottom']}
+			>
 				<StatusBar style="dark" hidden={false} />
 				<View style={mainStyle.inline}>
 					<TouchableOpacity

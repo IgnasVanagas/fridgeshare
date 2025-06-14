@@ -50,6 +50,11 @@ const mainStyle = StyleSheet.create({
 		borderRadius: 15,
 		width: '80%',
 	},
+	authForm: {
+		padding: '5%',
+		borderRadius: 15,
+		width: '90%',
+	},
 	formInputView: {
 		marginBottom: 13,
 	},
@@ -58,7 +63,7 @@ const mainStyle = StyleSheet.create({
 		borderStyle: 'solid',
 		borderColor: colors.lightGrey,
 		borderWidth: 1,
-		borderRadius: 15,
+		borderRadius: 7,
 		padding: 7,
 		flexDirection: 'row',
 		alignItems: 'center',
