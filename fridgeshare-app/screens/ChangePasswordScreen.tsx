@@ -56,7 +56,7 @@ const ChangePasswordScreen = () => {
 					onChangeText={setNewPassword}
 				/>
 				<GradientButton
-					onSubmit={() => handleChangePassword}
+					onSubmit={handleChangePassword}
 					label="Išsaugoti"
 					style={{ marginTop: 20 }}
 				/>

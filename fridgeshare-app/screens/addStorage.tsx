@@ -68,6 +68,8 @@ const AddStorage = ({ route }: Props) => {
 								type: values['type'],
 								communityId: communityId,
 								propertyOfCompany: values['propertyOfCompany'],
+								needsMaintenance: storage.needsMaintenance,
+								lastCleaningDate: storage.lastCleaningDate,
 							})
 							.then(function () {
 								if (adminAdd) {

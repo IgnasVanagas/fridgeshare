@@ -72,7 +72,7 @@ const CreateCommunity = () => {
 						onChangeText={setDescription}
 					/>
 					<GradientButton
-						onSubmit={() => handleCreateCommunity}
+						onSubmit={handleCreateCommunity}
 						label="Sukurti"
 					/>
 				</GradientBorderView>

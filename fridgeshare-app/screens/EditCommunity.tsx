@@ -128,7 +128,7 @@ const EditCommunity = () => {
 						<Text style={{ color: colors.red }}>{error}</Text>
 					)}
 					<GradientButton
-						onSubmit={() => handleSave}
+						onSubmit={handleSave}
 						label="Išsaugoti"
 						style={{ marginTop: 30 }}
 					/>

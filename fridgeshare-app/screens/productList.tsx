@@ -154,7 +154,7 @@ const ListOfProducts = () => {
 			await axios.post(`${API_BASE_URL}/producttaken`, {
 				userId: id,
 				productId: product.id,
-				quantityTaken: product.quantityLeft,
+				quantityTaken: product.quantity,
 			});
 			const updatedProducts = products.filter((p) => p.id !== product.id);
 			setProducts(updatedProducts);
@@ -283,7 +283,7 @@ const ListOfProducts = () => {
 										}
 									>
 										<Text>
-											Likutis: {product.quantityLeft}{' '}
+											Likutis: {product.quantity}{' '}
 											{product.typeOfMeasurementName}
 										</Text>
 										{/* <Text>

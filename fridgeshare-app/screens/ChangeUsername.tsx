@@ -51,7 +51,7 @@ const ChangeUsername = () => {
 				/>
 
 				<GradientButton
-					onSubmit={() => handleChangeUsername}
+					onSubmit={handleChangeUsername}
 					label="Išsaugoti"
 					style={{ marginTop: 20 }}
 				/>

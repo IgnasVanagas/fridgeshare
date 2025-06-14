@@ -139,7 +139,7 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 			expiryDate: null,
 			quantity: 0,
 			selectedMeasurement: 0, // Change from 1 to 0
-			selectedCategory: 1,
+			selectedCategory: 0,
 			selectedStorage: '',
 			selectedTags: [],
 			selectedCommunity: communityId || 0,
@@ -890,7 +890,7 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 								</Picker>
 							</View>
 							<GradientButton
-								onSubmit={() => formik.handleSubmit}
+								onSubmit={formik.handleSubmit}
 								label="Pridėti produktą"
 							/>
 						</GradientBorderView>

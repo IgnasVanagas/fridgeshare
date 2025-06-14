@@ -9,7 +9,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { View } from 'react-native';
 import { SafeAreaView, ScrollView, Text } from 'react-native';
 import { Storage } from '@/constants/storage';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
