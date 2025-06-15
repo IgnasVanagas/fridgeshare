@@ -1,5 +1,4 @@
 import colors from '@/constants/colors';
-import buttonStyle from '@/styles/buttons';
 import mainStyle from '@/styles/styles';
 import { StatusBar } from 'expo-status-bar';
 import {
@@ -8,6 +7,7 @@ import {
 	View,
 	Text,
 	TouchableOpacity,
+	StyleSheet,
 } from 'react-native';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -20,6 +20,7 @@ import { ParamList } from '@/constants/paramList';
 import axios from 'axios';
 import { API_BASE_URL } from '@/api_config';
 import { useEffect, useState } from 'react';
+import GradientBorderView from '@/components/gradientBorderView';
 
 type Props = NativeStackScreenProps<ParamList, 'CommunitySettings'>;
 
@@ -60,7 +61,7 @@ const CommunitySettings = ({ route }: Props) => {
 				<Text style={mainStyle.styledH1}>Bendruomenės nustatymai</Text>
 				<View
 					style={{
-						width: '75%',
+						width: '85%',
 					}}
 				>
 					<Text style={{ marginBottom: 10, fontWeight: 'bold' }}>
@@ -69,96 +70,100 @@ const CommunitySettings = ({ route }: Props) => {
 					{error && (
 						<Text style={{ color: colors.red }}>{error}</Text>
 					)}
-					<TouchableOpacity
-						style={[buttonStyle.greenBorder, { marginBottom: 25 }]}
-						onPress={() => handleRegenerate()}
-					>
-						<View style={mainStyle.inlineWithIcon}>
-							<FontAwesome
-								name="refresh"
-								size={24}
-								color={colors.brandGreen}
-								style={{ marginRight: 15 }}
-							/>
-							<Text>Iš naujo sugeneruoti kodą</Text>
-						</View>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={[buttonStyle.greenBorder, { marginBottom: 25 }]}
-						onPress={() =>
-							navigation.navigate('EditCommunity', {
-								id: community.id,
-							})
-						}
-					>
-						<View style={mainStyle.inlineWithIcon}>
-							<FontAwesome6
-								name="pencil"
-								size={24}
-								color={colors.brandGreen}
-								style={{ marginRight: 15 }}
-							/>
-							<Text>Redaguoti bendruomenę</Text>
-						</View>
-					</TouchableOpacity>
+					<GradientBorderView style={styles.gradientOpt}>
+						<TouchableOpacity onPress={() => handleRegenerate()}>
+							<View style={mainStyle.inlineWithIcon}>
+								<FontAwesome
+									name="refresh"
+									size={24}
+									color={colors.brandGreen}
+									style={{ marginRight: 15 }}
+								/>
+								<Text>Iš naujo sugeneruoti kodą</Text>
+							</View>
+						</TouchableOpacity>
+					</GradientBorderView>
+					<GradientBorderView style={styles.gradientOpt}>
+						<TouchableOpacity
+							onPress={() =>
+								navigation.navigate('EditCommunity', {
+									id: community.id,
+								})
+							}
+						>
+							<View style={mainStyle.inlineWithIcon}>
+								<FontAwesome6
+									name="pencil"
+									size={24}
+									color={colors.brandGreen}
+									style={{ marginRight: 15 }}
+								/>
+								<Text>Redaguoti bendruomenę</Text>
+							</View>
+						</TouchableOpacity>
+					</GradientBorderView>
 
-					<TouchableOpacity
-						style={[buttonStyle.greenBorder, { marginBottom: 25 }]}
-						onPress={() => {
-							navigation.navigate('PendingRequests', {
-								communityId: community.id,
-							});
-						}}
-					>
-						<View style={mainStyle.inlineWithIcon}>
-							<FontAwesome5
-								name="user-clock"
-								size={24}
-								color={colors.brandGreen}
-								style={{ marginRight: 15 }}
-							/>
-							<Text>Laukiančios užklausos</Text>
-						</View>
-					</TouchableOpacity>
+					<GradientBorderView style={styles.gradientOpt}>
+						<TouchableOpacity
+							onPress={() => {
+								navigation.navigate('PendingRequests', {
+									communityId: community.id,
+								});
+							}}
+						>
+							<View style={mainStyle.inlineWithIcon}>
+								<FontAwesome5
+									name="user-clock"
+									size={24}
+									color={colors.brandGreen}
+									style={{ marginRight: 15 }}
+								/>
+								<Text>Laukiančios užklausos</Text>
+							</View>
+						</TouchableOpacity>
+					</GradientBorderView>
 
-					<TouchableOpacity
-						style={[buttonStyle.greenBorder, { marginBottom: 25 }]}
-						onPress={() => {
-							navigation.navigate('StorageList', {
-								communityId: community.id,
-								isAdmin: true,
-							});
-						}}
-					>
-						<View style={mainStyle.inlineWithIcon}>
-							<MaterialCommunityIcons
-								name="fridge"
-								size={26}
-								color={colors.brandGreen}
-								style={{ marginRight: 15 }}
-							/>
-							<Text>Visos maisto laikymo vietos</Text>
-						</View>
-					</TouchableOpacity>
-					<TouchableOpacity
-						style={[buttonStyle.greenBorder, { marginBottom: 25 }]}
-						onPress={() => {
-							navigation.navigate('TagsList', {
-								communityId: community.id,
-								isAdmin: true,
-							});
-						}}
-					>
-						<View style={mainStyle.inlineWithIcon}>
-							<AntDesign
-								name="tag"
-								size={24}
-								color={colors.brandGreen}
-								style={{ marginRight: 15 }}
-							/>
-							<Text>Visos žymos</Text>
-						</View>
-					</TouchableOpacity>
+					<GradientBorderView style={styles.gradientOpt}>
+						<TouchableOpacity
+							onPress={() => {
+								navigation.navigate('StorageList', {
+									communityId: community.id,
+									isAdmin: true,
+								});
+							}}
+						>
+							<View style={mainStyle.inlineWithIcon}>
+								<MaterialCommunityIcons
+									name="fridge"
+									size={26}
+									color={colors.brandGreen}
+									style={{ marginRight: 15 }}
+								/>
+								<Text>Visos maisto laikymo vietos</Text>
+							</View>
+						</TouchableOpacity>
+					</GradientBorderView>
+
+					<GradientBorderView style={styles.gradientOpt}>
+						<TouchableOpacity
+							onPress={() => {
+								navigation.navigate('TagsList', {
+									communityId: community.id,
+									isAdmin: true,
+								});
+							}}
+						>
+							<View style={mainStyle.inlineWithIcon}>
+								<AntDesign
+									name="tag"
+									size={24}
+									color={colors.brandGreen}
+									style={{ marginRight: 15 }}
+								/>
+								<Text>Visos žymos</Text>
+							</View>
+						</TouchableOpacity>
+					</GradientBorderView>
 				</View>
 			</SafeAreaView>
 		</ScrollView>
@@ -166,3 +171,7 @@ const CommunitySettings = ({ route }: Props) => {
 };
 
 export default CommunitySettings;
+
+const styles = StyleSheet.create({
+	gradientOpt: { marginBottom: 25, padding: 2, width: '100%' },
+});

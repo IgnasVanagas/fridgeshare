@@ -1,7 +1,6 @@
 import { API_BASE_URL } from '@/api_config';
 import colors from '@/constants/colors';
 import { Community } from '@/constants/communityType';
-import buttonStyle from '@/styles/buttons';
 import mainStyle from '@/styles/styles';
 import axios from 'axios';
 import { useFocusEffect } from 'expo-router';
@@ -17,6 +16,8 @@ import {
 import AntDesign from '@expo/vector-icons/AntDesign';
 import Feather from '@expo/vector-icons/Feather';
 import { useNavigation } from '@react-navigation/native';
+import { LinearGradient } from 'expo-linear-gradient';
+import GradientButton from '@/components/gradientButton';
 
 const ChooseCommunityToCreateStorage = () => {
 	const navigation = useNavigation();
@@ -29,7 +30,6 @@ const ChooseCommunityToCreateStorage = () => {
 					.get(`${API_BASE_URL}/community`)
 					.then(function (response) {
 						setCommunities(response.data);
-						console.log(response.data);
 					})
 					.catch(function (error) {
 						console.log(error);
@@ -69,70 +69,68 @@ const ChooseCommunityToCreateStorage = () => {
 						]}
 					>
 						{communities.map((community) => (
-							<TouchableOpacity
-								key={community.id}
-								style={[
-									{
-										marginBottom: 15,
-										width: '80%',
-									},
-									buttonStyle.greenBorder,
-									activeId == community.id &&
-										buttonStyle.submitColorfulButton,
-									{
-										alignItems: 'flex-start',
-									},
+							<LinearGradient
+								colors={[
+									colors.ombreDarkGreen,
+									colors.ombreLightGreen,
 								]}
-								onPress={() => handleSelect(community.id)}
+								key={community.id}
+								style={{
+									borderRadius: 10,
+									width: '80%',
+									padding: 3,
+									marginBottom: 15,
+								}}
 							>
-								<View style={mainStyle.inline}>
-									{community.id == activeId && (
-										<AntDesign
-											name="check"
-											size={24}
-											color={colors.white}
-										/>
-									)}
-									<Text
-										style={[
-											activeId == community.id && {
-												color: colors.white,
-											},
-										]}
-									>
-										{community.title}
-									</Text>
-								</View>
-							</TouchableOpacity>
+								<TouchableOpacity
+									style={[
+										{
+											alignItems: 'flex-start',
+											backgroundColor:
+												activeId == community.id
+													? 'transparent'
+													: colors.white,
+											borderRadius: 10,
+											padding: 15,
+										},
+									]}
+									onPress={() => handleSelect(community.id)}
+								>
+									<View style={mainStyle.inline}>
+										{community.id == activeId && (
+											<AntDesign
+												name="check"
+												size={24}
+												color={colors.white}
+											/>
+										)}
+										<Text
+											style={[
+												activeId == community.id && {
+													color: colors.white,
+												},
+											]}
+										>
+											{community.title}
+										</Text>
+									</View>
+								</TouchableOpacity>
+							</LinearGradient>
 						))}
 						{activeId !== null && (
-							<TouchableOpacity
-								style={[
-									buttonStyle.submitColorfulButton,
-									{ width: '80%' },
-								]}
-								onPress={() =>
+							<GradientButton
+								onSubmit={() =>
 									navigation.navigate('AddStorage', {
 										communityId: activeId,
 										adminAdd: true,
 									})
 								}
-							>
-								<View style={mainStyle.inline}>
-									<Text
-										style={
-											buttonStyle.submitColorfulButtonText
-										}
-									>
-										Toliau
-									</Text>
-									<Feather
-										name="arrow-right"
-										size={24}
-										color={colors.white}
-									/>
-								</View>
-							</TouchableOpacity>
+								label="Toliau"
+								style={{ width: '80%' }}
+								IconLibrary={Feather}
+								iconName="arrow-right"
+								side="right"
+							/>
 						)}
 					</View>
 				) : (

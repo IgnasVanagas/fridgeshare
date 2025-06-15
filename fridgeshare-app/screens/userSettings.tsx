@@ -1,81 +1,123 @@
-import { View, Text, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, ImageBackground } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Feather from '@expo/vector-icons/Feather';
 import { StatusBar } from 'expo-status-bar';
 import mainStyle from '@/styles/styles';
-import buttonStyle from '@/styles/buttons';
 import colors from '@/constants/colors';
 import { useAuth } from '@/context/authContext';
+import SettingsOptions from '@/components/settingsOption';
 
 const SettingsScreen = () => {
 	const navigation = useNavigation();
-	const { logout, username, isAdmin } = useAuth();
+	const { username, isAdmin } = useAuth();
 
 	return (
-		<SafeAreaView style={mainStyle.container3}>
+		<SafeAreaView
+			style={[
+				mainStyle.container3,
+				{
+					width: '100%',
+					padding: 0,
+				},
+			]}
+			edges={['bottom']}
+		>
 			<StatusBar style="dark" hidden={false} />
-			<Text style={mainStyle.styledH1}>Nustatymai</Text>
 
-			<View style={{ padding: 20 }}>
-				<Text style={{ fontSize: 18, fontWeight: 'bold' }}>Vartotojas</Text>
-				<Text style={{ fontSize: 16, marginTop: 5 }}>{username}</Text>
-			</View>
+			<ImageBackground
+				source={require('../assets/images/fonas.png')}
+				style={{
+					width: '100%',
+				}}
+			>
+				<View
+					style={{
+						padding: 24,
+					}}
+				>
+					<Text
+						style={{
+							textAlign: 'center',
+							fontSize: 20,
+							color: colors.brandGreen,
+						}}
+					>
+						Labas!
+					</Text>
+					<View
+						style={[
+							mainStyle.inline,
+							{
+								justifyContent: 'center',
+							},
+						]}
+					>
+						<Text
+							style={{
+								fontSize: 16,
+								color: colors.brandGreen,
+							}}
+						>
+							Esate prisijungęs kaip{' '}
+						</Text>
+						<Text
+							style={{
+								fontSize: 16,
+								fontWeight: 'bold',
+								color: colors.brandGreen,
+							}}
+						>
+							{username}
+						</Text>
+					</View>
+				</View>
+			</ImageBackground>
 
-			<ScrollView style={{ width: '100%' }}>
-				<TouchableOpacity
-					style={[mainStyle.inline, { marginTop: 20 }]}
+			<View
+				style={{
+					width: '100%',
+					padding: 24,
+				}}
+			>
+				<SettingsOptions
 					onPress={() => navigation.navigate('ChangeUsername')}
-				>
-					<Ionicons name="person" size={20} color={colors.brandGreen} />
-					<Text style={{ paddingLeft: 10 }}>Keisti vartotojo vardą</Text>
-				</TouchableOpacity>
+					IconLibrary={Ionicons}
+					iconName="person"
+					label="Keisti vartotojo vardą"
+				/>
 
-				<TouchableOpacity
-					style={[mainStyle.inline, { marginTop: 20 }]}
+				<SettingsOptions
 					onPress={() => navigation.navigate('ChangePassword')}
-				>
-					<Ionicons name="lock-closed" size={20} color={colors.brandGreen} />
-					<Text style={{ paddingLeft: 10 }}>Keisti slaptažodį</Text>
-				</TouchableOpacity>
+					IconLibrary={Ionicons}
+					iconName="lock-closed"
+					label="Keisti slaptažodį"
+				/>
 
-				<TouchableOpacity
-					style={[mainStyle.inline, { marginTop: 20 }]}
+				{/* <SettingsOptions
 					onPress={() => navigation.navigate('Notifications')}
-				>
-					<Feather name="bell" size={20} color={colors.brandGreen} />
-					<Text style={{ paddingLeft: 10 }}>Pranešimų nustatymai</Text>
-				</TouchableOpacity>
+					IconLibrary={Feather}
+					iconName="bell"
+					label="Pranešimų nustatymai"
+				/>
 
-				<TouchableOpacity
-					style={[mainStyle.inline, { marginTop: 20 }]}
+				<SettingsOptions
 					onPress={() => navigation.navigate('Privacy')}
-				>
-					<Feather name="shield" size={20} color={colors.brandGreen} />
-					<Text style={{ paddingLeft: 10 }}>Privatumas</Text>
-				</TouchableOpacity>
+					IconLibrary={Feather}
+					iconName="shield"
+					label="Privatumas"
+				/> */}
 
 				{isAdmin && (
-					<TouchableOpacity
-						style={[mainStyle.inline, { marginTop: 20 }]}
+					<SettingsOptions
 						onPress={() => navigation.navigate('ManageNews')}
-					>
-						<Feather name="file-text" size={20} color={colors.brandGreen} />
-						<Text style={{ paddingLeft: 10 }}>Valdyti naujienas</Text>
-					</TouchableOpacity>
+						IconLibrary={Feather}
+						iconName="file-text"
+						label="Valdyti naujienas"
+					/>
 				)}
-			</ScrollView>
-
-			<TouchableOpacity
-				style={[
-					buttonStyle.submitColorfulButton,
-					{ backgroundColor: 'red', marginTop: 40 },
-				]}
-				onPress={logout}
-			>
-				<Text style={buttonStyle.submitColorfulButtonText}>Atsijungti</Text>
-			</TouchableOpacity>
+			</View>
 		</SafeAreaView>
 	);
 };

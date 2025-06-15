@@ -1,23 +1,18 @@
 import { ParamList } from '@/constants/paramList';
-import {
-	SafeAreaView,
-	ScrollView,
-	Text,
-	View,
-	TouchableOpacity,
-} from 'react-native';
+import { SafeAreaView, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import mainStyle from '@/styles/styles';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import FormTextInput from '@/components/formTextInput';
-import GreenSubmitButton from '@/components/submitButton';
 import colors from '@/constants/colors';
 import axios from 'axios';
 import { API_BASE_URL } from '@/api_config';
 import { useNavigation } from '@react-navigation/native';
 import { useState } from 'react';
+import GradientBorderView from '@/components/gradientBorderView';
+import GradientButton from '@/components/gradientButton';
 
 type Props = NativeStackScreenProps<ParamList, 'AddTag'>;
 
@@ -86,7 +81,6 @@ const TagForm = ({ route }: Props) => {
 							setError('Klaida kuriant žymą');
 						});
 				}
-				console.log(values);
 			};
 			addTag();
 		},
@@ -106,7 +100,7 @@ const TagForm = ({ route }: Props) => {
 				<Text style={mainStyle.styledH1}>
 					{isEditing ? 'Redaguoti žymą' : 'Pridėti žymą'}
 				</Text>
-				<View style={mainStyle.form}>
+				<GradientBorderView>
 					<FormTextInput
 						label="Pavadinimas"
 						error={formik.errors.title}
@@ -125,36 +119,38 @@ const TagForm = ({ route }: Props) => {
 						onBlur={formik.handleBlur('color')}
 						value={formik.values.color}
 					/>
-					<TouchableOpacity
-						onPress={() => onPressUseAppGreen()}
+					<GradientBorderView
 						style={{
-							borderColor: colors.brandGreen,
-							borderStyle: 'solid',
-							borderWidth: 1,
-							borderRadius: 10,
-							alignItems: 'center',
-							paddingVertical: 5,
 							marginBottom: 15,
+							paddingVertical: 2,
+							width: '100%',
 						}}
 					>
-						<Text
+						<TouchableOpacity
+							onPress={() => onPressUseAppGreen()}
 							style={{
-								color: colors.brandGreen,
+								alignItems: 'center',
 							}}
 						>
-							Naudoti "FridgeShare" žalią
-						</Text>
-					</TouchableOpacity>
+							<Text
+								style={{
+									color: colors.brandGreen,
+								}}
+							>
+								Naudoti "FridgeShare" žalią
+							</Text>
+						</TouchableOpacity>
+					</GradientBorderView>
 					{error && (
 						<Text style={{ color: colors.red, marginBottom: 15 }}>
 							{error}
 						</Text>
 					)}
-					<GreenSubmitButton
+					<GradientButton
 						label={isEditing ? 'Išsaugoti' : 'Pridėti'}
-						onPress={() => formik.handleSubmit()}
+						onSubmit={() => formik.handleSubmit()}
 					/>
-				</View>
+				</GradientBorderView>
 			</SafeAreaView>
 		</ScrollView>
 	);

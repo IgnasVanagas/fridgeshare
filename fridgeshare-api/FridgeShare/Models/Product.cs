@@ -88,7 +88,7 @@ public ICollection<ProductTaken> ProductTakens { get; private set; } = new List<
             return Errors.Product.InvalidQuantityLeft;
         }
 
-        if(productTaken.QuantityTaken <= 0 || (this.TypeOfMeasurement == FoodMeasurement.pcs && productTaken.QuantityTaken != Math.Floor(productTaken.QuantityTaken)))
+        if(productTaken.QuantityTaken <= 0 || (this.TypeOfMeasurement == FoodMeasurement.vnt && productTaken.QuantityTaken != Math.Floor(productTaken.QuantityTaken)))
         {
             return Errors.Product.IncorrectQuantity;
         }
@@ -136,7 +136,7 @@ public ICollection<ProductTaken> ProductTakens { get; private set; } = new List<
             errors.Add(Errors.Product.StorageIdMissing);
         }
 
-        if (quantity < 0 || ((FoodMeasurement)typeOfMeasurement == FoodMeasurement.pcs && quantity != Math.Floor(quantity)))
+        if (quantity < 0 || ((FoodMeasurement)typeOfMeasurement == FoodMeasurement.vnt && quantity != Math.Floor(quantity)))
         {
             errors.Add(Errors.Product.IncorrectQuantity);
         }

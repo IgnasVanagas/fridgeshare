@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react';
 import { API_BASE_URL } from '@/api_config';
 import axios from 'axios';
 import buttonStyle from '@/styles/buttons';
-import colors from '@/constants/colors';
+import GradientBorderView from '@/components/gradientBorderView';
 
 interface UserCommunityResponse {
 	userId: number;
@@ -93,15 +93,10 @@ const PendingRequests = ({ route }: Props) => {
 				<Text style={mainStyle.styledH1}>Laukiančios užklausos</Text>
 				{pendingRequests.length > 0 ? (
 					pendingRequests.map((req) => (
-						<View
+						<GradientBorderView
 							key={req.userId}
 							style={{
-								borderWidth: 1,
-								borderColor: colors.brandGreen,
-								padding: 10,
 								marginVertical: 5,
-								borderRadius: 10,
-								width: '75%',
 							}}
 						>
 							<Text style={{ marginBottom: '5%' }}>
@@ -149,7 +144,7 @@ const PendingRequests = ({ route }: Props) => {
 									</Text>
 								</TouchableOpacity>
 							</View>
-						</View>
+						</GradientBorderView>
 					))
 				) : (
 					<Text style={{ marginTop: 5 }}>

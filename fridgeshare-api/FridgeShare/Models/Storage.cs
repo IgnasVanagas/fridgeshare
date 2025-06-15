@@ -90,9 +90,8 @@ public class Storage
         {
             errors.Add(Errors.Storage.InvalidLocation);
         }
-
-        if ((lastCleaningDate != null && lastCleaningDate > DateTime.UtcNow) ||
-            (lastMaintenanceDate != null && lastMaintenanceDate > DateTime.UtcNow))
+        if ((lastCleaningDate != null && lastCleaningDate > DateTime.Now) ||
+            (lastMaintenanceDate != null && lastMaintenanceDate > DateTime.Now))
         {
             errors.Add(Errors.Storage.InvalidDate);
         }

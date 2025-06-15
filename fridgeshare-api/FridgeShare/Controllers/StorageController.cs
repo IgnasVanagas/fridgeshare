@@ -114,7 +114,6 @@ public class StoragesController : ApiController
     public async Task<IActionResult> UpdateStorage(Guid id, UpdateStorageRequest request)
     {
         var createStorageResult = Storage.From(id, request);
-
         if (createStorageResult.IsError)
         {
             return Problem(createStorageResult.Errors);

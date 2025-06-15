@@ -1,8 +1,11 @@
 import { API_BASE_URL } from '@/api_config';
+import GradientBorderView from '@/components/gradientBorderView';
+import GradientButton from '@/components/gradientButton';
 import colors from '@/constants/colors';
 import { Storage } from '@/constants/storage';
 import buttonStyle from '@/styles/buttons';
 import mainStyle from '@/styles/styles';
+import { Feather } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { useFocusEffect } from 'expo-router';
@@ -79,22 +82,18 @@ const CompanyStorageList = () => {
 		>
 			<SafeAreaView style={mainStyle.container3}>
 				<StatusBar style="dark" hidden={false} />
-				<TouchableOpacity
-					style={[
-						buttonStyle.submitColorfulButton,
-						{ marginBottom: 15 },
-					]}
-					onPress={() => navigation.navigate('ChooseCommunity')}
-				>
-					<Text style={buttonStyle.submitColorfulButtonText}>
-						Pridėti maisto laikymo vietą
-					</Text>
-				</TouchableOpacity>
+				<GradientButton
+					onSubmit={() => navigation.navigate('ChooseCommunity')}
+					label="Pridėti maisto laikymo vietą"
+					IconLibrary={Feather}
+					iconName="plus"
+					style={{ width: '85%', marginVertical: 20 }}
+				/>
 				{storages.length > 0 ? (
 					storages.map((storage) => (
-						<View
+						<GradientBorderView
 							key={storage.id}
-							style={buttonStyle.touchableOpacityListItem}
+							style={{ padding: 2, marginBottom: 20 }}
 						>
 							<Text style={buttonStyle.touchableOpacityText}>
 								{storage.title}
@@ -104,17 +103,19 @@ const CompanyStorageList = () => {
 							>
 								{getStorageName(storage.typeName)}
 							</Text>
-							<Text>Bendruomene: {storage.communityName}</Text>
-							<Text>
+							<Text style={{ marginVertical: 10 }}>
+								Bendruomene: {storage.communityName}
+							</Text>
+							<Text style={{ marginBottom: 10 }}>
 								Pridėta: {storage.dateAdded.split('T')[0]}
 							</Text>
-							<Text>
+							<Text style={{ marginBottom: 10 }}>
 								Paskutinė valymo data:{' '}
 								{storage.lastCleaningDate
 									? storage.lastCleaningDate.split('T')[0]
 									: 'Nėra informacijos'}
 							</Text>
-							<Text>
+							<Text style={{ marginBottom: 10 }}>
 								Paskutinis techninis tvarkymas:{' '}
 								{storage.lastMaintenanceDate
 									? storage.lastMaintenanceDate.split('T')[0]
@@ -125,45 +126,25 @@ const CompanyStorageList = () => {
 									{errorMsg}
 								</Text>
 							)}
-							<View style={mainStyle.inline}>
-								<TouchableOpacity
-									style={[
-										buttonStyle.submitColorfulButton,
-										{ width: '40%' },
-									]}
-									onPress={() =>
+							<View style={[mainStyle.inline, { marginTop: 20 }]}>
+								<GradientButton
+									onSubmit={() =>
 										navigation.navigate('AddStorage', {
 											communityId: storage.communityId,
 											storage: storage,
 											adminAdd: true,
 										})
 									}
-								>
-									<Text
-										style={
-											buttonStyle.submitColorfulButtonText
-										}
-									>
-										Redaguoti
-									</Text>
-								</TouchableOpacity>
-								<TouchableOpacity
-									style={[
-										buttonStyle.submitColorfulButton,
-										{ width: '40%' },
-									]}
-									onPress={() => handleDelete(storage.id)}
-								>
-									<Text
-										style={
-											buttonStyle.submitColorfulButtonText
-										}
-									>
-										Šalinti
-									</Text>
-								</TouchableOpacity>
+									label="Redaguoti"
+									style={{ width: '40%' }}
+								/>
+								<GradientButton
+									onSubmit={() => handleDelete(storage.id)}
+									label="Šalinti"
+									style={{ width: '40%' }}
+								/>
 							</View>
-						</View>
+						</GradientBorderView>
 					))
 				) : (
 					<Text>

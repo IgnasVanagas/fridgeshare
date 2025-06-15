@@ -1,20 +1,13 @@
-import React, { useState } from 'react';
-import {
-	Text,
-	TextInput,
-	TouchableOpacity,
-	View,
-	Alert,
-	ScrollView,
-	SafeAreaView,
-} from 'react-native';
+import { useState } from 'react';
+import { Text, TextInput, Alert, ScrollView, SafeAreaView } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
 import { API_BASE_URL } from '@/api_config';
 import mainStyle from '@/styles/styles';
-import buttonStyle from '@/styles/buttons';
 import { useAuth } from '@/context/authContext';
 import { StatusBar } from 'expo-status-bar';
+import GradientBorderView from '@/components/gradientBorderView';
+import GradientButton from '@/components/gradientButton';
 
 const CreateCommunity = () => {
 	const navigation = useNavigation();
@@ -58,7 +51,7 @@ const CreateCommunity = () => {
 				<Text style={mainStyle.styledH1}>
 					Sukurti naują bendruomenę
 				</Text>
-				<View style={mainStyle.form}>
+				<GradientBorderView style={{ width: '80%' }}>
 					<Text>Pavadinimas</Text>
 					<TextInput
 						placeholder="Pavadinimas"
@@ -66,7 +59,7 @@ const CreateCommunity = () => {
 						value={title}
 						onChangeText={setTitle}
 					/>
-					<Text>Aprašymas</Text>
+					<Text style={{ marginTop: 20 }}>Aprašymas</Text>
 					<TextInput
 						placeholder="Aprašymas"
 						style={[
@@ -78,16 +71,11 @@ const CreateCommunity = () => {
 						value={description}
 						onChangeText={setDescription}
 					/>
-
-					<TouchableOpacity
-						style={buttonStyle.submitColorfulButton}
-						onPress={handleCreateCommunity}
-					>
-						<Text style={buttonStyle.submitColorfulButtonText}>
-							Sukurti
-						</Text>
-					</TouchableOpacity>
-				</View>
+					<GradientButton
+						onSubmit={handleCreateCommunity}
+						label="Sukurti"
+					/>
+				</GradientBorderView>
 			</SafeAreaView>
 		</ScrollView>
 	);

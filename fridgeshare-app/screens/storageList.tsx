@@ -9,10 +9,12 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect, useState } from 'react';
-import { TouchableOpacity, View } from 'react-native';
+import { View } from 'react-native';
 import { SafeAreaView, ScrollView, Text } from 'react-native';
 import { Storage } from '@/constants/storage';
 import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
+import GradientButton from '@/components/gradientButton';
+import GradientBorderView from '@/components/gradientBorderView';
 
 type Props = NativeStackScreenProps<ParamList, 'StorageList'>;
 const storageNameInLithuanian: { [key: string]: string } = {
@@ -118,28 +120,17 @@ const StorageList = ({ route }: Props) => {
 				<Text style={mainStyle.styledH1}>Visos saugojimo vietos</Text>
 
 				{isAdmin && (
-					<TouchableOpacity
-						style={[
-							buttonStyle.submitColorfulButton,
-							mainStyle.inline,
-							{ marginBottom: '2%', paddingHorizontal: 5 },
-						]}
-						onPress={() =>
+					<GradientButton
+						onSubmit={() =>
 							navigation.navigate('AddStorage', {
 								communityId: communityId,
 							})
 						}
-					>
-						<Feather
-							name="plus"
-							size={20}
-							color={colors.white}
-							style={{ paddingLeft: 8 }}
-						/>
-						<Text style={buttonStyle.submitColorfulButtonText}>
-							Pridėti maisto laikymo vietą
-						</Text>
-					</TouchableOpacity>
+						label="Pridėti maisto laikymo vietą"
+						IconLibrary={Feather}
+						iconName="plus"
+						style={{ paddingHorizontal: 5, width: '85%' }}
+					/>
 				)}
 
 				{storages.length > 0 && (
@@ -168,12 +159,9 @@ const StorageList = ({ route }: Props) => {
 				)}
 				{storages.length > 0 ? (
 					storages.map((storage) => (
-						<View
+						<GradientBorderView
 							key={storage.id}
-							style={[
-								buttonStyle.touchableOpacityListItem,
-								{ marginBottom: '7%' },
-							]}
+							style={{ marginBottom: '7%', width: '85%' }}
 						>
 							<View>
 								<View
@@ -247,22 +235,12 @@ const StorageList = ({ route }: Props) => {
 											width: '35%',
 										}}
 									>
-										<TouchableOpacity
-											style={
-												buttonStyle.submitColorfulButton
-											}
-											onPress={() =>
+										<GradientButton
+											onSubmit={() =>
 												handleCleaned(storage)
 											}
-										>
-											<Text
-												style={
-													buttonStyle.submitColorfulButtonText
-												}
-											>
-												Išvalytas
-											</Text>
-										</TouchableOpacity>
+											label="Išvalytas"
+										/>
 									</View>
 									{!storage.needsMaintenance && (
 										<View
@@ -270,24 +248,14 @@ const StorageList = ({ route }: Props) => {
 												width: '35%',
 											}}
 										>
-											<TouchableOpacity
-												style={
-													buttonStyle.submitColorfulButton
-												}
-												onPress={() =>
+											<GradientButton
+												label="Reikia taisyti"
+												onSubmit={() =>
 													handleNeedsMaintenance(
 														storage
 													)
 												}
-											>
-												<Text
-													style={
-														buttonStyle.submitColorfulButtonText
-													}
-												>
-													Reikia taisyti
-												</Text>
-											</TouchableOpacity>
+											/>
 										</View>
 									)}
 								</View>
@@ -302,11 +270,8 @@ const StorageList = ({ route }: Props) => {
 											width: '35%',
 										}}
 									>
-										<TouchableOpacity
-											style={
-												buttonStyle.submitColorfulButton
-											}
-											onPress={() =>
+										<GradientButton
+											onSubmit={() =>
 												navigation.navigate(
 													'AddStorage',
 													{
@@ -316,37 +281,20 @@ const StorageList = ({ route }: Props) => {
 													}
 												)
 											}
-										>
-											<Text
-												style={
-													buttonStyle.submitColorfulButtonText
-												}
-											>
-												Redaguoti
-											</Text>
-										</TouchableOpacity>
+											label="Redaguoti"
+										/>
 									</View>
 									<View
 										style={{
 											width: '35%',
 										}}
 									>
-										<TouchableOpacity
-											style={
-												buttonStyle.submitColorfulButton
-											}
-											onPress={() =>
+										<GradientButton
+											onSubmit={() =>
 												handleDelete(storage.id)
 											}
-										>
-											<Text
-												style={
-													buttonStyle.submitColorfulButtonText
-												}
-											>
-												Pašalinti
-											</Text>
-										</TouchableOpacity>
+											label="Pašalinti"
+										/>
 									</View>
 								</View>
 								{deleteErrorId &&
@@ -356,7 +304,7 @@ const StorageList = ({ route }: Props) => {
 										</Text>
 									)}
 							</View>
-						</View>
+						</GradientBorderView>
 					))
 				) : (
 					<Text>Nėra pridėtų maisto saugojimo vietų.</Text>

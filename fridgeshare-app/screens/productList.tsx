@@ -1,13 +1,15 @@
-import GreenSubmitButton from '@/components/submitButton';
 import colors from '@/constants/colors';
 import mainStyle from '@/styles/styles';
-import { SafeAreaView, Text, View } from 'react-native';
+import { SafeAreaView, Text, View, Image } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { useEffect, useState } from 'react';
 import { API_BASE_URL } from '@/api_config';
 import axios from 'axios';
 import { useAuth } from '@/context/authContext';
 import { Picker } from '@react-native-picker/picker';
+import categoriesImages from '@/constants/categoriesImages';
+import GradientButton from '@/components/gradientButton';
+import GradientBorderView from '@/components/gradientBorderView';
 
 type Product = {
 	id: string;
@@ -18,6 +20,7 @@ type Product = {
 	typeOfMeasurement: number;
 	typeOfMeasurementName: string;
 	quantity: number;
+	quantityLeft: number;
 	inStock: boolean;
 	storageId: string;
 	storageTitle: string;
@@ -93,25 +96,14 @@ const ListOfProducts = () => {
 
 			try {
 				setLoading(true);
-				console.log(
-					'Fetching storages for community:',
-					selectedCommunity
-				);
 				const storagesResponse = await axios.get(
 					`${API_BASE_URL}/storages/community/${selectedCommunity}`
 				);
-				console.log('Storages response:', storagesResponse.data);
 				const storages = storagesResponse.data;
-				console.log(
-					`Found ${storages.length} storages in community ${selectedCommunity}`
-				);
 
 				const allProducts: Product[] = [];
 				for (const storage of storages) {
 					try {
-						console.log(
-							`Fetching details for storage: ${storage.id} (${storage.title})`
-						);
 						const storageDetailsResponse = await axios.get(
 							`${API_BASE_URL}/storages/${storage.id}`
 						);
@@ -121,14 +113,8 @@ const ListOfProducts = () => {
 							storageDetails.products &&
 							storageDetails.products.length > 0
 						) {
-							console.log(
-								`Found ${storageDetails.products.length} products in storage ${storage.title}`
-							);
 							allProducts.push(...storageDetails.products);
 						} else {
-							console.log(
-								`No products found in storage ${storage.title}`
-							);
 						}
 					} catch (storageErr) {
 						console.error(
@@ -137,19 +123,6 @@ const ListOfProducts = () => {
 						);
 						continue;
 					}
-				}
-
-				console.log(
-					`Total products found in community ${selectedCommunity}: ${allProducts.length}`
-				);
-				if (allProducts.length > 0) {
-					console.log(
-						'Products found:',
-						allProducts.map(
-							(p) =>
-								`${p.title} (${p.quantity} ${p.typeOfMeasurementName})`
-						)
-					);
 				}
 				setProducts(allProducts);
 				setLoading(false);
@@ -214,16 +187,7 @@ const ListOfProducts = () => {
 					<Picker
 						selectedValue={selectedCommunity}
 						onValueChange={(value) => setSelectedCommunity(value)}
-						itemStyle={{ color: colors.black }}
-						// style={{
-						// 	width: '100%',
-						// 	height: 50,
-						// 	backgroundColor: colors.white,
-						// 	borderRadius: 5,
-						// 	borderWidth: 1,
-						// 	borderColor: colors.brandGreen,
-						// 	color: colors.black,
-						// }}
+						itemStyle={[{ color: colors.black }]}
 					>
 						{communities.map((community) => (
 							<Picker.Item
@@ -251,77 +215,89 @@ const ListOfProducts = () => {
 					</View>
 				) : (
 					products.map((product) => (
-						<View
+						<GradientBorderView
 							key={product.id}
 							style={{
-								borderColor: colors.brandGreen,
-								borderStyle: 'solid',
-								borderWidth: 1,
-								padding: 15,
-								width: '90%',
-								borderRadius: 15,
-								marginBottom: 15,
+								marginBottom: 20,
 							}}
 						>
-							<Text
-								style={{
-									textAlign: 'center',
-									fontSize: 16,
-									fontWeight: 'bold',
-									color: colors.brandGreen,
-								}}
-							>
-								{product.title}
-							</Text>
-							{product.description && (
-								<Text>{product.description}</Text>
-							)}
-							<View
-								style={{
-									marginTop: 15,
-								}}
-							>
-								{product.boughtOn && (
-									<Text>
-										Pirkimo data:{' '}
-										{product.boughtOn.split('T')[0]}
+							<View style={{ flexDirection: 'row' }}>
+								<Image
+									source={categoriesImages[product.category]}
+									style={{ width: 150, height: 150 }}
+								/>
+
+								<View style={{ flex: 1 }}>
+									<Text
+										style={{
+											textAlign: 'left',
+											fontSize: 16,
+											fontWeight: 'bold',
+											color: colors.brandGreen,
+										}}
+									>
+										{product.title}
 									</Text>
-								)}
-								{product.preparationDate && (
-									<Text>
-										Pagaminimo data:{' '}
-										{product.preparationDate.split('T')[0]}
-									</Text>
-								)}
-								{product.expiryDate && (
-									<Text>
-										Galioja iki:{' '}
-										{product.expiryDate.split('T')[0]}
-									</Text>
-								)}
+									{/* {product.description && (
+										<Text>{product.description}</Text>
+									)} */}
+									<View
+										style={{
+											marginTop: 15,
+										}}
+									>
+										{product.boughtOn && (
+											<Text>
+												Pirkimo data:{' '}
+												{product.boughtOn.split('T')[0]}
+											</Text>
+										)}
+										{product.preparationDate && (
+											<Text>
+												Pagaminimo data:{' '}
+												{
+													product.preparationDate.split(
+														'T'
+													)[0]
+												}
+											</Text>
+										)}
+										{product.expiryDate && (
+											<Text>
+												Galioja iki:{' '}
+												{
+													product.expiryDate.split(
+														'T'
+													)[0]
+												}
+											</Text>
+										)}
+									</View>
+									<View
+										style={
+											product.boughtOn ||
+											product.preparationDate ||
+											product.expiryDate
+												? { marginTop: 15 }
+												: {}
+										}
+									>
+										<Text>
+											Likutis: {product.quantity}{' '}
+											{product.typeOfMeasurementName}
+										</Text>
+										{/* <Text>
+												Sandėliavimo vieta:
+												{product.storageTitle}
+											</Text> */}
+									</View>
+								</View>
 							</View>
-							<View
-								style={
-									product.boughtOn ||
-									product.preparationDate ||
-									product.expiryDate
-										? { marginTop: 15 }
-										: {}
-								}
-							>
-								<Text>
-									Likutis: {product.quantity}{' '}
-									{product.typeOfMeasurementName}
-								</Text>
-								<Text>
-									Sandėliavimo vieta: {product.storageTitle}
-								</Text>
-							</View>
-							<GreenSubmitButton
-								onPress={() => onTakeProduct(product)}
+							<GradientButton
+								onSubmit={() => onTakeProduct(product)}
 								label="Paimti šį produktą"
 							/>
-						</View>
+						</GradientBorderView>
 					))
 				)}
 			</SafeAreaView>

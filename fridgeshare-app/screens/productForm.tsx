@@ -20,7 +20,6 @@ import { Picker } from '@react-native-picker/picker';
 import colors from '@/constants/colors';
 import measurementOptions from '@/constants/measurementOptions';
 import categories from '@/constants/categories';
-import GreenSubmitButton from '@/components/submitButton';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { API_BASE_URL } from '@/api_config';
 import axios from 'axios';
@@ -29,6 +28,8 @@ import { useRoute, RouteProp } from '@react-navigation/native';
 import { ParamList } from '@/constants/paramList';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import GradientButton from '@/components/gradientButton';
+import GradientBorderView from '@/components/gradientBorderView';
 
 type Storage = {
 	id: string;
@@ -49,9 +50,9 @@ type Community = {
 type FormValues = {
 	title: string;
 	description: string;
-	dateBought?: Date;
-	dateMade?: Date;
-	expiryDate?: Date;
+	dateBought?: Date | null;
+	dateMade?: Date | null;
+	expiryDate?: Date | null;
 	quantity: number;
 	selectedMeasurement: number;
 	selectedCategory: number;
@@ -119,7 +120,7 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 			.min(0.001, 'Reikia įvesti kiekį, kuris yra didesnis nei 0.001')
 			.required('Privaloma!'),
 		selectedMeasurement: yup.number().min(0).max(4).required(),
-		selectedCategory: yup.number().min(1).max(11).required(),
+		selectedCategory: yup.number().min(0).max(11).required(),
 		selectedStorage: yup
 			.string()
 			.required('Privaloma pasirinkti sandėliavimą!'),
@@ -133,12 +134,12 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 		initialValues: existingProduct || {
 			title: '',
 			description: '',
-			dateBought: new Date(),
-			dateMade: new Date(),
-			expiryDate: new Date(),
+			dateBought: null,
+			dateMade: null,
+			expiryDate: null,
 			quantity: 0,
 			selectedMeasurement: 0, // Change from 1 to 0
-			selectedCategory: 1,
+			selectedCategory: 0,
 			selectedStorage: '',
 			selectedTags: [],
 			selectedCommunity: communityId || 0,
@@ -204,27 +205,16 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 						: null,
 				};
 
-				console.log('Sending data to API:', dataToSend);
 				const response = await axios.post(
 					`${API_BASE_URL}/products`,
 					dataToSend
 				);
-				console.log('API Response:', response.data);
 
 				try {
-					console.log(
-						'Verifying product was added to storage:',
-						values.selectedStorage
-					);
-
 					await new Promise((resolve) => setTimeout(resolve, 1000));
 
 					const storageResponse = await axios.get(
 						`${API_BASE_URL}/storages/${values.selectedStorage}`
-					);
-					console.log(
-						'Storage details response:',
-						JSON.stringify(storageResponse.data, null, 2)
 					);
 					const storageDetails = storageResponse.data;
 
@@ -342,7 +332,6 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 		const fetchData = async () => {
 			try {
 				setLoading(true);
-				// console.log('Fetching communities for user:', id);
 
 				const communitiesResponse = await axios.get(
 					`${API_BASE_URL}/usercommunity/user/${id}`
@@ -351,18 +340,8 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 					`${API_BASE_URL}/community/user/${id}`
 				);
 
-				// console.log(
-				// 	'Raw joined communities response:',
-				// 	JSON.stringify(communitiesResponse.data, null, 2)
-				// );
-				// console.log(
-				// 	'Raw managed communities response:',
-				// 	JSON.stringify(managedCommunitiesResponse.data, null, 2)
-				// );
-
 				const joinedCommunities = communitiesResponse.data.map(
 					(uc: any) => {
-						// console.log('Processing joined community:', uc);
 						return {
 							id: uc.communityId,
 							title: uc.communityTitle,
@@ -372,7 +351,6 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 
 				const managedCommunities = managedCommunitiesResponse.data.map(
 					(c: any) => {
-						// console.log('Processing managed community:', c);
 						return {
 							id: c.id,
 							title: c.title,
@@ -384,7 +362,6 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 					...managedCommunities,
 					...joinedCommunities,
 				];
-				// console.log('Final communities array:', allCommunities);
 
 				if (allCommunities.length === 0) {
 					setError(
@@ -400,7 +377,6 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 					const storagesResponse = await axios.get(
 						`${API_BASE_URL}/storages/community/${communityId}`
 					);
-					console.log(storagesResponse.data);
 
 					const tagsResponse = await axios.get(
 						`${API_BASE_URL}/tags/community/${communityId}`
@@ -521,7 +497,7 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 					<SafeAreaView
 						style={[mainStyle.container2, { padding: 0 }]}
 					>
-						<View style={mainStyle.form}>
+						<GradientBorderView>
 							<View style={style.pickerContainer}>
 								<Text>Bendruomenė:</Text>
 								<Picker
@@ -594,7 +570,9 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 												value
 											)
 										}
-										itemStyle={{ color: colors.black }}
+										itemStyle={{
+											color: colors.black,
+										}}
 										// style={style.picker}
 									>
 										{storages.map((storage) => (
@@ -663,52 +641,65 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 								/>
 							</View>
 							{isBought && (
-								<View
-									style={[
-										mainStyle.inline,
-										style.dateInputView,
-									]}
-								>
-									<Text>Pirkimo data:</Text>
-									<TouchableOpacity
-										onPress={() =>
-											setShowDatePicker((prev) => ({
-												...prev,
-												dateBought: true,
-											}))
-										}
+								<View>
+									<View
+										style={[
+											mainStyle.inline,
+											style.dateInputView,
+										]}
 									>
-										<Text>
-											{formik.values.dateBought
-												? formik.values.dateBought.toLocaleDateString()
-												: 'Pasirinkti datą'}
-										</Text>
-									</TouchableOpacity>
-									{showDatePicker.dateBought && (
-										<DateTimePicker
-											value={
-												formik.values.dateBought ||
-												todaysDate
-											}
-											mode="date"
-											onChange={(event, selectedDate) => {
+										<Text>Pirkimo data:</Text>
+										<TouchableOpacity
+											onPress={() =>
 												setShowDatePicker((prev) => ({
 													...prev,
-													dateBought: false,
-												}));
-												if (
-													event.type !==
-														'dismissed' &&
-													selectedDate
-												) {
-													formik.setFieldValue(
-														'dateBought',
-														selectedDate
-													);
+													dateBought: true,
+												}))
+											}
+										>
+											<Text>
+												{formik.values.dateBought
+													? formik.values.dateBought.toLocaleDateString()
+													: 'Pasirinkti datą'}
+											</Text>
+										</TouchableOpacity>
+										{showDatePicker.dateBought && (
+											<DateTimePicker
+												value={
+													formik.values.dateBought ||
+													todaysDate
 												}
-											}}
-										/>
-									)}
+												mode="date"
+												onChange={(
+													event,
+													selectedDate
+												) => {
+													setShowDatePicker(
+														(prev) => ({
+															...prev,
+															dateBought: false,
+														})
+													);
+													if (
+														event.type !==
+															'dismissed' &&
+														selectedDate
+													) {
+														formik.setFieldValue(
+															'dateBought',
+															selectedDate
+														);
+													}
+												}}
+											/>
+										)}
+									</View>
+									{formik.touched.dateBought &&
+										formik.errors.dateBought && (
+											<Text style={{ color: colors.red }}>
+												{formik.errors.dateBought}
+											</Text>
+										)}
 								</View>
 							)}
 
@@ -722,52 +713,65 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 								/>
 							</View>
 							{isMade && (
-								<View
-									style={[
-										mainStyle.inline,
-										style.dateInputView,
-									]}
-								>
-									<Text>Pagaminimo data:</Text>
-									<TouchableOpacity
-										onPress={() =>
-											setShowDatePicker((prev) => ({
-												...prev,
-												dateMade: true,
-											}))
-										}
+								<View>
+									<View
+										style={[
+											mainStyle.inline,
+											style.dateInputView,
+										]}
 									>
-										<Text>
-											{formik.values.dateMade
-												? formik.values.dateMade.toLocaleDateString()
-												: 'Pasirinkti datą'}
-										</Text>
-									</TouchableOpacity>
-									{showDatePicker.dateMade && (
-										<DateTimePicker
-											value={
-												formik.values.dateMade ||
-												todaysDate
-											}
-											mode="date"
-											onChange={(event, selectedDate) => {
+										<Text>Pagaminimo data:</Text>
+										<TouchableOpacity
+											onPress={() =>
 												setShowDatePicker((prev) => ({
 													...prev,
-													dateMade: false,
-												}));
-												if (
-													event.type !==
-														'dismissed' &&
-													selectedDate
-												) {
-													formik.setFieldValue(
-														'dateMade',
-														selectedDate
-													);
+													dateMade: true,
+												}))
+											}
+										>
+											<Text>
+												{formik.values.dateMade
+													? formik.values.dateMade.toLocaleDateString()
+													: 'Pasirinkti datą'}
+											</Text>
+										</TouchableOpacity>
+										{showDatePicker.dateMade && (
+											<DateTimePicker
+												value={
+													formik.values.dateMade ||
+													todaysDate
 												}
-											}}
-										/>
-									)}
+												mode="date"
+												onChange={(
+													event,
+													selectedDate
+												) => {
+													setShowDatePicker(
+														(prev) => ({
+															...prev,
+															dateMade: false,
+														})
+													);
+													if (
+														event.type !==
+															'dismissed' &&
+														selectedDate
+													) {
+														formik.setFieldValue(
+															'dateMade',
+															selectedDate
+														);
+													}
+												}}
+											/>
+										)}
+									</View>
+									{formik.touched.dateMade &&
+										formik.errors.dateMade && (
+											<Text style={{ color: colors.red }}>
+												{formik.errors.dateMade}
+											</Text>
+										)}
 								</View>
 							)}
 
@@ -804,11 +808,11 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 											}))
 										}
 									>
-										{/* <Text>
+										<Text>
 											{formik.values.expiryDate
 												? formik.values.expiryDate.toLocaleDateString()
 												: 'Pasirinkti datą'}
-										</Text> */}
+										</Text>
 									</TouchableOpacity>
 									{showDatePicker.expiryDate && (
 										<DateTimePicker
@@ -898,12 +902,11 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 									))}
 								</Picker>
 							</View>
-
-							<GreenSubmitButton
-								onPress={formik.handleSubmit}
+							<GradientButton
+								onSubmit={() => formik.handleSubmit()}
 								label="Pridėti produktą"
 							/>
-						</View>
+						</GradientBorderView>
 					</SafeAreaView>
 				</ScrollView>
 			</KeyboardAvoidingView>

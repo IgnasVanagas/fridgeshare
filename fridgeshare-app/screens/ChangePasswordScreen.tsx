@@ -1,13 +1,13 @@
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth } from '@/context/authContext';
 import mainStyle from '@/styles/styles';
-import buttonStyle from '@/styles/buttons';
 import { StatusBar } from 'expo-status-bar';
 import axios from 'axios';
 import { API_BASE_URL } from '@/api_config';
+import GradientButton from '@/components/gradientButton';
 
 const ChangePasswordScreen = () => {
 	const navigation = useNavigation();
@@ -48,25 +48,18 @@ const ChangePasswordScreen = () => {
 					value={oldPassword}
 					onChangeText={setOldPassword}
 				/>
-				<Text>Naujas slaptažodis</Text>
+				<Text style={{ marginTop: 20 }}>Naujas slaptažodis</Text>
 				<TextInput
 					style={mainStyle.formInput}
 					secureTextEntry
 					value={newPassword}
 					onChangeText={setNewPassword}
 				/>
-
-				<TouchableOpacity
-					style={[
-						buttonStyle.submitColorfulButton,
-						{ marginTop: 20 },
-					]}
-					onPress={handleChangePassword}
-				>
-					<Text style={buttonStyle.submitColorfulButtonText}>
-						Išsaugoti
-					</Text>
-				</TouchableOpacity>
+				<GradientButton
+					onSubmit={handleChangePassword}
+					label="Išsaugoti"
+					style={{ marginTop: 20 }}
+				/>
 			</View>
 		</SafeAreaView>
 	);

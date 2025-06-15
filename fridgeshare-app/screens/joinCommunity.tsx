@@ -1,6 +1,7 @@
 import { API_BASE_URL } from '@/api_config';
 import FormTextInput from '@/components/formTextInput';
-import GreenSubmitButton from '@/components/submitButton';
+import GradientBorderView from '@/components/gradientBorderView';
+import GradientButton from '@/components/gradientButton';
 import { useAuth } from '@/context/authContext';
 import mainStyle from '@/styles/styles';
 import { useNavigation } from '@react-navigation/native';
@@ -62,21 +63,23 @@ const JoinCommunity = () => {
 				<Text style={mainStyle.styledH1}>
 					Prisijungti prie bendruomenės
 				</Text>
-				<View style={mainStyle.form}>
-					<FormTextInput
-						label="Prisijungimo kodas"
-						error={formik.errors.code}
-						touched={formik.touched.code}
-						placeholder=""
-						onChangeText={formik.handleChange('code')}
-						onBlur={formik.handleBlur('code')}
-						value={formik.values.code}
-					/>
-					<GreenSubmitButton
-						label="Prisijungti prie bendruomenės"
-						onPress={() => formik.handleSubmit()}
-					/>
-				</View>
+				<GradientBorderView style={{ width: '80%' }}>
+					<View>
+						<FormTextInput
+							label="Prisijungimo kodas"
+							error={formik.errors.code}
+							touched={formik.touched.code}
+							placeholder=""
+							onChangeText={formik.handleChange('code')}
+							onBlur={formik.handleBlur('code')}
+							value={formik.values.code}
+						/>
+						<GradientButton
+							onSubmit={() => formik.handleSubmit()}
+							label="Prisijungti prie bendruomenės"
+						/>
+					</View>
+				</GradientBorderView>
 			</SafeAreaView>
 		</ScrollView>
 	);

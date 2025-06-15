@@ -4,6 +4,7 @@ import {
 	View,
 	Text,
 	TouchableOpacity,
+	StyleSheet,
 } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { ParamList } from '@/constants/paramList';
@@ -16,6 +17,7 @@ import { API_BASE_URL } from '@/api_config';
 import { useAuth } from '@/context/authContext';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import colors from '@/constants/colors';
+import GradientBorderView from '@/components/gradientBorderView';
 
 type Props = NativeStackScreenProps<ParamList, 'AllUsersList'>;
 interface UserCommunityResponse {
@@ -81,19 +83,18 @@ const AllUsersList = ({ route }: Props) => {
 						<TouchableOpacity
 							onPress={handleLeaveCommunity}
 							style={{
-								backgroundColor: 'orange',
+								backgroundColor: colors.lightGrey,
 								marginBottom: '5%',
 								padding: 10,
-								borderRadius: 5,
+								borderRadius: 10,
 								alignItems: 'center',
-								width: '50%',
+								width: '85%',
 							}}
 						>
 							<View style={[mainStyle.inline, { width: '100%' }]}>
 								<Text
 									style={{
 										color: 'white',
-										fontWeight: 'bold',
 									}}
 								>
 									Palikti bendruomenę
@@ -109,19 +110,12 @@ const AllUsersList = ({ route }: Props) => {
 
 				{acceptedMembers.length > 0 ? (
 					acceptedMembers.map((member) => (
-						<View
+						<GradientBorderView
+							style={styles.memberView}
 							key={member.userId}
-							style={{
-								borderWidth: 1,
-								borderColor: colors.brandGreen,
-								padding: 10,
-								marginBottom: '4%',
-								borderRadius: 10,
-								width: '80%',
-							}}
 						>
 							<Text style={{ marginBottom: '3%' }}>
-								Vartotojas: {member.username ?? 'Nežinomas'}
+								{member.username ?? 'Nežinomas'}
 							</Text>
 							<Text>
 								Prisijungė:{' '}
@@ -129,7 +123,7 @@ const AllUsersList = ({ route }: Props) => {
 									member.dateJoined!
 								).toLocaleDateString()}
 							</Text>
-						</View>
+						</GradientBorderView>
 					))
 				) : (
 					<Text style={{ marginTop: 5 }}>
@@ -142,3 +136,11 @@ const AllUsersList = ({ route }: Props) => {
 };
 
 export default AllUsersList;
+
+const styles = StyleSheet.create({
+	memberView: {
+		marginBottom: '4%',
+		width: '85%',
+		padding: 1,
+	},
+});
