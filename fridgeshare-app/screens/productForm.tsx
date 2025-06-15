@@ -146,7 +146,6 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 		},
 		validationSchema: AddProductValidation,
 		onSubmit: async (values) => {
-			console.log(values);
 			try {
 				if (!values.title) {
 					setError('Privaloma įvesti produkto pavadinimą');
@@ -206,27 +205,16 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 						: null,
 				};
 
-				console.log('Sending data to API:', dataToSend);
 				const response = await axios.post(
 					`${API_BASE_URL}/products`,
 					dataToSend
 				);
-				console.log('API Response:', response.data);
 
 				try {
-					console.log(
-						'Verifying product was added to storage:',
-						values.selectedStorage
-					);
-
 					await new Promise((resolve) => setTimeout(resolve, 1000));
 
 					const storageResponse = await axios.get(
 						`${API_BASE_URL}/storages/${values.selectedStorage}`
-					);
-					console.log(
-						'Storage details response:',
-						JSON.stringify(storageResponse.data, null, 2)
 					);
 					const storageDetails = storageResponse.data;
 
@@ -389,7 +377,6 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 					const storagesResponse = await axios.get(
 						`${API_BASE_URL}/storages/community/${communityId}`
 					);
-					console.log(storagesResponse.data);
 
 					const tagsResponse = await axios.get(
 						`${API_BASE_URL}/tags/community/${communityId}`

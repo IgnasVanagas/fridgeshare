@@ -11,15 +11,6 @@ const buttonStyle = StyleSheet.create({
 		color: colors.white,
 		margin: 10,
 	},
-	whiteButton: {
-		borderColor: colors.brandGreen,
-		borderStyle: 'solid',
-		borderWidth: 1,
-		padding: 15,
-		width: '90%',
-		borderRadius: 15,
-		marginBottom: 15,
-	},
 	redButtonCancel: {
 		backgroundColor: colors.red,
 		borderStyle: 'solid',
@@ -41,13 +32,6 @@ const buttonStyle = StyleSheet.create({
 		fontSize: 16,
 		fontWeight: 'bold',
 		color: colors.brandGreen,
-	},
-	greenBorder: {
-		borderColor: colors.brandGreen,
-		borderStyle: 'solid',
-		borderRadius: 10,
-		borderWidth: 1,
-		padding: 10,
 	},
 	greenButton: {
 		backgroundColor: 'green',

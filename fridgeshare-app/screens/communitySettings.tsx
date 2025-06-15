@@ -1,5 +1,4 @@
 import colors from '@/constants/colors';
-import buttonStyle from '@/styles/buttons';
 import mainStyle from '@/styles/styles';
 import { StatusBar } from 'expo-status-bar';
 import {

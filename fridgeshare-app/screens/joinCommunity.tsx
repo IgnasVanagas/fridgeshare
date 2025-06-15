@@ -2,7 +2,6 @@ import { API_BASE_URL } from '@/api_config';
 import FormTextInput from '@/components/formTextInput';
 import GradientBorderView from '@/components/gradientBorderView';
 import GradientButton from '@/components/gradientButton';
-import GreenSubmitButton from '@/components/submitButton';
 import { useAuth } from '@/context/authContext';
 import mainStyle from '@/styles/styles';
 import { useNavigation } from '@react-navigation/native';

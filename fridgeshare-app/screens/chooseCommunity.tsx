@@ -30,7 +30,6 @@ const ChooseCommunityToCreateStorage = () => {
 					.get(`${API_BASE_URL}/community`)
 					.then(function (response) {
 						setCommunities(response.data);
-						console.log(response.data);
 					})
 					.catch(function (error) {
 						console.log(error);

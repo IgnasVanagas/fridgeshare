@@ -13,7 +13,6 @@ import { useEffect, useState } from 'react';
 import { API_BASE_URL } from '@/api_config';
 import axios from 'axios';
 import buttonStyle from '@/styles/buttons';
-import colors from '@/constants/colors';
 import GradientBorderView from '@/components/gradientBorderView';
 
 interface UserCommunityResponse {

@@ -21,9 +21,6 @@ const mainStyle = StyleSheet.create({
 		alignItems: 'center',
 		backgroundColor: colors.white,
 	},
-	text: {
-		color: colors.black,
-	},
 	welcomeSign: {
 		color: colors.brandGreen,
 		fontSize: 50,
@@ -41,14 +38,6 @@ const mainStyle = StyleSheet.create({
 		fontWeight: 'bold',
 		marginBottom: 12,
 		color: colors.brandGreen,
-	},
-	form: {
-		borderStyle: 'solid',
-		borderColor: colors.brandGreen,
-		borderWidth: 2,
-		padding: '5%',
-		borderRadius: 15,
-		width: '80%',
 	},
 	authForm: {
 		padding: '5%',
@@ -95,9 +84,6 @@ const mainStyle = StyleSheet.create({
 	link: {
 		textDecorationLine: 'underline',
 		color: colors.brandGreen,
-	},
-	section: {
-		marginBottom: 24,
 	},
 });
 

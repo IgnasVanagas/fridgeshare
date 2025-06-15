@@ -7,7 +7,7 @@ import buttonStyle from '@/styles/buttons';
 import mainStyle from '@/styles/styles';
 import axios from 'axios';
 import { useFocusEffect } from 'expo-router';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useState } from 'react';
 import {
 	SafeAreaView,
 	ScrollView,
@@ -26,7 +26,6 @@ const SentOutRequestList = () => {
 				await axios
 					.get(`${API_BASE_URL}/usercommunity/user/request/${id}`)
 					.then(function (response) {
-						console.log(response.data);
 						setRequestList(response.data);
 					})
 					.catch(function (error) {

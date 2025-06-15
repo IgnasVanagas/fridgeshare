@@ -70,7 +70,6 @@ const SignupScreen = () => {
 		},
 		validationSchema: signUpValidation,
 		onSubmit: async (values: Record<string, string>) => {
-			console.log(values);
 			await axios
 				.post(
 					`${API_BASE_URL}/user`,

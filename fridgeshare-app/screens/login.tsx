@@ -39,7 +39,6 @@ const LoginScreen = () => {
 		initialValues: { username: initialUsername, password: initialPassword },
 		validationSchema: loginValidation,
 		onSubmit: async (values: Record<string, string>) => {
-			console.log(values);
 			await axios
 				.post(
 					`${API_BASE_URL}/login`,

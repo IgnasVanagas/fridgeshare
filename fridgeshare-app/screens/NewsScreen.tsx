@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, StyleSheet } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 import { useAuth } from '@/context/authContext';
 import mainStyle from '@/styles/styles';
 import { NewsFeed } from '@/components/NewsFeed';
 import colors from '@/constants/colors';
-import { Ionicons } from '@expo/vector-icons';
 import { API_BASE_URL } from '@/api_config';
 
 interface NewsPost {

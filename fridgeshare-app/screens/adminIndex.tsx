@@ -36,7 +36,6 @@ const AdminIndex = () => {
 
 	useEffect(() => {
 		if (storages && storages.length > 0) {
-			console.log(storages);
 			const grouped = storages.reduce((acc, storage) => {
 				const { communityName } = storage;
 				if (!acc[communityName]) {
@@ -67,7 +66,6 @@ const AdminIndex = () => {
 				});
 				const filtered = storages.filter((s) => s.id !== storage.id);
 				setStorages(filtered);
-				console.log(storages);
 			} catch (e) {
 				console.log(e);
 				setErrorId(storage.id);

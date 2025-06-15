@@ -1,9 +1,8 @@
 import { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, TextInput, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import mainStyle from '@/styles/styles';
-import buttonStyle from '@/styles/buttons';
 import { useAuth } from '@/context/authContext';
 import axios from 'axios';
 import { API_BASE_URL } from '@/api_config';

@@ -1,18 +1,11 @@
 import { ParamList } from '@/constants/paramList';
-import {
-	SafeAreaView,
-	ScrollView,
-	Text,
-	View,
-	TouchableOpacity,
-} from 'react-native';
+import { SafeAreaView, ScrollView, Text, TouchableOpacity } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { StatusBar } from 'expo-status-bar';
 import mainStyle from '@/styles/styles';
 import * as yup from 'yup';
 import { useFormik } from 'formik';
 import FormTextInput from '@/components/formTextInput';
-import GreenSubmitButton from '@/components/submitButton';
 import colors from '@/constants/colors';
 import axios from 'axios';
 import { API_BASE_URL } from '@/api_config';
@@ -88,7 +81,6 @@ const TagForm = ({ route }: Props) => {
 							setError('Klaida kuriant žymą');
 						});
 				}
-				console.log(values);
 			};
 			addTag();
 		},
