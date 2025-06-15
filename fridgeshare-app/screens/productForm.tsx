@@ -120,7 +120,7 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 			.min(0.001, 'Reikia įvesti kiekį, kuris yra didesnis nei 0.001')
 			.required('Privaloma!'),
 		selectedMeasurement: yup.number().min(0).max(4).required(),
-		selectedCategory: yup.number().min(1).max(11).required(),
+		selectedCategory: yup.number().min(0).max(11).required(),
 		selectedStorage: yup
 			.string()
 			.required('Privaloma pasirinkti sandėliavimą!'),
@@ -654,52 +654,65 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 								/>
 							</View>
 							{isBought && (
-								<View
-									style={[
-										mainStyle.inline,
-										style.dateInputView,
-									]}
-								>
-									<Text>Pirkimo data:</Text>
-									<TouchableOpacity
-										onPress={() =>
-											setShowDatePicker((prev) => ({
-												...prev,
-												dateBought: true,
-											}))
-										}
+								<View>
+									<View
+										style={[
+											mainStyle.inline,
+											style.dateInputView,
+										]}
 									>
-										<Text>
-											{formik.values.dateBought
-												? formik.values.dateBought.toLocaleDateString()
-												: 'Pasirinkti datą'}
-										</Text>
-									</TouchableOpacity>
-									{showDatePicker.dateBought && (
-										<DateTimePicker
-											value={
-												formik.values.dateBought ||
-												todaysDate
-											}
-											mode="date"
-											onChange={(event, selectedDate) => {
+										<Text>Pirkimo data:</Text>
+										<TouchableOpacity
+											onPress={() =>
 												setShowDatePicker((prev) => ({
 													...prev,
-													dateBought: false,
-												}));
-												if (
-													event.type !==
-														'dismissed' &&
-													selectedDate
-												) {
-													formik.setFieldValue(
-														'dateBought',
-														selectedDate
-													);
+													dateBought: true,
+												}))
+											}
+										>
+											<Text>
+												{formik.values.dateBought
+													? formik.values.dateBought.toLocaleDateString()
+													: 'Pasirinkti datą'}
+											</Text>
+										</TouchableOpacity>
+										{showDatePicker.dateBought && (
+											<DateTimePicker
+												value={
+													formik.values.dateBought ||
+													todaysDate
 												}
-											}}
-										/>
-									)}
+												mode="date"
+												onChange={(
+													event,
+													selectedDate
+												) => {
+													setShowDatePicker(
+														(prev) => ({
+															...prev,
+															dateBought: false,
+														})
+													);
+													if (
+														event.type !==
+															'dismissed' &&
+														selectedDate
+													) {
+														formik.setFieldValue(
+															'dateBought',
+															selectedDate
+														);
+													}
+												}}
+											/>
+										)}
+									</View>
+									{formik.touched.dateBought &&
+										formik.errors.dateBought && (
+											<Text style={{ color: colors.red }}>
+												{formik.errors.dateBought}
+											</Text>
+										)}
 								</View>
 							)}
 
@@ -713,52 +726,65 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 								/>
 							</View>
 							{isMade && (
-								<View
-									style={[
-										mainStyle.inline,
-										style.dateInputView,
-									]}
-								>
-									<Text>Pagaminimo data:</Text>
-									<TouchableOpacity
-										onPress={() =>
-											setShowDatePicker((prev) => ({
-												...prev,
-												dateMade: true,
-											}))
-										}
+								<View>
+									<View
+										style={[
+											mainStyle.inline,
+											style.dateInputView,
+										]}
 									>
-										<Text>
-											{formik.values.dateMade
-												? formik.values.dateMade.toLocaleDateString()
-												: 'Pasirinkti datą'}
-										</Text>
-									</TouchableOpacity>
-									{showDatePicker.dateMade && (
-										<DateTimePicker
-											value={
-												formik.values.dateMade ||
-												todaysDate
-											}
-											mode="date"
-											onChange={(event, selectedDate) => {
+										<Text>Pagaminimo data:</Text>
+										<TouchableOpacity
+											onPress={() =>
 												setShowDatePicker((prev) => ({
 													...prev,
-													dateMade: false,
-												}));
-												if (
-													event.type !==
-														'dismissed' &&
-													selectedDate
-												) {
-													formik.setFieldValue(
-														'dateMade',
-														selectedDate
-													);
+													dateMade: true,
+												}))
+											}
+										>
+											<Text>
+												{formik.values.dateMade
+													? formik.values.dateMade.toLocaleDateString()
+													: 'Pasirinkti datą'}
+											</Text>
+										</TouchableOpacity>
+										{showDatePicker.dateMade && (
+											<DateTimePicker
+												value={
+													formik.values.dateMade ||
+													todaysDate
 												}
-											}}
-										/>
-									)}
+												mode="date"
+												onChange={(
+													event,
+													selectedDate
+												) => {
+													setShowDatePicker(
+														(prev) => ({
+															...prev,
+															dateMade: false,
+														})
+													);
+													if (
+														event.type !==
+															'dismissed' &&
+														selectedDate
+													) {
+														formik.setFieldValue(
+															'dateMade',
+															selectedDate
+														);
+													}
+												}}
+											/>
+										)}
+									</View>
+									{formik.touched.dateMade &&
+										formik.errors.dateMade && (
+											<Text style={{ color: colors.red }}>
+												{formik.errors.dateMade}
+											</Text>
+										)}
 								</View>
 							)}
 
@@ -890,7 +916,7 @@ const AddProduct = ({ existingProduct }: { existingProduct?: FormValues }) => {
 								</Picker>
 							</View>
 							<GradientButton
-								onSubmit={formik.handleSubmit}
+								onSubmit={() => formik.handleSubmit()}
 								label="Pridėti produktą"
 							/>
 						</GradientBorderView>

@@ -3,14 +3,11 @@ import {
 	ScrollView,
 	Text,
 	TextInput,
-	TouchableOpacity,
-	View,
 	Alert,
 	ActivityIndicator,
 } from 'react-native';
 import { useEffect, useState } from 'react';
 import mainStyle from '@/styles/styles';
-import buttonStyle from '@/styles/buttons';
 import colors from '@/constants/colors';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { RouteProp } from '@react-navigation/native';
@@ -35,8 +32,6 @@ const EditCommunity = () => {
 	const [loading, setLoading] = useState(true);
 
 	useEffect(() => {
-		console.log('Received ID from route params:', id);
-
 		if (!id) {
 			setError('Bendruomenės ID nerastas.');
 			setLoading(false);
@@ -49,7 +44,6 @@ const EditCommunity = () => {
 					`${API_BASE_URL}/community/${Number(id)}`
 				);
 				const fetched = response.data;
-				console.log('Fetched community:', fetched);
 				setCommunity(fetched);
 				setTitle(fetched.title);
 				setDescription(fetched.description || '');

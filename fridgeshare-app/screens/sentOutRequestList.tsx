@@ -5,9 +5,9 @@ import { UserCommunity } from '@/constants/communityType';
 import { useAuth } from '@/context/authContext';
 import buttonStyle from '@/styles/buttons';
 import mainStyle from '@/styles/styles';
-import { useNavigation } from '@react-navigation/native';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import { useFocusEffect } from 'expo-router';
+import { useCallback, useEffect, useState } from 'react';
 import {
 	SafeAreaView,
 	ScrollView,
@@ -20,22 +20,23 @@ const SentOutRequestList = () => {
 	const [requestList, setRequestList] = useState<UserCommunity[]>([]);
 	const { id } = useAuth();
 
-	useEffect(() => {
-		const fetchData = async () => {
-			await axios
-				.get(`${API_BASE_URL}/usercommunity/user/request/${id}`)
-				.then(function (response) {
-					console.log(response.data);
-					setRequestList(response.data);
-				})
-				.catch(function (error) {
-					console.log(error);
-				});
-		};
-		if (id) {
+	useFocusEffect(
+		useCallback(() => {
+			const fetchData = async () => {
+				await axios
+					.get(`${API_BASE_URL}/usercommunity/user/request/${id}`)
+					.then(function (response) {
+						console.log(response.data);
+						setRequestList(response.data);
+					})
+					.catch(function (error) {
+						console.log(error);
+					});
+			};
+
 			fetchData();
-		}
-	}, [id]);
+		}, [id])
+	);
 
 	const cancelRequest = async (communityId: number) => {
 		try {
