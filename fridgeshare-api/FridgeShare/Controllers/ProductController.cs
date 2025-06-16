@@ -97,6 +97,38 @@ public class ProductsController : ApiController
         return Ok(response);
     }
 
+    [HttpGet("community/{id:int}")]
+    public async Task<IActionResult> GetCommunityProducts(int id)
+    {
+        var getProductsResult = await _productService.GetCommunityProducts(id);
+        if (getProductsResult.IsError)
+        {
+            return Problem(getProductsResult.Errors);
+        }
+
+        List<ProductResponse> productResponses = new List<ProductResponse>();
+        foreach (var product in getProductsResult.Value)
+        {
+            var storageResult = await _storageService.GetStorage(product.StorageId);
+            if (storageResult.IsError)
+            {
+                return Problem(storageResult.Errors);
+            }
+            var storage = storageResult.Value;
+            var tagsResult = await _productService.GetProductTag(product.Id);
+            if (tagsResult.IsError)
+            {
+                return Problem(tagsResult.Errors);
+            }
+            var tags = tagsResult.Value;
+            var response = MapProductResponse(product, storage, tags);
+            productResponses.Add(response);
+        }
+
+        return Ok(productResponses);
+    }
+
+
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateProduct(Guid id, UpdateProductRequest request)
     {

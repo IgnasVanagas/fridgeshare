@@ -14,6 +14,5 @@ public interface IUserCommunityService
     Task<ErrorOr<UserCommunity>> GetUserCommunity(int userId, int communityId);
     Task<ErrorOr<List<UserCommunity>>> GetAllForCommunity(int communityId);
     Task<ErrorOr<Deleted>> LeaveCommunity(int userId, int communityId);
-
-
+    Task<ErrorOr<int>> GetMemberCount(int communityId);
 }

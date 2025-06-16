@@ -4,14 +4,22 @@ import mainStyle from '@/styles/styles';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import axios from 'axios';
 import { StatusBar } from 'expo-status-bar';
-import { useEffect, useState } from 'react';
-import { SafeAreaView, ScrollView, Text, View } from 'react-native';
+import { useCallback, useEffect, useState } from 'react';
+import {
+	ImageBackground,
+	SafeAreaView,
+	ScrollView,
+	Text,
+	View,
+} from 'react-native';
 import { Community } from '@/constants/communityType';
 import { useAuth } from '@/context/authContext';
-import { useNavigation } from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import colors from '@/constants/colors';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import Product from '@/constants/product';
+import ProductCard from '@/components/productCard';
 
 type Props = NativeStackScreenProps<ParamList, 'CommunityView'>;
 
@@ -20,32 +28,61 @@ const CommunityView = ({ route }: Props) => {
 	const { id } = route.params;
 	const { id: userId } = useAuth();
 	const [community, setCommunity] = useState<Community | null>(null);
+	const [products, setProducts] = useState<Product[]>([]);
 	const [isAdmin, setIsAdmin] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
-	useEffect(() => {
-		const getCommunity = async () => {
-			try {
-				const response = await axios.get(
-					`${API_BASE_URL}/community/${id}`,
-					{
-						headers: {
-							'Content-Type': 'application/json',
-						},
-					}
-				);
-				setCommunity(response.data);
-			} catch (error) {
-				console.log(error);
-			}
-		};
-		getCommunity();
-	}, [id]);
+	useFocusEffect(
+		useCallback(() => {
+			const getCommunity = async () => {
+				try {
+					const response = await axios.get(
+						`${API_BASE_URL}/community/${id}`,
+						{
+							headers: {
+								'Content-Type': 'application/json',
+							},
+						}
+					);
+					setCommunity(response.data);
+					const response2 = await axios.get(
+						`${API_BASE_URL}/products/community/${response.data.id}`,
+						{
+							headers: {
+								'Content-Type': 'application/json',
+							},
+						}
+					);
+					setProducts(response2.data);
+				} catch (error) {
+					console.log(error);
+				}
+			};
+			getCommunity();
+		}, [id])
+	);
 
 	useEffect(() => {
 		if (community && userId) {
 			setIsAdmin(community.managerId.toString() === userId);
 		}
 	}, [community, userId]);
+
+	const onTakeProduct = async (product: Product) => {
+		try {
+			console.log(userId, product.id, product.quantity);
+			await axios.post(`${API_BASE_URL}/producttaken`, {
+				userId: userId,
+				productId: product.id,
+				quantityTaken: product.quantity,
+			});
+			const updatedProducts = products.filter((p) => p.id !== product.id);
+			setProducts(updatedProducts);
+		} catch (err) {
+			console.error('Error taking product:', err);
+			setError('Nepavyko paimti produkto.');
+		}
+	};
 
 	return (
 		<ScrollView
@@ -78,6 +115,7 @@ const CommunityView = ({ route }: Props) => {
 					>
 						{community?.title}
 					</Text>
+
 					<View
 						style={[
 							mainStyle.inline,
@@ -114,11 +152,40 @@ const CommunityView = ({ route }: Props) => {
 						)}
 					</View>
 				</View>
-				{community?.description && (
-					<Text>{community?.description}</Text>
-				)}
-
-				<Text style={{ marginTop: 10 }}>-----content-----</Text>
+				<ImageBackground
+					source={require('../assets/images/fonas.png')}
+					style={{
+						width: '100%',
+						alignItems: 'center',
+						marginBottom: 20,
+					}}
+				>
+					<View
+						style={{
+							width: '90%',
+							alignItems: 'center',
+							paddingVertical: 20,
+						}}
+					>
+						{community?.description && (
+							<Text style={{ color: colors.brandGreen }}>
+								{community?.description}
+							</Text>
+						)}
+						<Text>Iš viso narių: {community?.memberCount}</Text>
+					</View>
+				</ImageBackground>
+				<Text style={{ color: colors.red }}>{error}</Text>
+				<View style={{ width: '100%', alignItems: 'center' }}>
+					{products.length > 0 &&
+						products.map((product) => (
+							<ProductCard
+								product={product}
+								key={product.id}
+								onTakeProduct={onTakeProduct}
+							/>
+						))}
+				</View>
 			</SafeAreaView>
 		</ScrollView>
 	);

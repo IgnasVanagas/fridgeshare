@@ -7,29 +7,8 @@ import { API_BASE_URL } from '@/api_config';
 import axios from 'axios';
 import { useAuth } from '@/context/authContext';
 import { Picker } from '@react-native-picker/picker';
-import categoriesImages from '@/constants/categoriesImages';
-import GradientButton from '@/components/gradientButton';
-import GradientBorderView from '@/components/gradientBorderView';
-
-type Product = {
-	id: string;
-	title: string;
-	description: string;
-	category: number;
-	categoryName: string;
-	typeOfMeasurement: number;
-	typeOfMeasurementName: string;
-	quantity: number;
-	quantityLeft: number;
-	inStock: boolean;
-	storageId: string;
-	storageTitle: string;
-	tagIds: number[];
-	addedOn: string;
-	expiryDate?: string;
-	preparationDate?: string;
-	boughtOn?: string;
-};
+import Product from '@/constants/product';
+import ProductCard from '@/components/productCard';
 
 type Community = {
 	id: number;
@@ -126,6 +105,7 @@ const ListOfProducts = () => {
 				}
 				setProducts(allProducts);
 				setLoading(false);
+				setError(null);
 			} catch (err) {
 				console.error('Error fetching products:', err);
 				if (axios.isAxiosError(err)) {
@@ -158,6 +138,7 @@ const ListOfProducts = () => {
 			});
 			const updatedProducts = products.filter((p) => p.id !== product.id);
 			setProducts(updatedProducts);
+			setError(null);
 		} catch (err) {
 			console.error('Error taking product:', err);
 			setError('Nepavyko paimti produkto');
@@ -172,13 +153,13 @@ const ListOfProducts = () => {
 		);
 	}
 
-	if (error) {
-		return (
-			<SafeAreaView style={mainStyle.container3}>
-				<Text style={{ color: 'red' }}>{error}</Text>
-			</SafeAreaView>
-		);
-	}
+	// if (error) {
+	// 	return (
+	// 		<SafeAreaView style={mainStyle.container3}>
+	// 			<Text style={{ color: 'red' }}>{error}</Text>
+	// 		</SafeAreaView>
+	// 	);
+	// }
 
 	return (
 		<ScrollView contentContainerStyle={{ flexGrow: 1 }}>
@@ -198,7 +179,9 @@ const ListOfProducts = () => {
 						))}
 					</Picker>
 				</View>
-
+				{error != null && (
+					<Text style={{ color: colors.red }}>{error}</Text>
+				)}
 				{products.length === 0 ? (
 					<View style={{ alignItems: 'center', marginTop: 20 }}>
 						<Text
@@ -215,89 +198,11 @@ const ListOfProducts = () => {
 					</View>
 				) : (
 					products.map((product) => (
-						<GradientBorderView
+						<ProductCard
+							product={product}
+							onTakeProduct={onTakeProduct}
 							key={product.id}
-							style={{
-								marginBottom: 20,
-							}}
-						>
-							<View style={{ flexDirection: 'row' }}>
-								<Image
-									source={categoriesImages[product.category]}
-									style={{ width: 150, height: 150 }}
-								/>
-
-								<View style={{ flex: 1 }}>
-									<Text
-										style={{
-											textAlign: 'left',
-											fontSize: 16,
-											fontWeight: 'bold',
-											color: colors.brandGreen,
-										}}
-									>
-										{product.title}
-									</Text>
-									{/* {product.description && (
-										<Text>{product.description}</Text>
-									)} */}
-									<View
-										style={{
-											marginTop: 15,
-										}}
-									>
-										{product.boughtOn && (
-											<Text>
-												Pirkimo data:{' '}
-												{product.boughtOn.split('T')[0]}
-											</Text>
-										)}
-										{product.preparationDate && (
-											<Text>
-												Pagaminimo data:{' '}
-												{
-													product.preparationDate.split(
-														'T'
-													)[0]
-												}
-											</Text>
-										)}
-										{product.expiryDate && (
-											<Text>
-												Galioja iki:{' '}
-												{
-													product.expiryDate.split(
-														'T'
-													)[0]
-												}
-											</Text>
-										)}
-									</View>
-									<View
-										style={
-											product.boughtOn ||
-											product.preparationDate ||
-											product.expiryDate
-												? { marginTop: 15 }
-												: {}
-										}
-									>
-										<Text>
-											Likutis: {product.quantity}{' '}
-											{product.typeOfMeasurementName}
-										</Text>
-										{/* <Text>
-												Sandėliavimo vieta:
-												{product.storageTitle}
-											</Text> */}
-									</View>
-								</View>
-							</View>
-							<GradientButton
-								onSubmit={() => onTakeProduct(product)}
-								label="Paimti šį produktą"
-							/>
-						</GradientBorderView>
+						/>
 					))
 				)}
 			</SafeAreaView>

@@ -14,7 +14,7 @@ const BottomTab = createBottomTabNavigator();
 const CommunityBottomTabNavigator = () => {
 	return (
 		<BottomTab.Navigator
-			initialRouteName="Bendruomenės"
+			initialRouteName="BendruomenesInfo"
 			screenOptions={{
 				headerShown: false,
 				tabBarActiveTintColor: colors.brandGreen,
@@ -22,7 +22,7 @@ const CommunityBottomTabNavigator = () => {
 			}}
 		>
 			<BottomTab.Screen
-				name="Bendruomenės"
+				name="BendruomenesInfo"
 				component={CommunityList}
 				options={{
 					tabBarIcon: ({ color }) => (

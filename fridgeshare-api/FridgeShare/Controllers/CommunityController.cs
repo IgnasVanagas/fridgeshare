@@ -2,6 +2,7 @@ using ErrorOr;
 using FridgeShare.Contracts.FridgeShare.Community;
 using FridgeShare.Models;
 using FridgeShare.Services.Communities;
+using FridgeShare.Services.UserCommunities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FridgeShare.Controllers;
@@ -10,10 +11,12 @@ namespace FridgeShare.Controllers;
 public class CommunityController : ApiController
 {
     private readonly ICommunityService _communityService;
+    private readonly IUserCommunityService _userCommunityService;
 
-    public CommunityController(ICommunityService communityService)
+    public CommunityController(ICommunityService communityService, IUserCommunityService userCommunityService)
     {
         _communityService = communityService;
+        _userCommunityService = userCommunityService;
     }
 
     [HttpPost]
@@ -48,7 +51,13 @@ public class CommunityController : ApiController
             return Problem(getResult.Errors);
 
         var community = getResult.Value;
-        return Ok(MapCommunityResponse(community));
+        var countResult = await _userCommunityService.GetMemberCount(community.Id);
+        if(countResult.IsError)
+        {
+            return Problem(countResult.Errors);
+        }
+        int count = countResult.Value;
+        return Ok(MapCommunityResponse(community, count));
     }
 
     [HttpGet("user/{userId:int}")]
@@ -138,7 +147,7 @@ public class CommunityController : ApiController
         );
     }
 
-    private static CommunityResponse MapCommunityResponse(Community community)
+    private static CommunityResponse MapCommunityResponse(Community community, int? count=-1)
     {
         return new CommunityResponse(
             community.Id,
@@ -147,7 +156,8 @@ public class CommunityController : ApiController
             community.JoiningCode,
             community.CreatedOn,
             community.Active,
-            community.ManagerId
+            community.ManagerId,
+            count
         );
     }
 

@@ -7,5 +7,6 @@ public record CommunityResponse(
     string JoiningCode,
     DateTime CreatedOn,
     bool Active,
-    int ManagerId
+    int ManagerId,
+    int? memberCount = null
 );

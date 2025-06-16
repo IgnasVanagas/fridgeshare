@@ -133,4 +133,17 @@ public class ProductService : IProductService
         await _dbContext.SaveChangesAsync();
         return Result.Deleted;
     }
+
+    public async Task<ErrorOr<List<Product>>> GetCommunityProducts(int id)
+    {
+        var products = await _dbContext.Products
+            .Include(p => p.Storage)
+            .Where(p => p.Storage != null && p.Storage.CommunityId == id && p.Quantity > 0)
+            .ToListAsync();
+        if(products is null)
+        {
+            return Errors.Product.NotFound;
+        }
+        return products;
+    }
 }

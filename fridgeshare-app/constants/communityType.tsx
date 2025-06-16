@@ -15,4 +15,5 @@ export type Community = {
 	createdOn: string;
 	active: boolean;
 	managerId: number;
+	memberCount: number;
 };
