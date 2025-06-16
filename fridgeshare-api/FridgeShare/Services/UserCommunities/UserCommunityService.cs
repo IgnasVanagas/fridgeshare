@@ -146,6 +146,9 @@ public class UserCommunityService : IUserCommunityService
         return Result.Deleted;
     }
 
-    
-
+    public async Task<ErrorOr<int>> GetMemberCount(int communityId)
+    {
+        var count = await _dbContext.UserCommunities.Where(uc => uc.CommunityId == communityId && uc.DateJoined != null).CountAsync();
+        return count;
+    }
 }

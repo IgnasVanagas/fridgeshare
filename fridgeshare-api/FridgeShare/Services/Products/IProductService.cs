@@ -13,4 +13,5 @@ public interface IProductService
     Task<ErrorOr<List<ProductTag>>> GetProductTag(Guid productId);
     Task<ErrorOr<Product>> AddProductTaken(Guid productId, ProductTaken productTaken);
     Task<ErrorOr<Deleted>> RemoveProductTaken(Guid productId, ProductTaken productTaken);
+    Task<ErrorOr<List<Product>>> GetCommunityProducts(int id);
 }
