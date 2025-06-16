@@ -4,6 +4,7 @@ import NewsScreen from '@/screens/NewsScreen';
 import AddProduct from '@/screens/productForm';
 import ListOfProducts from '@/screens/productList';
 import userSettings from '@/screens/userSettings';
+import Tutorial from '@/screens/tutorial';
 import {
 	createDrawerNavigator,
 	DrawerContentScrollView,
@@ -125,6 +126,19 @@ const DrawerNavigation = () => {
 					drawerIcon: () => (
 						<Ionicons
 							name="settings-sharp"
+							size={22}
+							color={colors.brandGreen}
+						/>
+					),
+				}}
+			/>
+			<Drawer.Screen
+				name="Kaip naudotis?"
+				component={Tutorial}
+				options={{
+					drawerIcon: () => (
+						<FontAwesome5
+							name="question-circle"
 							size={22}
 							color={colors.brandGreen}
 						/>
