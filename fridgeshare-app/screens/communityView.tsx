@@ -11,6 +11,7 @@ import {
 	ScrollView,
 	Text,
 	View,
+	Alert,
 } from 'react-native';
 import { Community } from '@/constants/communityType';
 import { useAuth } from '@/context/authContext';
@@ -70,17 +71,34 @@ const CommunityView = ({ route }: Props) => {
 
 	const onTakeProduct = async (product: Product) => {
 		try {
-			console.log(userId, product.id, product.quantity);
-			await axios.post(`${API_BASE_URL}/producttaken`, {
-				userId: userId,
-				productId: product.id,
-				quantityTaken: product.quantity,
-			});
-			const updatedProducts = products.filter((p) => p.id !== product.id);
-			setProducts(updatedProducts);
-		} catch (err) {
-			console.error('Error taking product:', err);
-			setError('Nepavyko paimti produkto.');
+			const response = await axios.delete(
+				`${API_BASE_URL}/products/${product.id}`
+			);
+
+			// Remove the product from the local state
+			setProducts(prevProducts => 
+				prevProducts.filter(p => p.id !== product.id)
+			);
+			
+			// Show success message
+			Alert.alert('Sėkmė', 'Produktas sėkmingai paimtas!');
+		} catch (error) {
+			console.error('Error taking product:', error);
+			if (axios.isAxiosError(error)) {
+				// If product is not found (404), it means it was already taken
+				if (error.response?.status === 404) {
+					// Remove the product from the local state since it's already gone
+					setProducts(prevProducts => 
+						prevProducts.filter(p => p.id !== product.id)
+					);
+					Alert.alert('Informacija', 'Produktas jau paimtas');
+				} else {
+					console.error('API Error Response:', error.response?.data);
+					Alert.alert('Klaida', 'Nepavyko paimti produkto. Bandykite dar kartą.');
+				}
+			} else {
+				Alert.alert('Klaida', 'Nepavyko paimti produkto. Bandykite dar kartą.');
+			}
 		}
 	};
 
